@@ -1,0 +1,22 @@
+comparison between "brute" and "walk" methods for ray tracing through a Plot3D grid
+
+
+trace 4 rays through BF1/BF1 using brute method:
+---------------------------------
+
+/bin/time -l trace < BF1/BF1.input
+elapsed time ........................... 486.667
+    user CPU ........................... 430.541
+    system CPU ......................... 3.205
+    percent busy ....................... 89.1%%
+
+
+
+trace 4 rays through BF1/BF1 using walk method:
+--------------------------------
+
+/bin/time -l trace < BF1/BF1.input
+elapsed time ........................... 26.171
+    user CPU ........................... 23.609
+    system CPU ......................... 0.188
+    percent busy ....................... 90.9%%

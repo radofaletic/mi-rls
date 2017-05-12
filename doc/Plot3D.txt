@@ -1,0 +1,143 @@
+  ------------------------------------------------------------------------
+
+                             Plot3D File Formats
+
+  ------------------------------------------------------------------------
+
+File Extension Conventions
+
+Filename extensions are shown in table 1.
+
+          Table 1. Filename Extensions
+
+ Filename                 Usage
+ name.PUG Plot3D format, Unformatted, Grid
+ name.PFG Plot3D format, Formatted, (ASCII) Grid
+ name.PBG Plot3D format, Binary, Grid
+
+File Formats
+
+Plot3D files can be formatted, unformatted, or binary, contain a single or
+multi-domain 3D grid, and may have blanking information. All files are in
+single precision by default; however, double precision is also supported.
+All arrays are written in column-major order, i.e., with the I index varying
+fastest and K index slowest.
+
+Single-Domain Grid File
+
+     Ni Nj Nk
+
+     X(1,1,1) ... X(Ni,Nj,Nk),
+
+     Y(1,1,1) ... Y(Ni,Nj,Nk),
+
+     Z(1,1,1) ... Z(Ni,Nj,Nk)
+
+where
+Ni      =the number of grid points in i-direction
+Nj      =the number of grid points in j-direction
+Nk      =the number of grid points in k-direction
+X, Y, Z =3-D arrays of the X, Y, and Z Cartesian grid point coordinates
+
+Single-Domain Grid File with Blanking
+
+     Ni Nj Nk
+
+     X(1,1,1) ... X(Ni,Nj,Nk),
+
+     Y(1,1,1) ... Y(Ni,Nj,Nk),
+
+     Z(1,1,1) ... Z(Ni,Nj,Nk),
+
+     IB(1,1,1) ... IB(Ni,Nj,Nk)
+
+where
+IB                  =the three dimensional array of i-blanking values
+all other variables =the same as for the grid file without blanking
+
+Multi-Domain Grid File
+
+     Nz
+
+     Ni(1) Nj(1) Nk(1) ... Ni(Nz) Nj(Nz) Nk(Nz)
+
+     X1(1,1,1) ... X1(Ni(1),Nj(1),Nk(1)),
+
+     Y1(1,1,1) ... Y1(Ni(1),Nj(1),Nk(1)),
+
+     Z1(1,1,1) ... Z1(Ni(1),Nj(1),Nk(1))
+
+     .
+
+     .
+
+     XNz(1,1,1) ... XNz(Ni(Nz),Nj(Nz),Nk(Nz)),
+
+     YNz(1,1,1) ... YNz(Ni(Nz),Nj(Nz),Nk(Nz)),
+
+     ZNz(1,1,1) ... ZNz(Ni(Nz),Nj(Nz),Nk(Nz))
+
+where
+Nz         =number of domains
+Ni(n)      =number of grid points in the i-direction for domain n
+Nj(n)      =number of grid points in the j-direction for domain n
+Nk(n)      =number of grid points in the k-direction for domain n
+
+Xn, Yn, Zn =3-D arrays of the X, Y, and Z Cartesian grids points for domain
+            n
+
+Multi-Domain Grid File with Blanking
+
+     Nz
+
+     Ni(1) Nj(1) Nk(1) ... Ni(Nz) Nj(Nz) Nk(Nz)
+
+     X1(1,1,1) ... X1(Ni(1),Nj(1),Nk(1)),
+
+     Y1(1,1,1) ... Y1(Ni(1),Nj(1),Nk(1)),
+
+     Z1(1,1,1) ... Z1(Ni(1),Nj(1),Nk(1)),
+
+     IB1(1,1,1)...IB1(Ni(1),Nj(1),Nk(1))
+
+     .
+
+     .
+
+     XNz(1,1,1) ... XNz(Ni(Nz),Nj(Nz),Nk(Nz)),
+
+     YNz(1,1,1) ... YNz(Ni(Nz),Nj(Nz),Nk(Nz)),
+
+     ZNz(1,1,1) ... ZNz(Ni(Nz),Nj(Nz),Nk(Nz)),
+
+     IBNz(1,1,1)...IBNz(Ni(Nz),Nj(Nz),Nk(Nz))
+
+where
+
+IBn                 =three dimensional array of i-blanking values for
+                     domain n
+all other variables =same as for the grid file without blanking
+  ------------------------------------------------------------------------
+
+CFD Research Corporation
+Copyright © 1998, CFD Research Corporation. All rights reserved.
+
+
+OFFICIAL Plot3D VARIABLES (Q-file):
+	 density
+	 x-momentum
+	 y-momentum
+	 z-momentum
+	 energy per unit volume
+
+CFDRC Plot3D VARIABLES (Scalar and Vector files):
+      viscosity
+      temperature
+      Mach number
+      turbulent kinetic energy
+      turbulent dissipation
+      density
+      u-velocity
+      v-velocity
+      w-velocity
+      pressure
