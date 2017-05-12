@@ -8,7 +8,7 @@ be viewable in any modern web browser or imaging programme. Note,
 however, that PNG images are integer. Also stored in these files,
 in textual IEEE number format are the decimal values of the results.
 These values can be retrieved with the Tomography::pngread function
-found in the c++/include/tomography.h header file.
+found in the include/tomography.h header file.
 
 This function, along with Tomography::pngwrite, allow for reading
 and writing of decimal data in PNG files. They are also able to
@@ -25,8 +25,8 @@ Science at the Australian National University.
         contains routines for byte-swapping all of the standard
         C/C++ variable types. It has been verified to swap between
         SGI/IRIX and Intel/Linux platforms (the main motivation
-        for this piece of code since I use and SGI at ANU and have
-        and Pentium-III machine at home
+        for this piece of code since I used an SGI at ANU and had
+        an Intel machine at home
 
 ### delaunay (NOT WRITTEN) ###
         routines for dealing with unstructured grids. In particular,
