@@ -1,0 +1,130 @@
+\documentclass[12pt,a4paper]{article}
+
+% OPTIONS FOR DRAFT
+%\usepackage[light]{draftcopy}
+
+% EXTERNAL PACKAGES
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{epic}
+\usepackage{eepic}
+%\usepackage[normal]{subfigure}
+\usepackage{theorem}
+%\usepackage{fancyhdr}
+%\usepackage{QED}
+%\usepackage{times}
+%\usepackage{mathtime}
+
+% PAGE LAYOUT OPTIONS
+\renewcommand{\baselinestretch}{1.3}
+\hoffset=1.46cm
+\oddsidemargin=0cm
+\textwidth=14.5cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=.75cm
+\headsep=.75cm
+\textheight=25cm
+\footskip=1cm
+%\pagestyle{fancy}
+%\rhead{\thepage}
+%\cfoot{}
+
+% USER COMMANDS
+%\newcommand{\eg}{eg.\ }
+%\newcommand{\etc}{etc.\ }
+%\newcommand{\ie}{ie.\ }
+%\renewcommand{\div}{\operatorname{div}}
+%\newcommand{\dee}{\operatorname{d}}
+
+% THEOREM ENVIRONMENTS (needs the ``theorem'' package)
+\newtheorem{theorem}{Theorem}
+%{\theorembodyfont{\normalfont} \newtheorem{definition}{Definition}[section]}
+%\newtheorem{axiom}[theorem]{Axiom}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{corollary}[theorem]{Corollary}
+%{\theorembodyfont{\normalfont} \newtheorem{example}{Example}[section]}
+%{\theorembodyfont{\normalfont} \newtheorem{remark}{Remark}[section]}
+
+%
+%
+% BEGIN
+\begin{document}
+  \begin{center}{\Huge the Icosahedron}\end{center}
+
+  \begin{theorem}
+    If an icosahedron is placed inside a sphere of unit radius then the triangles subtended from both poles have an angular width, at their base, of $\frac{2\pi}{5}$ and the bases are an angular distance of $\phi$ from the pole, where $\phi$ is given by $\cos\phi = \frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}$.
+  \end{theorem}
+
+  PROOF:\\
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(21,21)
+      % graph axes
+      \put(19,14.5){\vector(-2,-1){18}}
+      \put(0.5,5.3){\small $x$}
+      \put(0,10){\vector(1,0){20}}
+      \put(20.1,9.8){\small $y$}
+      \put(10,0){\vector(0,1){20}}
+      \put(9.8,20.1){\small $z$}
+      % sphere
+      \put(10,10){\circle{18}}
+      % spherical triangle
+      \put(17.5,9){\arc{25.1}{3.14}{4.07}}
+      \put(0,10.6){\arc{26.2}{5.58}{6.4}}
+      \put(9,20){\arc{23.41}{1.22}{1.92}}
+      \put(10,19){\makebox(0,0){$\bullet$}}
+      \put(5,9){\makebox(0,0){$\bullet$}}
+      \put(13,9){\makebox(0,0){$\bullet$}}
+      % drop lines
+      \dashline{0.25}(5,9)(5,7.5)(13,7.5)(13,9)(10,10)(5,9)(10,11.5)
+      \dashline{0.25}(10,10)(13,7.5)
+      \path(9.5,11.25)(9.5,11.75)(10,12)
+      \put(7.5,10.7){\small $l$}
+      % planar triangle
+      \dottedline{0.1}(10,19)(5,9)(13,9)(10,19)
+      \put(9,8.5){\small $t$}
+      \put(11.5,14){\small $t$}
+      \put(7.3,14){\small $t$}
+      % arc
+      \put(10,10){\arc{2}{2.94}{4.71}}
+      \put(8.8,10.5){\small $\phi$}
+    \end{picture}
+  \end{center}
+  Firstly, there are five triangles around each pole, so the angular width of each triangle must be $\frac{2\pi}{5}$. Let $t$ be the length of the straight line connecting two nodes of a triangle. Then, by the cosine rule,
+  \begin{equation*}
+    t^2 = l^2 + l^2 - 2l^2 \cos\frac{2\pi}{5} = 2l^2\left( 1 - \cos\frac{2\pi}{5} \right).
+  \end{equation*}
+  Since the sphere has unit radius we have $l=\sin\phi$ and $h=1-\cos\phi$. Pythagoras' theorem gives that
+  \begin{alignat*}{1}
+    &\qquad t^2 = l^2 + h^2 \\
+    &\Rightarrow 2l^2 \left( 1-\cos\frac{2\pi}{5} \right) = l^2 + h^2 \\
+    &\Rightarrow 2\sin^2\phi \left( 1-\cos\frac{2\pi}{5} \right) = \sin^2\phi + \left( 1-\cos\phi \right)^2 \\
+    &\Rightarrow 2\sin^2\phi \left( 1-\cos\frac{2\pi}{5} \right) = \sin^2\phi + 1 - 2\cos\phi + \cos^2\phi \\
+    &\Rightarrow 2\sin^2\phi \left( 1-\cos\frac{2\pi}{5} \right) = 2\left( 1-\cos\phi \right) \\
+    &\Rightarrow \left( 1-\cos^2\phi \right) \left( 1 - \cos\frac{2\pi}{5} \right) = \left( 1-\cos\phi \right) \\
+    &\Rightarrow \left( 1-\cos\phi \right) \left( 1+\cos\phi \right) \left( 1 - \cos\frac{2\pi}{5} \right) = \left( 1-\cos\phi \right) \\
+    &\Rightarrow 1+\cos\phi = \frac{1}{1-\cos\frac{2\pi}{5}} \\
+    &\Rightarrow \cos\phi = \frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}.
+  \end{alignat*}
+
+  \begin{center}
+    spherical co-ordinates for points on the icosahedron\\
+    \begin{tabular}{|c||c|c|} \hline
+      \    & $\qquad\theta\qquad$ & $\qquad\phi\qquad$ \\ \hline\hline
+      $1$  & $0$                  & $0$ \\ \hline
+      $2$  & $0$                  & $\arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $3$  & $\frac{2\pi}{5}$     & $\arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $4$  & $\frac{4\pi}{5}$     & $\arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $5$  & $\frac{6\pi}{5}$     & $\arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $6$  & $\frac{8\pi}{5}$     & $\arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $7$  & $\frac{9\pi}{5}$     & $\pi - \arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $8$  & $\frac{\pi}{5}$      & $\pi - \arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $9$  & $\frac{3\pi}{5}$     & $\pi - \arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $10$ & $\pi$                & $\pi - \arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $11$ & $\frac{7\pi}{5}$     & $\pi - \arccos\left(\frac{\cos\frac{2\pi}{5}}{1-\cos\frac{2\pi}{5}}\right)$ \\ \hline
+      $12$ & $0$                  & $\pi$ \\ \hline
+    \end{tabular}
+  \end{center}
+
+\end{document}

@@ -1,0 +1,148 @@
+\documentclass[12pt,a4paper]{article}
+
+% OPTIONS FOR DRAFT
+%\usepackage[light]{draftcopy}
+
+% EXTERNAL PACKAGES
+\usepackage{amsfonts}
+\usepackage{amsmath}
+%\usepackage{graphics}
+%\usepackage[normal]{subfigure}
+\usepackage{theorem}
+%\usepackage{fancyhdr}
+%\usepackage{QED}
+%\usepackage{times}
+%\usepackage{mathtime}
+
+% PAGE LAYOUT OPTIONS
+\renewcommand{\baselinestretch}{1.3}
+\hoffset=1.46cm
+\oddsidemargin=0cm
+\textwidth=14.5cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=.75cm
+\headsep=.75cm
+\textheight=25cm
+\footskip=1cm
+%\pagestyle{fancy}
+%\rhead{\thepage}
+%\cfoot{}
+
+% USER COMMANDS
+%\newcommand{\eg}{eg.\ }
+%\newcommand{\etc}{etc.\ }
+%\newcommand{\ie}{ie.\ }
+%\renewcommand{\div}{\operatorname{div}}
+\newcommand{\dee}{\operatorname{d}}
+
+% THEOREM ENVIRONMENTS (needs the ``theorem'' package)
+\newtheorem{theorem}{Theorem}
+{\theorembodyfont{\normalfont} \newtheorem{definition}{Definition}}
+%\newtheorem{axiom}[theorem]{Axiom}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{corollary}[theorem]{Corollary}
+%{\theorembodyfont{\normalfont} \newtheorem{example}{Example}[section]}
+%{\theorembodyfont{\normalfont} \newtheorem{remark}{Remark}[section]}
+
+%
+%
+% BEGIN
+\begin{document}
+  \begin{center}{\Huge B-splines}\end{center}
+
+  \begin{definition}[spline space]
+    Let points $a = x_0 < x_1 < \cdots < x_k < x_{k+1} = b$ and an integer $m \ge 1$ be given. We call
+    \begin{equation*}
+      S_m \left( x_1, \ldots ,x_k \right) = \left\{ f \in \mathcal{C}^{m-1} [a,b] : \left. f \right|_{\left[ x_i, x_{i+1} \right]} \in \mathcal{P}_m (\mathbb{R}), i=0,\ldots ,k \right\}
+    \end{equation*}
+    the space of \emph{polynomial splines of degree $m$ with $k$ fixed knots $x_1, \ldots ,x_k$}. For a given spline space $S_m \left( x_1, \ldots ,x_k \right)$, we always associate further points $x_{-m} < \cdots < x_{-1} < a$ and $b < x_{k+2} < \cdots < x_{k+m+1}$, where these points may be chosen arbitrarily.
+  \end{definition}
+
+  \begin{theorem}[spline space dimension]
+    The dimension of $S_m \left( x_1, \ldots ,x_k \right)$ is $k+m+1$.
+  \end{theorem}
+
+  \begin{definition}[polynomial splines]
+    Let points $x_{-m} < \cdots < x_{-1} < a = x_0 < x_1 < \cdots < x_k < x_{k+1} = b < x_{k+2} < \cdots < x_{k+m+1}$ be given. A function $f : \left( -\infty , \infty \right) \rightarrow \mathbb{R}$ is called a \emph{polynomial spline of degree $m$ with knots $x_{-m} , \ldots , x_{k+m+1}$} if $f$ has $m-1$ continuous derivatives at $x_i$, $i=-m ,\ldots , k+m+1$, and $\left. f \right|_{\left( x_i , x_{i+1} \right)} \in \mathcal{P}_m \left( \mathbb{R} \right)$, $i=-m-1, \ldots, k+m+1$, where $x_{-m-1} = -\infty$ and $x_{k+m+2} = \infty$.
+  \end{definition}
+
+  \begin{theorem}
+    \label{theBspline}
+    For each $i\in \{ -m, \ldots ,k \}$ there exists a unique spline $B^m_i$ of degree $m$ with knots $x_{-m}, \ldots , x_{k+m+1}$ such that
+    \begin{alignat*}{1}
+      B^m_i (t) = 0, &\quad t\in\left( -\infty , x_i \right] \cup \left[ x_{i+m+1} , \infty \right), \\
+	  B^m_i (t) > 0, &\quad t\in \left( x_i, x_{i+m+1} \right) ,
+    \end{alignat*}
+    and
+    \begin{equation*}
+      \int_{x_i}^{x_{i+m+1}} B^m_i (t) \, \dee t = 1.
+    \end{equation*}
+  \end{theorem}
+
+  \begin{definition}[B-spline]
+    The spline $B^m_i$ in Theorem~\ref{theBspline} is called the \emph{B-spline} of degree $m$ with support $\left[ x_i , x_{i+m+1} \right]$.
+  \end{definition}
+
+  \begin{theorem}[B-spline basis]
+    The set of B-splines $\left\{ B_{-m}^m , \ldots , B_k^m \right\}$ forms a basis of $S_m \left( x_1, \ldots ,x_k \right)$ on $[a,b]$.
+  \end{theorem}
+
+  \begin{definition}[normalised B-spline]
+    The spline $N_i^m$, defined by
+    \begin{equation*}
+      N_i^m (x) = \frac{\left( x_{i+m+1} - x_i \right)}{(m+1)} B^m_i (x)
+    \end{equation*}
+    for all $x\in\left( -\infty , \infty \right)$, is called the \emph{normalised B-spline of degree $m$ with support $\left( x_i , x_{i+m+1} \right)$}.
+  \end{definition}
+
+  To uniquely determine a cubic B-spline through a set of $k+2$ knots there is a constraint that the second derivative at the `boundary' knots ($i = 0, k+1$) be equal to zero. The fact that the cubic B-splines must be $\mathcal{C}^2$ demands the support of at least four consecutive intervals for internal knots, and two or three intervals at the boundaries. The following are an explicit set of cubic B-splines (from $S_3 \left( x_1, \ldots ,x_k \right)$):
+  \begin{equation*}
+    \rho_0(x) = \left\{
+    \begin{array}{rl}
+      \frac{1}{6} \left( x - x_0 \right)^3 - \left( x- x_0 \right) + 1 &\quad x_0 \le x < x_1 \\
+      -\frac{1}{6} \left( x - x_1 \right)^3 + \frac{1}{2} \left( x- x_1 \right)^2 - \frac{1}{2} \left( x -x_1 \right) + \frac{1}{6} &\quad x_1 \le x < x_2 \\
+      0 &\quad x_2 \le x \le x_{k+1}
+    \end{array} \right.
+  \end{equation*}
+  \begin{equation*}
+    \rho_1(x) = \left\{
+    \begin{array}{rl}
+      -\frac{1}{3} \left( x - x_0 \right)^3 + \left( x- x_0 \right) &\quad x_0 \le x < x_1 \\
+      \frac{1}{2} \left( x - x_1 \right)^3 + \left( x- x_1 \right)^2 + \frac{2}{3} &\quad x_1 \le x < x_2 \\
+      -\frac{1}{6} \left( x - x_2 \right)^3 + \frac{1}{2} \left( x- x_2 \right)^2 - \frac{1}{2} \left( x -x_2 \right) + \frac{1}{6} &\quad x_2 \le x < x_3 \\
+      0 &\quad x_3 \le x \le x_{k+1}
+    \end{array} \right.
+  \end{equation*}
+  \begin{center}$\vdots$\end{center}
+  \begin{equation*}
+    \rho_i(x) = \left\{
+    \begin{array}{rl}
+      0 &\quad x_0 \le x < x_{i-2} \\
+      \frac{1}{6} \left( x - x_{i-2} \right)^3 &\quad x_{i-2} \le x < x_{i-1} \\
+      -\frac{1}{2} \left( x - x_{i-1} \right)^3 + \frac{1}{2}\left( x- x_{i-1} \right)^2 + \frac{1}{2} \left( x - x_{i-1} \right) + \frac{1}{6} &\quad x_{i-1} \le x < x_i \\
+      \frac{1}{2} \left( x - x_i \right)^3 - \left( x- x_i \right)^2 + \frac{2}{3} &\quad x_i \le x < x_{i+1} \\
+      -\frac{1}{6} \left( x - x_{i+1} \right)^3 + \frac{1}{2} \left( x- x_{i+1} \right)^2 - \frac{1}{2} \left( x -x_{i+1} \right) + \frac{1}{6} &\quad x_{i+1} \le x < x_{i+2} \\
+      0 &\quad x_{i+2} \le x \le x_{k+1}
+    \end{array} \right.
+  \end{equation*}
+  \begin{center}$\vdots$\end{center}
+  \begin{equation*}
+    \rho_k(x) = \left\{
+    \begin{array}{rl}
+      0 &\quad x_0 \le x < x_{k-2} \\
+      \frac{1}{6} \left( x - x_{k-2} \right)^3 &\quad x_{k-2} \le x < x_{k-1} \\
+      -\frac{1}{2} \left( x - x_{k-1} \right)^3 + \frac{1}{2}\left( x- x_{k-1} \right)^2 + \frac{1}{2} \left( x - x_{k-1} \right) + \frac{1}{6} &\quad x_{k-1} \le x < x_k \\
+      \frac{1}{3} \left( x - x_k \right)^3 - \left( x- x_k \right)^2 + \frac{2}{3} &\quad x_k \le x \le x_{k+1}
+    \end{array} \right.
+  \end{equation*}
+  \begin{equation*}
+    \rho_{k+1}(x) = \left\{
+    \begin{array}{rl}
+      0 &\quad x_0 \le x < x_{k-1} \\
+      \frac{1}{6} \left( x - x_{k-1} \right)^3 &\quad x_{k-1} \le x < x_k \\
+      -\frac{1}{6} \left( x - x_k \right)^3 + \frac{1}{2}\left( x- x_k \right)^2 + \frac{1}{2} \left( x - x_k \right) + \frac{1}{6} &\quad x_k \le x \le x_{k+1}
+    \end{array} \right.
+  \end{equation*}
+
+\end{document}

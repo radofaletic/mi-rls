@@ -1,0 +1,58 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{epic}
+\usepackage{eepic}
+%\hoffset=1.46cm
+\pagestyle{empty}
+\oddsidemargin=0cm
+\textwidth=14cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=1cm
+\headsep=1cm
+\textheight=24.2cm
+\footskip=1cm
+\begin{document}
+
+  \begin{center}{\Huge interferometric equation}\end{center}
+
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(10,6)
+      % shock tunnel nozel
+      \path(0,4)(0,3)(3,4)
+      \path(0,1)(0,2)(3,1)
+      \put(1.5,2.5){\vector(1,0){1.5}}
+      \put(2,2.75){\small $M_\infty$}
+      \put(2.15,2){\small $\rho_\infty$}
+      % test object
+      \path(7,2.5)(10,1.5)(10,3.5)(7,2.5)
+      \path(9.25,3.25)(10,3.25)
+      \path(8.5,3)(10,3)
+      \path(7.75,2.75)(10,2.75)
+      \path(7,2.5)(10,2.5)
+      \path(7.75,2.25)(10,2.25)
+      \path(8.5,2)(10,2)
+      \path(9.25,1.75)(10,1.75)
+      \path(7.375,2.625)(7.375,2.375)
+      \path(7.75,2.75)(7.75,2.25)
+      \path(8.125,2.875)(8.125,2.125)
+      \path(8.5,3)(8.5,2)
+      \path(8.875,3.125)(8.875,1.875)
+      \path(9.25,3.25)(9.25,1.75)
+      \path(9.625,3.375)(9.625,1.625)
+      % shock wave
+      \put(10,2.5){\arc{8}{2.356}{3.927}}
+      % optical path
+      \dashline{0.2}(6.5,4.5)(6.5,0.5)
+      \path(6.5,4.5)(6.5,5)
+      \path(6.5,0.5)(6.5,0)
+      \put(8,0.5){\vector(-1,1){1.4}}
+      \put(8.05,0.3){\small path length}
+    \end{picture}
+  \end{center}
+  Interferometric equation: $p\lambda = \left( n' -1 \right) L' - \left( n-1 \right) L = G \left( p' -p \right)$. We take measurements of $\frac{\Delta\phi}{\phi}$.
+
+\end{document}

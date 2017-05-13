@@ -1,0 +1,255 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{epic}
+\usepackage{eepic}
+%\hoffset=1.46cm
+\pagestyle{empty}
+\oddsidemargin=0cm
+\textwidth=14cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=1cm
+\headsep=1cm
+\textheight=24.2cm
+\footskip=1cm
+\begin{document}
+
+  \section{Triangular grid cell}
+
+  \subsection{node numbering}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(6,5)(0,0)
+      \path(1,1)(5,2)(3,5)(1,1)
+      \put(1,1){\makebox(0,0){$\bullet$}}
+      \put(0.5,0.5){$0$}
+      \put(5,2){\makebox(0,0){$\bullet$}}
+      \put(5.2,1.8){$1$}
+      \put(3,5){\makebox(0,0){$\bullet$}}
+      \put(3.2,4.8){$2$}
+    \end{picture}
+  \end{center}
+  The edges are create from the nodes as follows:
+  \begin{itemize}
+  \item \fbox{$0$} --- 1, 2
+  \item \fbox{$1$} --- 2, 0
+  \item \fbox{$2$} --- 0, 1
+  \end{itemize}
+
+
+  \section{Tetrahedral grid cell}
+
+  \subsection{node numbering}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(6,5)(0,0)
+      \path(1,1)(5,2)(3,5)(1,1)
+      \path(5,2)(4.75,4)(3,5)
+      \dashline{0.2}(1,1)(4.75,4)
+      \put(1,1){\makebox(0,0){$\bullet$}}
+      \put(0.5,0.5){$0$}
+      \put(5,2){\makebox(0,0){$\bullet$}}
+      \put(5.2,1.8){$1$}
+      \put(3,5){\makebox(0,0){$\bullet$}}
+      \put(3.2,5){$2$}
+      \put(4.75,4){\makebox(0,0){$\bullet$}}
+      \put(4.9,3.8){$3$}
+    \end{picture}
+  \end{center}
+  The surfaces are create from the nodes as follows:
+  \begin{itemize}
+  \item \fbox{$0$} --- 1, 2, 3
+  \item \fbox{$1$} --- 2, 3, 0
+  \item \fbox{$2$} --- 3, 0, 1
+  \item \fbox{$3$} --- 0, 1, 2
+  \end{itemize}
+
+
+  \section{Polygonal grid cell}
+
+  \subsection{node numbering}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(6,5)(0,0)
+      \path(1,1)(5,1)(5,5)(1,5)(1,1)
+      \put(1,1){\makebox(0,0){$\bullet$}}
+      \put(0.5,0.5){$0$}
+      \put(5,1){\makebox(0,0){$\bullet$}}
+      \put(5.1,0.5){$1$}
+      \put(1,5){\makebox(0,0){$\bullet$}}
+      \put(0.4,4.8){$3$}
+      \put(5,5){\makebox(0,0){$\bullet$}}
+      \put(5.2,4.8){$2$}
+    \end{picture}
+  \end{center}
+  The edges are create from the nodes as follows:
+  \begin{itemize}
+  \item \fbox{$0$} --- 0, 1
+  \item \fbox{$1$} --- 1, 2
+  \item \fbox{$2$} --- 2, 3
+  \item \fbox{$3$} --- 3, 0
+  \end{itemize}
+
+
+  \section{Polyhedral grid cell}
+
+  \subsection{node numbering}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(7,7)(0,0)
+      \path(1,1)(5,1)(5,5)(1,5)(1,1)
+      \path(5,1)(6,2)(6,6)(2,6)(1,5)
+      \path(5,5)(6,6)
+      \dashline{0.2}(1,1)(2,2)(6,2)
+      \dashline{0.2}(2,2)(2,6)
+      \put(1,1){\makebox(0,0){$\bullet$}}
+      \put(0.5,0.5){$0$}
+      \put(5,1){\makebox(0,0){$\bullet$}}
+      \put(5.1,0.5){$1$}
+      \put(1,5){\makebox(0,0){$\bullet$}}
+      \put(0.5,5){$2$}
+      \put(5,5){\makebox(0,0){$\bullet$}}
+      \put(5.2,4.6){$3$}
+      \put(2,2){\makebox(0,0){$\bullet$}}
+      \put(1.5,2){$4$}
+      \put(2,6){\makebox(0,0){$\bullet$}}
+      \put(6.1,1.8){$5$}
+      \put(6,2){\makebox(0,0){$\bullet$}}
+      \put(2.1,6.1){$6$}
+      \put(6,6){\makebox(0,0){$\bullet$}}
+      \put(6.2,5.9){$7$}
+    \end{picture}
+  \end{center}
+  The surfaces are create from the nodes as follows:
+  \begin{itemize}
+    \item \fbox{$0$} --- 0, 1, 3, 2
+    \item \fbox{$1$} --- 1, 5, 7, 3
+    \item \fbox{$2$} --- 3, 7, 6, 2
+    \item \fbox{$3$} --- 7, 5, 4, 6
+    \item \fbox{$4$} --- 6, 4, 0, 2
+    \item \fbox{$5$} --- 4, 5, 1, 0
+  \end{itemize}
+
+  \subsection{surface neighbours}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(9.6,8.5)(-1.6,-0.5)
+      \path(0,0)(0,6)(2,8)
+      \path(1,0)(1,6)(3,8)
+      \path(2,0)(2,6)(4,8)
+      \path(3,0)(3,6)(5,8)
+      \path(4,0)(4,6)(6,8)
+      \path(5,0)(5,6)(7,8)
+      \path(6,0)(6,6)(8,8)
+      \path(0,0)(6,0)(8,2)
+      \path(0,1)(6,1)(8,3)
+      \path(0,2)(6,2)(8,4)
+      \path(0,3)(6,3)(8,5)
+      \path(0,4)(6,4)(8,6)
+      \path(0,5)(6,5)(8,7)
+      \path(0,6)(6,6)(8,8)
+      \path(0.5,6.5)(6.5,6.5)(6.5,0.5)
+      \path(1,7)(7,7)(7,1)
+      \path(1.5,7.5)(7.5,7.5)(7.5,1.5)
+      \path(2,8)(8,8)(8,2)
+      \put(1.5,1.5){\vector(1,0){3}}
+      \put(4.8,1.5){\makebox(0,0){$1$}}
+      \put(1.5,1.5){\vector(0,1){2.6}}
+      \put(1.5,4.5){\makebox(0,0){$2$}}
+      \put(1.75,6.25){\vector(1,1){1}}
+      \put(3,7.5){\makebox(0,0){$1$}}
+      \put(1.75,6.25){\vector(1,0){1.9}}
+      \put(3.9,6.25){\makebox(0,0){$2$}}
+      \put(6.75,2){\vector(0,1){2.8}}
+      \put(6.8,5.3){\makebox(0,0){$1$}}
+      \put(6.75,2){\vector(1,1){0.9}}
+      \put(7.9,3.2){\makebox(0,0){$2$}}
+      \put(3,-0.5){\makebox(0,0){$\text{nnx} = 6$}}
+      \put(-1.6,3){\makebox(0,0){$\text{nny} = 6$}}
+      \put(-0.6,7.3){\makebox(0,0){$\text{nnz} = 4$}}
+    \end{picture}
+  \end{center}
+  \begin{center}
+    \begin{tabular}{c c c c}\hline
+      \quad & $i+\text{nnx}-1$ & $i+\text{nnx}$ & $i+\text{nnx}+1$ \\
+      \fbox{$0$} & $i-1$ & $i$ & $i+1$ \\
+      front & $i-\text{nnx}-1$ & $i-\text{nnx}$ & $i-\text{nnx}-1$ \\ \hline
+      \quad & $i-\text{nny}+1$ & $i+1$ & $i+\text{nny}+1$ \\
+      \fbox{$1$} & $i-\text{nny}$ & $i$ & $i+\text{nny}$ \\
+      right & $i-\text{nny}-1$ & $i-1$ & $i+\text{nny}-1$ \\ \hline
+      \quad & $i+\text{nnz}-1$ & $i+1$ & $i+\text{nnz}+1$ \\
+      \fbox{$2$} & $i-\text{nnz}$ & $i$ & $i+\text{nnz}$ \\
+      top & $i-\text{nnz}-1$ & $i-1$ & $i-\text{nnz}+1$ \\ \hline
+      \quad & $i+\text{nnx}-1$ & $i+\text{nnx}$ & $i+\text{nnx}+1$ \\
+      \fbox{$3$} & $i-1$ & $i$ & $i+1$ \\
+      back & $i-\text{nnx}-1$ & $i-\text{nnx}$ & $i-\text{nnx}+1$ \\ \hline
+      \quad & $i-\text{nny}+1$ & $i+1$ & $i+\text{nny}+1$ \\
+      \fbox{$4$} & $i-\text{nny}$ & $i$ & $i+\text{nny}$ \\
+      left & $i-\text{nny}-1$ & $i-1$ & $i+\text{nny}-1$ \\ \hline
+      \quad & $i+\text{nnz}-1$ & $i+1$ & $i+\text{nnz}+1$ \\
+      \fbox{$5$} & $i-\text{nnz}$ & $i$ & $i+\text{nnz}$ \\
+      bottom & $i-\text{nnz}-1$ & $i-1$ & $i-\text{nnz}+1$ \\ \hline
+    \end{tabular}
+  \end{center}
+  Note that \fbox{$0$} and \fbox{$3$} are the same. Similary with \fbox{$1$} and \fbox{$4$}, and with \fbox{$2$} and \fbox{$5$}.
+
+  \begin{center}
+    \begin{tabular}{c c||c|c|c|c|c|c}
+      \ & \   & $1$ & $2$ & $1$ $2$ & $1$ $2^-$ & $1^-$ $2$ & $1^-$ $2^-$ \\ \hline\hline
+      $\begin{array}{c}\text{nnx}\\ \text{nny}\end{array}$ & $0$ & $\text{nnz}$ & 1 & $1$, $\text{nnz}$ & $1$, $-\text{nnz}$ & $-1$, $\text{nnz}$ & $-1$, $-\text{nnz}$ \\ \hline
+      $\begin{array}{c}\text{nny}\\ \text{nnz}\end{array}$ & $1$ & $\text{nnx}$ & 1 & $1$, $\text{nnx}$ & $1$, $-\text{nnx}$ & $-1$, $\text{nnx}$ & $-1$, $-\text{nnx}$ \\ \hline
+      $\begin{array}{c}\text{nnz}\\ \text{nnx}\end{array}$ & $2$ & $\text{nny}$ & 1 & $1$, $\text{nny}$ & $1$, $-\text{nny}$ & $-1$, $\text{nny}$ & $-1$, $-\text{nny}$ \\ \hline
+    \end{tabular}
+  \end{center}
+
+  \begin{center}
+    \begin{tabular}{c||c|c|c}
+      \ & $\text{a}1$   & $\text{a}2$   & \quad \\ \hline\hline
+      0 & $+1$          & $+\text{fdn}$ & $\text{surf\_n}$ \\
+      1 & $+\text{fdn}$ & $+1$          & \quad \\
+      2 & $+1$          & $+\text{fdn}$ & \fbox{$0$} \\
+      3 & $+1$          & $+\text{fdn}$ & \quad \\
+      4 & $+\text{fdn}$ & $+1$          & \quad \\
+      5 & $+1$          & $+\text{fdn}$ & \quad \\
+    \end{tabular}
+  \end{center}
+
+  \begin{center}
+    \begin{tabular}{c||c|c|c}
+      \ & $\text{a}1$   & $\text{a}2$   & \quad \\ \hline\hline
+      0 & $+1$          & $-\text{fdn}$ & $\text{surf\_n}+\text{fd}+1$ \\
+      1 & $-\text{fdn}$ & $+1$          & \quad \\
+      2 & $+1$          & $-\text{fdn}$ & \fbox{$1$} \\
+      3 & $+1$          & $-\text{fdn}$ & \quad \\
+      4 & $-\text{fdn}$ & $+1$          & \quad \\
+      5 & $+1$          & $-\text{fdn}$ & \quad \\
+    \end{tabular}
+  \end{center}
+
+  \begin{center}
+    \begin{tabular}{c||c|c|c}
+      \ & $\text{a}1$   & $\text{a}2$   & \quad \\ \hline\hline
+      0 & $+\text{fdn}$ & $-1$          & $\text{surf\_n}+\text{fd}1\times\text{fd}2-\text{fd}1$ \\
+      1 & $+\text{fdn}$ & $-1$          & \quad \\
+      2 & $-1$          & $+\text{fdn}$ & \fbox{$2$} \\
+      3 & $+\text{fdn}$ & $-1$          & \quad \\
+      4 & $+\text{fdn}$ & $-1$          & \quad \\
+      5 & $-1$          & $+\text{fdn}$ & \quad \\
+    \end{tabular}
+  \end{center}
+
+  \begin{center}
+    \begin{tabular}{c||c|c|c}
+      \ & $\text{a}1$   & $\text{a}2$   & \quad \\ \hline\hline
+      0 & $-1$          & $-\text{fdn}$ & $\text{surf\_n}+\text{fd}1\times\text{fd}2-1$ \\
+      1 & $-1$          & $-\text{fdn}$ & \quad \\
+      2 & $-\text{fdn}$ & $-1$          & \fbox{$2$} \\
+      3 & $-1$          & $-\text{fdn}$ & \quad \\
+      4 & $-1$          & $-\text{fdn}$ & \quad \\
+      5 & $-\text{fdn}$ & $-1$          & \quad \\
+    \end{tabular}
+  \end{center}
+
+
+\end{document}

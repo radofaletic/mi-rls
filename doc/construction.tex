@@ -1,0 +1,143 @@
+\documentclass[12pt,a4paper]{article}
+
+% EXTERNAL PACKAGES
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{epic}
+\usepackage{eepic}
+\usepackage{theorem}
+
+% USER COMMANDS
+\newcommand{\eg}{eg.\ }
+\newcommand{\etc}{etc.\ }
+\newcommand{\ie}{ie.\ }
+\renewcommand{\div}{\operatorname{div}}
+\newcommand{\dee}{\operatorname{d}}
+
+% THEOREM ENVIRONMENTS (needs the ``theorem'' package)
+\newtheorem{theorem}{Theorem}[section]
+{\theorembodyfont{\normalfont} \newtheorem{definition}{Definition}[section]}
+\newtheorem{corollary}[theorem]{Corollary}
+
+
+%
+%
+% BEGIN
+\begin{document}
+
+  \section{Experimental basics}
+  Let us consider a ray travelling through a physical medium (\eg an X-ray travelling through a human body). As this ray traverses the medium it will undergo changes depending on the nature of the ray and of the medium. For example, X-ray imaging relies on ray attenuation as it passes through a body, and interferometry is based on phase shifts.
+
+  In an experimental situation we will take some sort of measurement of a ray after it has passed throught a medium. If we allow ourselves to only consider homogeneous mediums, we can mathematically describe our measurement by the following equation:
+  \begin{equation}\label{ray_projection}
+    p_i = \int_{\Gamma_i} f(\mathbf{x}) \, \dee \mathbf{x} \text{,}
+  \end{equation}
+  where the function $f$ describes the action of the medium on our ray at a given point $\mathbf{x}$, $\Gamma_i$ depicts the path that the ray traverses, and $p_i$ is the measurement of the ray with respect to some sort of reference (\eg the reference may be the ray properties before it entered the medium). The measurement, $p_i$, is also known as the projection of $f$ along the path $\Gamma_i$.
+  \begin{figure}[h]
+    \begin{center}
+      \setlength{\unitlength}{15pt}
+      \begin{picture}(13,11)
+	% arbitrary shape
+	\spline(2,8)(1,6)(1,5)(2,3)(3,2)(5,1)(6,1)(8,2)(10,3)(11,4)(11,5)(10,6)(8,7)(6,8)(3,9)(2,8)
+	% projection
+	\spline(4.5,10)(8,5)(9.5,0)
+	\put(8,5){{\small $\Gamma_i$}}
+	\put(9.7,0){{\small $p_i$}}
+	% 
+	\put(3,4.5){{\small $f\left( x,y \right)$}}
+      \end{picture}
+      \caption{Example of projecting of $f$ along $\Gamma_i$.}
+      \label{projection_fig}
+    \end{center}
+  \end{figure}
+
+  By measuring a large number of projections we may be able to form a ``picture'' of the medium in question, \ie get some understanding of the function $f$. A simple example is the shadow (attenuation of light) of a solid object. Although a shadow is unlikely to reveal the three dimensional nature of the object we can at least get some idea as to its outline. If we also consider shadows from differing angles we may be able to conceive the three dimensional outline of the object.
+
+  In scientific diagnostics we require methods that will allow us to determine, with some degree of accuracy, the properties of the function $f$ from the measured projections.
+
+  \section{Parameterisation}
+  To be able to perform any type of calculation using a computer the problem must be discretised/parameterised. Clearly there are many ways in which this can be done. Let's suppose that we can discretise our medium, $f$, of interest. A logical way of doing this is to write $f$ as a weighted sum of known functions, $e_j$:
+  \begin{equation}\label{weighted_sum}
+    f = \sum_j c_j e_j
+  \end{equation}
+  where the $c_j$ are constants. The choice of $e_j$ will depend on the nature of the problem.
+
+  By inserting equation~\ref{weighted_sum} into equation~\ref{ray_projection} we get
+  \[
+  p_i = \sum_j c_j \int_{\Gamma_i} e_j (\mathbf{x}) \, \dee \mathbf{x} \text{.}
+  \]
+  Now the problem has changed from one of determining the function $f$, to determining the value of the constants $c_j$, assuming that the ray path $\Gamma_i$ is known.
+
+  By considering a collection of measurements along different ray paths we can form a vector $\mathbf{p}^T = \left( p_1 , p_2, \ldots , p_i , \ldots,p_N \right)$. Likewise, we can form a vector of constants $\mathbf{c}^T = \left( c_1, c_2, \ldots, c_j, \ldots, c_M \right)$. This conception allows us to rewrite the problem as a matrix equation:
+  \begin{equation}
+    \mathbf{p} = A \mathbf{c}
+  \end{equation}
+  where $A$ is the $N \times M$ matrix of integrals defined by:
+  \begin{equation}\label{matrix_integral}
+    A_{ij} = \int_{\Gamma_i} e_j (\mathbf{x}) \, \dee \mathbf{x} \text{.}
+  \end{equation}
+  There are many well known mathematical techniques available to be able to invert this matrix equation and solve for $\mathbf{c}$, hence determining the original function $f$.
+
+  The success of this technique relies on a number of factors. Clearly the experimental conditions, \ie quality and abundance of the data $\mathbf{p}$, will play a role. Mathematically the other two important factors are the choice of functions $e_j$ and knowledge about the ray paths $\Gamma_i$.
+
+  It is often feasible, with good accuracy, to approximate the ray paths by straight lines. Human X-ray imaging is one such situation. Cases where the rays traverse curved paths include large scale seismic tomography, and astronomical tomography. In both of these cases the mediums in questions vary considerably over the large distances involved. Such cases require specialised ray tracing methods in order the calculate the integrals of $e_j$.
+
+  \subsection{Basis Functions}
+  Without loss of generality we can choose the functions $e_j$ to be basis functions defined on the same domain as $f$. Some of the more common choices for these functions are discussed here.
+
+  \subsubsection{Block parameterisation}
+  One of the most common and practical parameterisations involves subdividing the region of interest into cells. The size of the coefficient vector $\mathbf{c}$, $M$, is the number of cells in this parameterisation. These cells can be structured, such as a Cartesian grid, or unstructured, such as a tetrahedral grid. In either case there are many ways in which we could define such a basis:
+  \[
+  e_j (\mathbf{x}) =
+  \begin{cases}
+    k_j & \mathbf{x}\in \text{cell } j \\
+    0 & \mathbf{x}\notin \text{cell } j
+  \end{cases}
+  \]
+  where $k_j$ is a function of the $j$-th cell only. For example, a simple function is $k_j = 1$. Or, more practically, $k_j$ can be a function of the volume of the $j$-th cell, $k_j = V_j^{-\frac{1}{2}}$. Using this function for $k_j$ make these particular $e_j$ an orthonormal basis on particular sets. However, we need not keep $k_j$ constant over the $j$-th cell, it may be a function of $\mathbf{x}$ inside the cell.
+
+  In the case that $k_j$ is constant for the $j$-th cell, the integral in equation~\ref{matrix_integral} reduces to the product of $k_j$ with the length of the ray through the $j$-th cell, making computations trivial.
+
+  With this type of basis, visualisation becomes easy since the grid can easily be displayed with a myriad of three dimensional viewing packages. However, it is often necessary to use a large number of cells to get meaningful results. The number of cells required may exceed the memory limitations of the average desktop computer, meaning that in the past this type of computation has been restriction to high performance workstations, servers and supercomputers. Recently, however, the cheap price of high speed computer memory for desktop machines has enabled this type of computation to be implemented cheaply as a viable solution for particular experimental regimes.\footnote{The author was able to equip his personal desktop machine with 256MB of modern computer memory for under A\$250 in late 2001.}
+
+  \subsubsection{Polynomials}
+  The most common types of polynomials employed are spherical harmonics, as they are often used in problems involving spherical shapes and harmonic patterns. We could expand the function $f$ as a sum of spherical harmonics:
+  \begin{equation}\label{spherical_harmonics}
+    f \left( r, \theta, \phi \right) = \sum_{i=0}^I \sum_{j=0}^J \sum_{k=-j}^j c_{ijk} T_i (r) P_{jk} \left( \cos\theta \right) e^{ik\phi}
+  \end{equation}
+  where $c_{ijk}$ are unknown constants, $T_i$ are polynomial functions (such as as Tchebycheff\footnote{The function $T_i : ( 0,1 ) \rightarrow \mathbb{R}$ defined by $T_i (x) = \cos \left( i \arccos x \right)$ is one example of a \emph{Tchebycheff polynomial of degree $i$}.} polynomials), and $P_{jk}$ are the associated Legendre\footnote{The function $P_{jk} : \mathbb{R} \rightarrow \mathbb{R}$ defined by $P_{jk} (x) = \left( 1 - x^2 \right)^{\frac{k}{2}} \frac{\dee^k}{\dee x^k} \left( \frac{1}{2^j j!}\frac{\dee^j}{\dee x^j} \left( x^2 - 1 \right)^j \right)$ is called the \emph{associated Legendre polynomical of degree $j$ and order $k$}.} polynomials of degree $j$ and order $k$.
+
+  The application of this basis requires substituting equation~\ref{spherical_harmonics} into equation~\ref{matrix_integral} (making the appropriate switch from $i$-notation to $ijk$-notation). This process can be computationally expensive, given the intense floating point arithmetic involved. The upside, however, is that in practice only a few basis functions are required in order to achieve meaningful results (\eg Dziewonski~\cite{dziewonski} used values of $I=4$ and $J=6$ resulting in 245 unknowns, as opposed to 291,600 unkowns in the block parameterisation used by Van der Hilst \emph{et al.}~\cite{hilst:widiyantoro:engdahl} for the same problem).
+
+  \subsection{Shock tunnel particulars}
+  In the study of fluid dynamics, and indeed any real world experiment, the computational method employed for performing successful tomography will be dictated by the nature of the experiment. In a shock tunnel facility the following is a list of experimental particulars that restrict the collection and usefulness of tomographic data:
+  \begin{itemize}
+    \item visual access to the flow
+    \item background luminescence in high temperature and/or combusting flows
+    \item repeatability of a flow situation, particularly turbulent flows
+    \item obstructions in the field of view
+  \end{itemize}
+  These items will now be discussed, in relation to tomographic data collection.
+
+  \subsubsection{Visual access}\label{visual_access}
+  The ANU shock tunnel facilities have viewing ports on the test section that allows for visual access to the flows of interest. These ports are at right angles to the flow, and are only available at $0^\circ$, $90^\circ$, $180^\circ$ and $270^\circ$ (in fact, many facilities only allow for viewing windows at $90^\circ$ and $270^\circ$). The first issue this raises, in regards to collecting tomographic data, is that tomography relies on collecting data from a number of viewing angle. Clearly this cannot be achieved in a single experiment, since we have access to at most two viewing angles during a single experiment. In order to collect data from many angles, it is apparent that either the shock tunnel or the experimental flow must by rotated and further experiments performed. The later case is the most practical solution.
+
+  In the case of turbulent, or other difficult to repeat flow regimes, the solution to rotate the flow through a series of experiments means that the data from shot to shot will not correlate well. To be able to collect meaningful data and produce useful results, one may be inclined to take a series of shots at each viewing angle, and then averaging the data for each angle.
+
+  \subsubsection{Luminescence}
+  Shock tunnel tomography utilises light rays to sample the medium. In the case of radiation being eminated from the flow, this can lead to spurious results. For luminescing flows, a simple solution could be to add a narrow band optical filter to the optical collection device, to either filter particular luminescing transitions. Conversely and narrow pass filter could be used to the tomographic rays are being generated by a narrow band coherent device (such as a laser).
+
+  In the case of combusting flows the problem can become more complex because there are usually many more wavelengths being emitted which makes filtering undesirable. Doing so could either weaken the tomographic signal and/or artificially strengthen the signal.
+
+  \subsubsection{Repeatability}
+  A well documented and tested facility should have repeatable flow conditions. However, it is the inclusion of test objects that can make a flow unrepeatable. Configurations such a a flow over a flat plate can lead to turbulence. One practical solution to manage this problem is outlined above in section~\ref{visual_access}.
+
+  \subsubsection{Obstructions}
+  Test objections, and the mechanisms used the secure them, can obstruct the field of view in a flow configuration. Some tomographic techniques are capable of dealing with opaque objects in the flow. Others, such as the Fourier methods, have no satisfactory method for dealing with opaque objects which negate the data along particular rays. This is because the Fourier methods rely on entirity of a data set.
+
+  %
+  % BIBLIOGRAPHY
+  \pagebreak
+  \bibliographystyle{plain}
+  \bibliography{mathematics,seismology}
+\end{document}

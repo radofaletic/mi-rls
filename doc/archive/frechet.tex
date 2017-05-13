@@ -1,0 +1,81 @@
+\documentclass[12pt,a4paper]{article}
+
+% OPTIONS FOR DRAFT
+%\usepackage[light]{draftcopy}
+
+% EXTERNAL PACKAGES
+\usepackage{amsfonts}
+\usepackage{amsmath}
+%\usepackage[normal]{subfigure}
+\usepackage{theorem}
+%\usepackage{fancyhdr}
+\usepackage{palatino}
+
+% PAGE LAYOUT OPTIONS
+\renewcommand{\baselinestretch}{1.3}
+\hoffset=1.46cm
+\oddsidemargin=0cm
+\textwidth=14.5cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=.75cm
+\headsep=.75cm
+\textheight=25cm
+\footskip=1cm
+%\pagestyle{fancy}
+%\rhead{\thepage}
+%\cfoot{}
+
+% THEOREM ENVIRONMENTS (needs the ``theorem'' package)
+{\theorembodyfont{\normalfont} \newtheorem{definition}{Definition}[section]}
+
+% USER COMMANDS
+\newcommand{\eg}{eg.\ }
+\newcommand{\ie}{ie.\ }
+\newcommand{\dee}{\operatorname{d}}
+%
+%
+% BEGIN
+\begin{document}
+  \begin{center}{\Huge Fr\'{e}chet derivative}\end{center}
+
+  In Euclidean space the derivative of a function $f$ at a point $\mathbf{x}$ is the best linear approximation of $f$ at $\mathbf{x}$ (denoted $f'(\mathbf{x})$). In more general spaces the derivative of a function can be defined through notions of linearity in that space. There are many possible ways in which to define the derivative of a function in a general space, and one such definition is that of the Fr\'{e}chet derivative~\cite[pp~6--9]{yamamuro}:
+
+  \begin{definition}[Fr\'{e}chet derivative]
+    Suppose $X$ and $Y$ are normed vector spaces. Let $a \in X$ and suppose a function $T$ is defined on an open neighbourhood $A \subseteq X$ of $a$, \ie $T: A \rightarrow Y$. $T$ is said to be Fr\'{e}chet differentiable at $a$ if there exists a bound linear transformation $u: X \rightarrow Y$ such that
+    \[
+    \frac{T(a + \varepsilon b) - T(a)}{\varepsilon} - u(b) \xrightarrow[\text{uniformly}]{\varepsilon \rightarrow 0} \mathbf{0}
+    \]
+    for each $b\in A$, and where $\mathbf{0}$ is the zero element of $Y$. If such a function $u$ exists then it is called the \emph{Fr\'{e}chet derivative} of $T$ and it is denoted $T'$.
+  \end{definition}
+
+  In the study of tomography the Radon transform is a linear transformation from a space of functions on $\mathbb{R}^n$ (\eg $\mathcal{L}_2\left( \mathbb{R}^n \right)$) to $\mathbb{R}$. Using the above definition suppose that the Fr\'{e}chet derivative of the Radon transform $\mathcal{R}$ exists, and let $f$ and $g$ be functions on $\mathbb{R}^n$:
+  \begin{alignat*}{1}
+    \frac{\mathcal{R}(f + \varepsilon g) - \mathcal{R}(f)}{\varepsilon} - u(g) &= \frac{ \mathcal{R}(f) + \mathcal{R}(\varepsilon g) - \mathcal{R}(f)}{\varepsilon} - u(g) \\
+    &= \frac{\mathcal{R} (\varepsilon g )}{\varepsilon} - u(g) \\
+    &= \mathcal{R} (g) - u(g) \\
+    &\xrightarrow[\text{uniformly}]{\varepsilon \rightarrow 0} 0
+  \end{alignat*}
+  and this must occur for all $g$. Since the expression $\mathcal{R} (g) - u(g)$ has no dependence on $\varepsilon$ we conclude that that Fr\'{e}chet derivative of $\mathcal{R}$ exists at $f$ and is equal to
+  \[
+  \mathcal{R}'(f) = u(f) = \mathcal{R}(f)\text{,}
+  \]
+  \ie the Radon transform is the best linear approximation to itself (which also follows from the fact that the Radon transform is itself a linear transformation).
+
+  By substituting the expression $f = c^j e_j$, where $e_j$ are basis functions, we get
+  \begin{alignat*}{1}
+    \mathcal{R}' (f) &= \mathcal{R}' (c^j e_j) \\
+    &= c^j \mathcal{R}' (e_j) \\
+    &= c^j \mathcal{R} (e_j) \text{.}
+  \end{alignat*}
+  By breaking the Radon transform down into a set of integrals over the hyperplanes in $\mathbb{R}^n$ we can write $\mathcal{R}(f) = \left\{ \mathcal{R}_i(f) : \left( \mathcal{R}_i(f) \right) (\mathbf{x}) = \int_{\Gamma_i} f ( \mathbf{x} ) \, \dee \mathbf{x} \right\}$, where $\Gamma_i$ denotes a hyperplane.
+  The Fr\'{e}chet derivative matrix $A_{ij}$ can then be defined as
+  \[
+  A_{ij} = \mathcal{R}_i' \left( e_j \right) 
+  \]
+  from which $\mathcal{R}_i'(f) = A_{ij} c^j$.
+
+  \pagebreak
+  \bibliographystyle{plain}
+  \bibliography{../mathematics}
+\end{document}

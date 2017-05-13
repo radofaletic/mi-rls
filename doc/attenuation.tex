@@ -1,0 +1,47 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{epic}
+\usepackage{eepic}
+%\hoffset=1.46cm
+\pagestyle{empty}
+\oddsidemargin=0cm
+\textwidth=14cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=1cm
+\headsep=1cm
+\textheight=24.2cm
+\footskip=1cm
+\begin{document}
+
+{\LARGE This formulation is wrong}
+
+  \section{Complex attenuation}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(12,10)
+      \spline(2,8)(1,6)(1,5)(2,3)(3,2)(5,1)(6,1)(8,2)(10,3)(11,4)(11,5)(10,6)(8,7)(6,8)(3,9)(2,8)
+      \path(0,10)(2,8)
+      \dashline{0.2}(2,8)(8,2)
+      \put(8,2){\vector(1,-1){2}}
+      \put(1,9){\tiny{incoming ray}}
+      \put(3,5){\tiny{amplitude and phase changes}}
+      \put(9,1){\tiny{outgoing ray}}
+    \end{picture}
+  \end{center}
+  As a ray passes through the medium in question in undergoes an amplitude attenuation and phase shift. At any given point, $\mathbf{x}$, this change can be represented by the attenuation kernel: $k(\mathbf{x}) e^{i \phi(\mathbf{x})}$. Here, $k(\mathbf{x})$ is purely amplitude attenuation with the property $0 \le k(\mathbf{x}) \le 1$ (a value of $1$ represents total transmition, and a value of $0$ represents total attenuation). The term $\phi (\mathbf{x})$ represents the phase shift property of the medium, with $0 \le \phi(\mathbf{x}) < 2\pi$. For all intents and purposes we may assume an inital amplitude of $1$, and phase of $0$.
+
+  From this formulation we wish to construct an intergral for determining the projected form of the outgoing ray. A nieve approach would be to simply integrate along the line of sight, $P_\text{ray} = \int_\text{ray} k(\mathbf{x}) e^{i \phi(\mathbf{x})} \, dl$. However, in real world applications this formulation would not hold true if $k(\mathbf{x}) = 0$ for any point along the ray path (eg. an opaque object blocking the line of sight). So we introduce another function:
+  \begin{equation*}
+    A \left( \text{ray} \right) = \begin{cases} 0 & \text{if } \exists \mathbf{x} \in \text{ray} \text{ such that } k(\mathbf{x}) = 0\text{,} \\ 1 & \text{otherwise.} \end{cases}
+  \end{equation*}
+  We can implement this into our projection formula to give:
+  \begin{equation}
+    P_\text{ray} = A\left( \text{ray} \right) \int_\text{ray} k\left( \mathbf{x} \right) e^{i \phi \left( \mathbf{x} \right)} \, dl \text{.}
+  \end{equation}	
+
+  In real world problems we will measure $P(\text{ray}) = a e^{i\varphi}$, where $a$ is the measured amplitude and $\varphi$ is the phase. One way of measuring this is to take separate measurements of $a$ and $\varphi$ (eg. intensity maps and interferometry).
+
+\end{document}

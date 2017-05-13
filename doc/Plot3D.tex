@@ -1,0 +1,50 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+%\hoffset=1.46cm
+\pagestyle{empty}
+\oddsidemargin=0cm
+\textwidth=14cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=1cm
+\headsep=1cm
+\textheight=24.2cm
+\footskip=1cm
+\begin{document}
+
+  \section{Unformatted Plot3D grid file format in C++}
+  Plot3D grid files are traditionally written and read in Fortran routines. Fortran is able to store files in three basic formats: Formatted, Unformatted, and Binary.
+
+  A Formatted file is a plain text file with lines breaks between Fortran \texttt{write} statements. These files are easily written, and read, in C++ as the standard C++ library provides simple streams for this purpose.
+
+  An Unformatted file is one which is stored in a system specific binary format. However, each Fortran \texttt{write} statement results in a number being written at the beginning and end of the data contained with the statement. The number is the same at both ends, and depicts the size, in bytes, of the data being written by that particular \texttt{write} statement. The purpose of these numbers is twofold: to ensure data consistency, and to allow for file transparency between big and little endian machines (for example, the first \texttt{write} command may be of a plain integer, which has four bytes. In an Unformatted file this integer will be both pre and proceeded by the number 4).
+
+  A Binary file is similar to the Unformatted format, except that the pre and proceeding integer values on each line are ommitted. Hence, this format is machine specific.
+
+  \begin{center}
+    \begin{tabular}{|r|l||l|}\hline
+      value & byte-size & description \\ \hline\hline
+      
+      \texttt{4}     & \texttt{4} & \quad \\ \hline
+      \texttt{$n_d$} & \texttt{$\nwarrow$} & number of domains \\ \hline
+      \texttt{4}     & \texttt{4} & \quad \\ \hline\hline
+      
+      \texttt{$\text{4}\times\text{3}\times n_d$} & \texttt{4} & \quad \\ \hline
+      \texttt{$N_{x_1} N_{y_1} N_{z_1} \cdots N_{x_{n_d}} N_{y_{n_d}} N_{z_{n_d}}$} & \texttt{$\nwarrow$} & number of points in each domain and direction\\ \hline
+      \texttt{$\text{4}\times\text{3}\times n_d$} & \texttt{4} & \quad \\ \hline\hline
+
+      \texttt{$N_{x_1}\times N_{y_1}\times N_{z_1}\times \left( \text{3}\times f_\text{s} + 4 \right)$} & \texttt{4} & ($f_\text{s}$ is the \texttt{float} size, usually \texttt{4} or \texttt{8}) \\ \hline
+      \texttt{$X_1 \text{ } Y_1 \text{ } Z_1 \text{ } B_1$} & \texttt{$\nwarrow$} & $X$, $Y$, $Z$, and blanking vectors\\ \hline
+      \texttt{$N_{x_1}\times N_{y_1}\times N_{z_1}\times \left( \text{3}\times f_\text{s} + 4 \right)$} & \texttt{4} & \quad \\ \hline\hline
+
+      \texttt{$\vdots$} & \texttt{$\vdots$} & \texttt{$\vdots$} \\ \hline\hline
+
+      \texttt{$N_{x_{n_d}}\times N_{y_{n_d}}\times N_{z_{n_d}}\times \left( \text{3}\times f_\text{s} + 4 \right)$} & \texttt{4} & \quad \\ \hline
+      \texttt{$X_{n_d} \text{ } Y_{n_d} \text{ } Z_{n_d} \text{ } B_{n_d}$} & \texttt{$\nwarrow$} & $X$, $Y$, $Z$, and blanking vectors\\ \hline
+      \texttt{$N_{x_{n_d}}\times N_{y_{n_d}}\times N_{z_{n_d}}\times \left( \text{3}\times f_\text{s} + 4 \right)$} & \texttt{4} & \quad \\ \hline\hline
+
+    \end{tabular}
+  \end{center}
+
+\end{document}

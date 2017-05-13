@@ -1,0 +1,154 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{epic}
+\usepackage{eepic}
+%\hoffset=1.46cm
+\pagestyle{empty}
+\oddsidemargin=0cm
+\textwidth=14cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=1cm
+\headsep=1cm
+\textheight=24.2cm
+\footskip=1cm
+\begin{document}
+
+
+  \section{Perpendicular drop point onto a line}
+  line:
+  \begin{equation}
+    \label{lp}\mathbf{x} = \mathbf{m} t + \mathbf{c}
+  \end{equation}
+  Given a point $\mathbf{p}$ we want to know the value $t_\mathbf{p}$ such that $\mathbf{p} - \mathbf{x}_\mathbf{p}$ is perpendicular to the line~\ref{lp}, ie
+  \begin{equation*}
+    \left( \mathbf{p} - \mathbf{x}_\mathbf{p} \right) \cdot \mathbf{m} = \left( \mathbf{p} - \mathbf{m} t_\mathbf{p} - \mathbf{c} \right) \cdot \mathbf{m} = 0
+  \end{equation*}
+  Solving this equation for $t_\mathbf{p}$ yields:
+  \begin{equation*}
+    t_\mathbf{p} = \frac{\left( \mathbf{p} - \mathbf{c} \right) \cdot \mathbf{m}}{\left\| \mathbf{m} \right\|^2}
+  \end{equation*}
+
+
+  \section{Intersection of two lines in $\mathbb{R}^n$ ($n \ge 2$)}
+  line~\ref{l1}:
+  \begin{equation}
+    \label{l1}\mathbf{x}_1 = \mathbf{m}_1 t_1 + \mathbf{c}_1
+  \end{equation}
+  line~\ref{l2}:
+  \begin{equation}
+    \label{l2}\mathbf{x}_2 = \mathbf{m}_2 t_2 + \mathbf{c}_2
+  \end{equation}
+
+  \subsection{general ideas}
+  Project lines onto a set of axes which are spanned by the projections of $\mathbf{m}_2$ and $\mathbf{m}_2$. This will guarantee that if lines~\ref{l1} and~\ref{l2} intersect at all, then they will surely intersect in this axis plane. Then solve for $t_1$ and $t_2$.
+
+  \subsection{explicit steps}
+  \begin{enumerate}
+  \item If $\mathbf{m}_1 = \mathbf{m}_2$ then the lines don't intersect, finish.
+  \item Choose a pair of axes in which the projections of $\mathbf{m}_1$ and $\mathbf{m}_2$ \emph{span} the axis plane. Call these axes $i$ and $j$, ie $\left( {m_1}_i, {m_1}_j \right)$ and $\left( {m_2}_i, {m_2}_j \right)$ are neither parallel or equal to $\left( 0,0 \right)$. 
+  \item There \emph{will} be a solutions for $t_1$ and $t_2$ in the following pair of simultaneous equations
+    \begin{align*}
+      & \quad
+      \begin{cases}
+	{m_1}_i t_1 + {c_1}_i & = {m_2}_i t_2 + {c_2}_i \\
+	{m_1}_j t_1 + {c_1}_j & = {m_2}_j t_2 + {c_2}_j
+      \end{cases} \\
+      & \Rightarrow
+      \begin{cases}
+	t_1 & = \frac{{m_2}_i \left( {c_1}_j - {c_2}_j \right) - {m_2}_j \left( {c_1}_i - {c_2}_i \right)}{{m_1}_i {m_2}_j - {m_1}_j {m_2}_i} \\
+	t_2 & = \frac{{m_1}_i \left( {c_1}_j - {c_2}_j \right) - {m_1}_j \left( {c_1}_i - {c_2}_i \right)}{{m_1}_i {m_2}_j - {m_1}_j {m_2}_i}
+      \end{cases}
+    \end{align*}
+  \item Put $t_1$ and $t_2$ back into equations~\ref{l1} and~\ref{l2} respectively, to solve for the intersection point.
+  \item Check that $\mathbf{x}_1 = \mathbf{x}_2$, if not then finish.
+  \item The intersection exists and we are finished.
+  \end{enumerate}
+
+
+  \section{Perpendicular drop point onto a plane}
+  plane:
+  \begin{equation}
+    \label{dpl}\left( \mathbf{x} - \mathbf{c} \right) \cdot \mathbf{n} = 0
+  \end{equation}
+  Given any point $\mathbf{p}$, we wish to find the point on plane~\ref{dpl}, $\mathbf{x}_\mathbf{p}$, such that $\mathbf{p} - \mathbf{x}_\mathbf{p}$ is perpendicular to plane~\ref{dpl}.
+  $\mathbf{x}_\mathbf{p} = \mathbf{p} - k \mathbf{n}$, for some number $k$. We substitute this into plane~\ref{dpl} to get
+  \begin{align*}
+    & \quad \left( \left( \mathbf{p} - k \mathbf{n} \right) - \mathbf{c} \right) \cdot \mathbf{n} = 0 \\
+    & \Rightarrow k = \frac{\left( \mathbf{p} - \mathbf{c} \right) \cdot \mathbf{n}}{\left\| \mathbf{n} \right\|^2}
+  \end{align*}
+
+
+  \section{Intersection of a line and a plane in $\mathbb{R}^3$}
+  line:
+  \begin{equation}
+    \label{l}\mathbf{x}_l = \mathbf{m}_l t_l + \mathbf{c}_l
+  \end{equation}
+  plane:
+  \begin{equation}
+    \label{p}\left( \mathbf{x}_p - \mathbf{c}_p \right) \cdot \mathbf{n}_p = 0
+  \end{equation}
+  \begin{enumerate}
+  \item if $\mathbf{m}_l \cdot \mathbf{n}_p = 0 $ then the line is parallel to the plane, and there is no intersection
+  \item substitute $\mathbf{x}_l$ into the plane~\ref{p}
+    \begin{align*}
+      & \quad \left( \left( \mathbf{m}_l t_l + \mathbf{c}_l \right) - \mathbf{c}_p \right) \cdot \mathbf{n}_p = 0 \\
+      & \Rightarrow t_l \left( \mathbf{m}_l \cdot \mathbf{n}_p \right) = \mathbf{c}_p \cdot \mathbf{n}_p - \mathbf{c}_l \cdot \mathbf{n}_p \\
+      & \Rightarrow t_l = \frac{ \mathbf{c}_p \cdot \mathbf{n}_p - \mathbf{c}_l \cdot \mathbf{n}_p }{\mathbf{m}_l \cdot \mathbf{n}_p}
+    \end{align*}
+  \item put $t_l$ back into~\ref{l} to find the intercept point
+  \end{enumerate}
+
+  \section{Useful geometric formulae}
+
+  \subsection{area of a quadrilateral in $\mathbb{R}^2$}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(11,6)(0,0)
+      \path(1,1)(11,2)(2,6)(1,1)(7,5)(11,2)
+      \path(7,5)(2,6)
+      \put(0.7,3.5){$a$}
+      \put(4.7,5.7){$b$}
+      \put(9,3.7){$c$}
+      \put(6,0.7){$d$}
+      \put(7.5,2.7){$p$}
+      \put(3.5,3.2){$q$}
+    \end{picture}
+  \end{center}
+  \begin{equation*}
+    A = \frac{1}{4}\sqrt{4p^2q^2-\left(b^2+d^2-a^2-c^2\right)^2}
+  \end{equation*}
+
+  \subsection{area of a triangle}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(9,5)(0,0)
+      \path(0,0)(9,3)(3,5)(0,0)
+      \put(1,3){$a$}
+      \put(6,4.2){$b$}
+      \put(4.5,0.7){$c$}
+    \end{picture}
+  \end{center}
+  \begin{equation*}
+    A = \sqrt{s\left(s-a\right)\left(s-b\right)\left(s-c\right)}
+    \text{ where } s = \frac{1}{2} \left( a+b+c \right)
+  \end{equation*}
+
+  \subsection{volume of a tetrahedron}
+  \begin{center}
+    \setlength{\unitlength}{15pt}
+    \begin{picture}(9,7)(0,0)
+      \path(1,1)(8,2)(5,6)(2,4)(1,1)(5,6)
+      \dashline{0.2}(2,4)(8,2)
+      \put(0.5,0.6){$\mathbf{a}$}
+      \put(1.3,4){$\mathbf{b}$}
+      \put(4.9,6.2){$\mathbf{c}$}
+      \put(8.2,1.5){$\mathbf{d}$}
+    \end{picture}
+  \end{center}
+  \begin{equation*}
+    V = \frac{1}{6} \begin{vmatrix} \left( \mathbf{b} - \mathbf{a} \right)_1 & \left( \mathbf{b} - \mathbf{a} \right)_2 & \left( \mathbf{b} - \mathbf{a} \right)_3 \\ \left( \mathbf{c} - \mathbf{a} \right)_1 & \left( \mathbf{c} - \mathbf{a} \right)_2 & \left( \mathbf{c} - \mathbf{a} \right)_3 \\ \left( \mathbf{d} - \mathbf{a} \right)_1 & \left( \mathbf{d} - \mathbf{a} \right)_2 & \left( \mathbf{d} - \mathbf{a} \right)_3 \end{vmatrix}
+  \end{equation*}
+
+\end{document}

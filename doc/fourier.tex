@@ -1,0 +1,113 @@
+\documentclass[12pt,a4paper]{article}
+
+% OPTIONS FOR DRAFT
+%\usepackage[light]{draftcopy}
+
+% EXTERNAL PACKAGES
+\usepackage{makeidx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{epic}
+\usepackage{eepic}
+%\usepackage[normal]{subfigure}
+\usepackage{theorem}
+%\usepackage{fancyhdr}
+\usepackage{palatino}
+
+% PAGE LAYOUT OPTIONS
+\renewcommand{\baselinestretch}{1.3}
+\hoffset=1.46cm
+\oddsidemargin=0cm
+\textwidth=14.5cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=.75cm
+\headsep=.75cm
+\textheight=25cm
+\footskip=1cm
+%\pagestyle{fancy}
+%\rhead{\thepage}
+%\cfoot{}
+
+% USER COMMANDS
+\newcommand{\eg}{eg.\ }
+\newcommand{\etc}{etc.\ }
+\newcommand{\ie}{ie.\ }
+\renewcommand{\div}{\operatorname{div}}
+\newcommand{\dee}{\operatorname{d}}
+
+% THEOREM ENVIRONMENTS (needs the ``theorem'' package)
+\newtheorem{theorem}{Theorem}[section]
+{\theorembodyfont{\normalfont} \newtheorem{definition}{Definition}[section]}
+%\newtheorem{axiom}[theorem]{Axiom}
+%\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+%{\theorembodyfont{\normalfont} \newtheorem{example}{Example}[section]}
+%{\theorembodyfont{\normalfont} \newtheorem{remark}{Remark}[section]}
+
+% INDEX
+\makeindex
+\index{transform!Fourier|see{Fourier transform}}
+
+%
+%
+% BEGIN
+\begin{document}
+  \section{Fourier}
+
+  %
+  % THE FOURIER TRANSFORM %
+  \index{Fourier transform}
+
+  \begin{definition}[Fourier transform]
+    The \emph{Fourier transform} of a function $f(\mathbf{x})$ is defined by:
+    \begin{equation}
+      (\mathcal{F}f)(\boldsymbol{\nu}) = F(\boldsymbol{\nu}) = \int_{\mathbb{R}^n} f(\mathbf{x}) e^{-i2\pi \boldsymbol{\nu}\cdot \mathbf{x}} \, \dee \mathbf{x} \text{.}
+    \end{equation}
+  \end{definition}
+
+  \begin{theorem}[Inverse Fourier transform]
+    The \emph{inverse Fourier transform} is a function $\mathcal{F}^{-1}$ that satisfies $\mathcal{F}^{-1} \left( \mathcal{F} f \right) = f $ for any function $f$. The function $\mathcal{F}^{-1}$ of a function $F ( \boldsymbol{\nu} )$ is given by:
+    \begin{equation}
+      (\mathcal{F}^{-1}F)(\mathbf{x}) = f(\mathbf{x}) = \int_{\mathbb{R}^n} F(\boldsymbol{\nu}) e^{i2\pi \mathbf{x} \cdot \boldsymbol{\nu}} \, \dee \boldsymbol{\nu} \text{.}
+    \end{equation}
+  \end{theorem}
+
+  \begin{theorem}[Fourier slice theorem]\index{Fourier transform!slice theorem}
+    Suppose $T_{\boldsymbol{\omega}} \left( r \right)$ is a tomogram of a function $f$. Then:
+    \begin{equation}
+      \left( \mathcal{F}_1 T_{\boldsymbol{\omega}}\right) \left( r \right) = \left( \mathcal{F}_n f \right) \left( r \boldsymbol{\omega} \right) \text{.}
+    \end{equation}
+  \end{theorem}
+  PROOF:
+  \begin{eqnarray*}
+    \left( \mathcal{F}_1 T_{\boldsymbol{\omega}} \right) \left( r \right) & = & \int_{-\infty}^\infty \left( \int_{\mathbb{R}^n} f \left( \mathbf{z} \right) \delta \left( s - \mathbf{z} \cdot \boldsymbol{\omega} \right) \dee \mathbf{z} \right) e^{-2\pi i s r} \dee s \\
+    & = & \int_{\mathbb{R}^n} f \left( \mathbf{z} \right) \left( \int_{-\infty}^\infty \delta \left( s - \mathbf{z} \cdot \boldsymbol{\omega} \right) e^{-2\pi i s r} \dee s \right) \dee \mathbf{z} \\
+    & = & \int_{\mathbb{R}^n} f \left( \mathbf{z} \right) \left( e^{-2\pi i \mathbf{z} \cdot \boldsymbol{\omega} r} \left( \mathcal{F} \delta \right) \left( r \right) \right) \dee \mathbf{z} \\
+    & = & \int_{\mathbb{R}^n} f \left( \mathbf{z} \right) e^{-2\pi i \mathbf{z} \cdot \left( r \boldsymbol{\omega} \right) } \dee \mathbf{z} \\
+    & = & \left( \mathcal{F}_n f \right) \left( r \boldsymbol{\omega} \right)
+  \end{eqnarray*}
+
+  This simple theorem can then be used to recover the data function $f$ from its projections $p$.
+
+  \section{DFT process}
+  For the following, suppose that their are $n$ sample points in each projection.
+  \begin{enumerate}
+    \item For each projection, take the DFT.
+    \item The DFT is not the same as the Fourier transform. So we need to do a shift. The first $\left( n/2 \right) + 1$ (the division is rounded down to the nearest integer) elements need to be moved/wrapped to the end of the array.\cite[pg~361]{bracewell}
+    \item Each of these transformed projections need to be put into a 2D plane, according to the inital angle of projection.
+    \item This 2D plane needs to be interpolated to create a set of values at Cartesian coordinates, as opposed to circular.
+    \item Cycle over this data set and find which $x$ and $y$ coordinate, $\left( i, j \right)$, holds the largest value for the real component. This point corresponds to the DC component of the Fourier signal.
+    \item Do the reverse 2D DFT.
+    \item Again, the DFT is not the same at the Fourier transform. So we need to shift the points of the grid, firstly in the $-x$ direction so that the $i$ coordinate is shifted to $x=0$, and then secondly in the $-y$ direction so that the $j$ coordinate is shifted to $y=0$. Remember that this shift is to be wrapped.
+    \item Now we have the solution.
+  \end{enumerate}
+
+  %
+  % BIBLIOGRAPHY
+  \pagebreak
+  \bibliographystyle{plain}
+  \bibliography{mathematics,seismology}
+  \pagebreak
+  \printindex
+\end{document}

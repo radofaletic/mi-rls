@@ -1,0 +1,235 @@
+\documentclass[12pt,a4paper]{article}
+
+% OPTIONS FOR DRAFT
+%\usepackage[light]{draftcopy}
+
+% EXTERNAL PACKAGES
+\usepackage{makeidx}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{epic}
+\usepackage{eepic}
+%\usepackage[normal]{subfigure}
+\usepackage{theorem}
+%\usepackage{fancyhdr}
+\usepackage{palatino}
+
+% PAGE LAYOUT OPTIONS
+\renewcommand{\baselinestretch}{1.3}
+\hoffset=1.46cm
+\oddsidemargin=0cm
+\textwidth=14.5cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=.75cm
+\headsep=.75cm
+\textheight=25cm
+\footskip=1cm
+%\pagestyle{fancy}
+%\rhead{\thepage}
+%\cfoot{}
+
+% USER COMMANDS
+\newcommand{\eg}{eg.\ }
+\newcommand{\etc}{etc.\ }
+\newcommand{\ie}{ie.\ }
+\renewcommand{\div}{\operatorname{div}}
+\newcommand{\dee}{\operatorname{d}}
+
+% THEOREM ENVIRONMENTS (needs the ``theorem'' package)
+\newtheorem{theorem}{Theorem}[section]
+{\theorembodyfont{\normalfont} \newtheorem{definition}{Definition}[section]}
+%\newtheorem{axiom}[theorem]{Axiom}
+%\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+%{\theorembodyfont{\normalfont} \newtheorem{example}{Example}[section]}
+%{\theorembodyfont{\normalfont} \newtheorem{remark}{Remark}[section]}
+
+% INDEX
+\makeindex
+\index{transform!Fourier|see{Fourier transform}}
+\index{transform!Radon|see{Radon transform}}
+
+%
+%
+% BEGIN
+\begin{document}
+  \begin{center}{\Huge Tomography} \\ {\Large Rado Faleti\v{c} }\end{center}
+
+  \section{Transforms}
+  \index{transform}
+  The notes presented here will be in arbitrary dimension $n$ ($n\ge 2$) unless specified.
+
+  Let $f: \mathbb{R}^n \rightarrow \mathbb{R}$ be a function on $\mathbb{R}^n$ (typically this function belongs to a \emph{nice} set such as $L_2(\mathbb{R}^n)$)\footnote{A function $f: X \left( \subseteq \mathbb{R}^n \right) \rightarrow \mathbb{R}$ belongs to $L_p ( X )$ if $\left\| f \right\|_p = \left( \int_{X} \left( f\left( \mathbf{x} \right) \right)^p \, \dee \mathbf{x} \right)^{\frac{1}{p}} < \infty$.}.
+
+  %
+  % THE RADON TRANSFORM %
+  \subsection{The Radon Transform}
+  \index{Radon transform}
+
+  \begin{definition}[Radon transform]
+    Consider the hyperplane in $\mathbb{R}^n$ defined by $\mathbf{x} \cdot \boldsymbol{\omega} = r$, where $r\ge 0$ is the perpendicular distance of the hyperplane from the origin, and $\left| \boldsymbol{\omega} \right| =1$ is a unit vector that is perpendicular to the hyperplane. The \emph{Radon transform}, $\mathcal{R}f$, of $f$ along this hyperplane is defined by:
+    \begin{equation}
+      (\mathcal{R}f)(r\boldsymbol{\omega}) = p (r, \boldsymbol{\omega}) = p (r\boldsymbol{\omega}) = \int_{\mathbb{R}^n} f(\mathbf{x}) \delta(r-\mathbf{x} \cdot \boldsymbol{\omega} ) \, \dee \mathbf{x}.
+    \end{equation}
+    This is also known as the \emph{projection}\index{projection} of $f$ along the hyperplane, hence the equivalent (projection) notation $p(r, \boldsymbol{\omega}) = p(r\boldsymbol{\omega})$. (NOTE: $\boldsymbol{\omega}$ is not the angle of projection but a unit vector in the direction of the desired angle $\boldsymbol{\theta}$ just as $\boldsymbol{\omega}=(\cos\theta , \sin\theta )$ in $\mathbb{R}^2$).
+  \end{definition}
+  The construct for the Radon transform is depicted in Figure~\ref{RadonT}.
+  \begin{figure}[h]
+    \begin{center}
+      \setlength{\unitlength}{15pt}
+      \begin{picture}(13,11)
+	% arbitrary shape
+	\spline(2,8)(1,6)(1,5)(2,3)(3,2)(5,1)(6,1)(8,2)(10,3)(11,4)(11,5)(10,6)(8,7)(6,8)(3,9)(2,8)
+	% graph axes
+	\put(5,0){\vector(0,1){10}}
+	\put(4.7,10.1){{\small $y$}}
+	\put(0,5){\vector(1,0){12}}
+	\put(12.1,4.9){{\small $x$}}
+	% rotated axes
+	\dottedline{0.1}(1,3)(9,7)
+	\dottedline{0.1}(7,1)(3,9)
+	% angles
+	\put(5,5){\vector(2,1){1.58}}
+	\put(5.5,5.5){{\small $\boldsymbol{\omega}$}}
+	\put(5,5){\arc{6}{5.82}{0}}
+	\put(8.1,5.5){{\small $\theta$}}
+	% projection
+	\path(4.5,10)(9.5,0)
+	\put(9,1.3){{\small $p ( r,\boldsymbol{\omega})$}}
+	\put(6.5,3,25){\vector(-2,-1){0.5}}
+	\put(6.6,3.2){{\small $r$}}
+	\put(7,3.5){\vector(2,1){0.63}}
+	% 
+	\put(2.5,3){{\small $f\left( x,y \right)$}}
+      \end{picture}
+      \caption{The Radon transform in $\mathbb{R}^2$}
+      \label{RadonT}
+    \end{center}
+  \end{figure}
+
+  \index{Radon transform!inverse}
+  The inverse Radon transform is a function $\mathcal{R}^{-1}$ such that $\left( \mathcal{R}^{-1} ( \mathcal{R}f ) \right) (\mathbf{x}) = f(\mathbf{x})$.
+
+  \begin{theorem}[Inverse Radon transform]
+    The general \emph{inverse Radon transform} of a function $p ( r,\boldsymbol{\omega})$ is given by:
+    \[
+    f(\mathbf{x}) = \frac{\Delta_{\mathbf{x}}^{\left( \frac{n-1}{2} \right) }}{2(2\pi i)^{n-1}} \int_{\left| \boldsymbol{\omega} \right| = 1} p ( \boldsymbol{\omega} \cdot \mathbf{x} , \boldsymbol{\omega}) \, \dee \boldsymbol{\omega}
+    \]
+    where $i=\sqrt{-1}$ and $\Delta_{\mathbf{x}} = \sum_{i=1}^n \frac{\partial^2}{\partial x_i^2}$ is the Laplacian.
+  \end{theorem}
+
+  In the case when $n$ is even, we have fractional powers of $\Delta$. These exist, but the detail is unnecessary for the current study. In Deans~\cite[ch~5]{deans} an inverse formula is derived separately for odd and even cases of $n$.
+
+  \begin{theorem}[Inverse Radon transform in $\mathbb{R}^2$]
+    When $n=2$ the inverse Radon transform simplifies to:
+    \[
+    f(\mathbf{x}) = \frac{-1}{2\pi} \int_0^{\pi} \int_{-\infty}^{\infty} \frac{\frac{\partial p ( r,\boldsymbol{\omega})}{\partial r}}{r - \boldsymbol{\omega}\cdot\mathbf{x}} \, \dee r \dee \theta
+    \]
+    where $\mathbf{x}=(x,y)$ and $\boldsymbol{\omega}=(\cos\theta ,\sin\theta)$.
+  \end{theorem}
+
+  %
+  % 2D AND 3D SPECIFICS
+  \section{Dimension considerations}
+  Most experimental situations involve two or three dimensions, particularly when considering geometrical configurations. In the two dimensional case, the Radon transform is measured by integrating along lines. In many three dimensional applications one will consider a series of parallel planes, and perform two dimensional calculations on these planes. Three dimensional results are then produced by interpolating between the parallel planes. In most cases this method is easier (experimentally and computationally) than attempting integration over planes in three dimensions, as would be required in the three dimensional Radon transform.
+
+  This idea can be further extended by considering only lines, or rays, when performing Radon integrations in three dimensions. For simple cases, \eg straight lines, this can be viewed as discretising the parallel planes described in the paragraph above.
+
+  {\Large NEED TO PUT MORE HERE ABOUT WHY WE CAN JUST USE \emph{LINES} IN 3D TOMOGRAPHY}
+
+  %
+  % THE FOURIER TRANSFORM %
+  \subsection{The Fourier Transform}
+  \index{Fourier transform}
+
+  \begin{definition}[Fourier transform]
+    The \emph{Fourier transform} of a function $f(\mathbf{x})$ is defined by:
+    \begin{equation}
+      (\mathcal{F}f)(\boldsymbol{\nu}) = F(\boldsymbol{\nu}) = \int_{\mathbb{R}^n} f(\mathbf{x}) e^{-i2\pi \boldsymbol{\nu}\cdot \mathbf{x}} \, \dee \mathbf{x} \text{.}
+    \end{equation}
+  \end{definition}
+
+  \begin{theorem}[Inverse Fourier transform]
+    The \emph{inverse Fourier transform} is a function $\mathcal{F}^{-1}$ that satisfies $\mathcal{F}^{-1} \left( \mathcal{F} f \right) = f $ for any function $f$. The function $\mathcal{F}^{-1}$ of a function $F ( \boldsymbol{\nu} )$ is given by:
+    \begin{equation}
+      (\mathcal{F}^{-1}F)(\mathbf{x}) = f(\mathbf{x}) = \int_{\mathbb{R}^n} F(\boldsymbol{\nu}) e^{i2\pi \mathbf{x} \cdot \boldsymbol{\nu}} \, \dee \boldsymbol{\nu} \text{.}
+    \end{equation}
+  \end{theorem}
+
+  We can take one dimensional Fourier transforms of a two dimensional function $f(x,y)$. It is sufficient to only consider transforms along the $x$ and $y$ axial directions. Let's rewrite $f(x,y) = f_y(x)$ so that it is now a function of one variable, and we can take the Fourier transform of this new function $f_y$ as we could with any other one dimensional function (we could similarly write $f(x,y) = f_x(y)$ if we wished to examine the Fourier transform along the $y$ axis). This notation becomes useful in describing the Fourier slice theorem:
+  \begin{theorem}[Fourier slice theorem]\index{Fourier transform!slice theorem}
+    Suppose $p_{\boldsymbol{\omega}} (r)=p(r\boldsymbol{\omega})$ is the Radon transform of a function $f(x,y) = f ( r\boldsymbol{\omega})$, where $\boldsymbol{\omega} = ( \cos\theta, \sin\theta)$. Then:
+    \begin{equation}
+      \left( \mathcal{F} p_{\boldsymbol{\omega}}\right) (r) = \left( \mathcal{F} f \right) ( r \boldsymbol{\omega} ) \text{.}
+    \end{equation}
+  \end{theorem}
+  This simple theorem can then be used to recover the data function $f$ from its projections $p$.
+
+  %
+  % PARAMETERISATION %
+  \section{The parameterisation method}
+
+  \subsection{Matrix equations}
+  Let's rewrite our function $f$ as a sum of basis functions:
+  \[
+  f(\mathbf{x}) = c^j e_j (\mathbf{x})
+  \]
+  where the $c^j$ are unknown coefficients, the $e_j$ are known basis functions, and we are using the Einstein summation convention $c^j e_j (\mathbf{x}) = \sum_j c_j e_j(\mathbf{x})$.
+
+  Now let us make a change in notation. The variables $(r, \boldsymbol{\omega})$ basically represent the hyperplane $r- \mathbf{x} \cdot \boldsymbol{\omega} = 0$. Let's also represent this hyperplane with the notation $\Gamma_i$ (in practice $i$ will be an integer). We would then represent the projection $p ( r, \boldsymbol{\omega} )$ by $p_i$. So,
+  \[
+  p ( r, \boldsymbol{\omega}) = \int_{\mathbb{R}^n} f(\mathbf{x}) \delta(r- \mathbf{x} \cdot \boldsymbol{\omega} ) \, \dee \mathbf{x} = \int_{\Gamma_i} f(\mathbf{x}) \, \dee l = p_i
+  \]
+  where $\dee l$ is a segment of the hyperplane.
+
+  Substituting the basis notation for $f$, $p_i$ becomes:
+  \begin{equation}
+    p_i = c^j \int_{\Gamma_i} e_j (\mathbf{x}) \, \dee l \text{.}
+  \end{equation}
+  Both $p_i$ and $c^j$ are scalars, so if both $i$ and $j$ run over a finite index set we can represent these by vectors. Without loss of generality, let $i = 1, 2, \ldots , M$ (in practice $M$ would represent the number of projection data in a tomographic experiment) and $j = 1, 2, \ldots , N$ (\ie $N$ basis functions), so
+  \[
+  \mathbf{p} = \begin{pmatrix} p_1 \\  p_2 \\ \vdots \\ p_M \end{pmatrix} \text{,} \quad
+  \mathbf{c} = \begin{pmatrix} c_1 \\  c_2 \\ \vdots \\ c_N \end{pmatrix} \text{.}
+  \]
+  Also, define a matrix $A$ by
+  \begin{equation}\label{matrix_integral}
+    A_{ij} = \int_{\Gamma_i} e_j (\mathbf{x}) \, \dee l \text{.}
+  \end{equation}
+  This allows us to rewrite the projection equation as a simple matrix equation
+  \[
+  \mathbf{p} = A \mathbf{c} \text{.}
+  \]
+  Here, both $\mathbf{p}$ and $A$ are known, so all that remains is to determine $\mathbf{c}$ through some sort of matrix \emph{inversion} or iterative solver.
+
+  The matrix $A$ is the matrix of transformation for the Radon transform, which is itself a linear transformation.
+
+  \subsection{Useful basis}
+  The basis one uses is often called the \emph{parameterisation}, or \emph{discretisation}, of the object $f$. Some of the more common, and useful, parameterisations are outlined below.
+
+  \subsubsection{Block parameterisation}
+  One of the most common and practical parameterisations involves subdividing the region of interest into cells. The size of the coefficient vector $\mathbf{c}$, $M$, is the number of cells in this parameterisation. These cells can be structured, such as a Cartesian grid, or unstructured, such as a tetrahedral grid. In either case there are many ways in which we could define a basis, such as:\[
+  e_j (\mathbf{x}) = \begin{cases} k_j & \mathbf{x}\in \text{cell } j \\ 0 & \mathbf{x}\notin \text{cell } j \end{cases}\]
+  where $k_j$ is a function of the $j$-th cell only. For example, a simple function is $k_j = 1$. Or, more practically, $k_j$ can be a function of the volume of the $j$-th cell, $k_j = V_j^{-\frac{1}{2}}$. Using this function for $k_j$ make these particular $e_j$ an orthonormal basis on $L_2(X)$, where $X \subset \mathbb{R}^n$ has compact support\footnote{A set is said to have \emph{compact support} if it ????}. However, we need not keep $k_j$ constant over the $j$-th cell, it may be a function of $\mathbf{x}$ inside the cell.
+
+  In the case that $k_j$ is constant for the $j$-th cell, the integral in equation~\ref{matrix_integral} reduces to the product of $k_j$ with the length of the ray through the $j$-th cell, making computations trivial.
+
+  With this type of basis, visualisation becomes easy since the grid can easily be displayed with a myriad of three dimensional viewing packages. However, it is often necessary to use a large number of cells to get meaningful results. The number of cells required may exceed the memory limitations of the average desktop computer, meaning that in the past this type of computation has been restriction to high performance workstations, servers and supercomputers. Recently, however, the cheap price of high speed computer memory for desktop machines has enabled this type of computation to be implemented cheaply as a viable solution for particular experimental regimes.
+
+  \subsubsection{Spherical harmonics}\index{spherical harmonics}
+  Spherical harmonics are often used in problems involving spherical shapes and harmonic patterns. We could expand the function $f$ as a sum of spherical harmonics:
+  \begin{equation}\label{spherical_harmonics}
+    f \left( r, \theta, \phi \right) = \sum_{i=0}^I \sum_{j=0}^J \sum_{k=-j}^j c_{ijk} T_i (r) P_{jk} \left( \cos\theta \right) e^{ik\phi}
+  \end{equation}
+  where $c_{ijk}$ are unknown constants, $T_i$ are polynomial functions (such as as Tchebycheff\footnote{The function $T_i : ( 0,1 ) \rightarrow \mathbb{R}$ defined by $T_i (x) = \cos \left( n \arccos x \right)$ is one example of a \emph{Tchebycheff polynomial of degree $i$}.} polynomials), and $P_{jk}$ are the associated Legendre\footnote{The function $P_{jk} : \mathbb{R} \rightarrow \mathbb{R}$ defined by $P_{jk} (x) = \left( 1 - x^2 \right)^{\frac{k}{2}} \frac{\dee^k}{\dee x^k} \left( \frac{1}{2^j j!}\frac{\dee^j}{\dee x^j} \left( x^2 - 1 \right)^j \right)$ is called the \emph{associated Legendre polynomical of degree $j$ and order $k$}.} polynomials of degree $j$ and order $k$.
+
+  The application of this basis requires substituting equation~\ref{spherical_harmonics} into equation~\ref{matrix_integral}. This process can be computationally expensive, given the intense floating point arithmetic involved. The upside, however, is that in practice only a few basis functions are required in order to achieve meaningful results (\eg Dziewonski~\cite{dziewonski} used values of $I=4$ and $J=6$ resulting in 245 unknowns, as opposed to 291,600 unkowns in the block parameterisation used by Van der Hilst \emph{et al.}~\cite{hilst:widiyantoro:engdahl} for the same problem).
+
+  %
+  % BIBLIOGRAPHY
+  \pagebreak
+  \bibliographystyle{plain}
+  \bibliography{mathematics,seismology}
+  \pagebreak
+  \printindex
+\end{document}

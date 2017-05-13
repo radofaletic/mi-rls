@@ -1,0 +1,94 @@
+\documentclass[12pt,a4paper]{article}
+
+% OPTIONS FOR DRAFT
+%\usepackage[light]{draftcopy}
+
+% EXTERNAL PACKAGES
+\usepackage{amsfonts}
+\usepackage{amsmath}
+%\usepackage{epic}
+%\usepackage{eepic}
+%\usepackage[normal]{subfigure}
+\usepackage{theorem}
+%\usepackage{fancyhdr}
+%\usepackage{palatino}
+\usepackage{hyperref}
+
+% PAGE LAYOUT OPTIONS
+%\renewcommand{\baselinestretch}{1.3}
+\hoffset=1.46cm
+\oddsidemargin=0cm
+\textwidth=14.5cm
+\voffset=-1.54cm
+\topmargin=0cm
+\headheight=.75cm
+\headsep=.75cm
+\textheight=25cm
+\footskip=1cm
+%\pagestyle{fancy}
+%\rhead{\thepage}
+%\cfoot{}
+
+% USER COMMANDS
+\newcommand{\eg}{eg.\ }
+\newcommand{\etc}{etc.\ }
+\newcommand{\ie}{ie.\ }
+\renewcommand{\div}{\operatorname{div}}
+\newcommand{\dee}{\operatorname{d}}
+
+% THEOREM ENVIRONMENTS (needs the ``theorem'' package)
+%\newtheorem{theorem}{Theorem}[section]
+%{\theorembodyfont{\normalfont} \newtheorem{definition}{Definition}[section]}
+%\newtheorem{axiom}[theorem]{Axiom}
+%\newtheorem{lemma}[theorem]{Lemma}
+%\newtheorem{corollary}[theorem]{Corollary}
+%{\theorembodyfont{\normalfont} \newtheorem{example}{Example}[section]}
+%{\theorembodyfont{\normalfont} \newtheorem{remark}{Remark}[section]}
+
+
+%
+%
+% BEGIN
+\begin{document}
+
+  \section{PNG file format}
+  All two dimensional images and data that are produced at various stage of the computation are stored in PNG image file format~\cite{PNG}. The reason for this is to allow easy, portable viewing of the results, since PNG files are viewable in every modern web browser and image viewer. PNG is a free image format, available to everyone to use as they see fit, plus free software libraries are available for the reading and writing of PNG files~\cite{libpng}.
+
+  Different pieces of information in a PNG file are called chunks. For example, there is a chunk for describing the images transparency, tRNS, and another chunk for describing the creation time, tIME.
+
+  One benefit of the PNG file format is that it allows unlimited storage of textual chunks, tEXT. By appropriately choosing and defining new tEXT chunks we can completely define a floating point data set by storing it in standard floating point format (\eg 2.45654e-12) in a tEXT chunk. The displayable part of the PNG image can then contain an integer representation of the floating point data for easy viewing purposes.
+
+  To be able to store a series of images in one PNG file, an image was created that contains a grid of the series. For example, a series of 5 images would be stored in a $2\times 3$ fashion, with each image being separated by single transparent pixel. To be able to describe this configuration, a tEXT chunk is defined, called \emph{collage}, that stores the number of images and the number of rows and columns in which they are layed out. For example, the \emph{collage} string may contain ``17:4,5'', which means that 17 images are represented on a grid with 4 rows and 5 columns:
+  \begin{center}
+    \setlength{\unitlength}{3pt}
+    \begin{picture}(104,43)
+      \put(0,33){\framebox(20,10){\small image~1}}
+      \put(21,33){\framebox(20,10){\small image~2}}
+      \put(42,33){\framebox(20,10){\small image~3}}
+      \put(63,33){\framebox(20,10){\small image~4}}
+      \put(84,33){\framebox(20,10){\small image~5}}
+      \put(0,22){\framebox(20,10){\small image~6}}
+      \put(21,22){\framebox(20,10){\small image~7}}
+      \put(42,22){\framebox(20,10){\small image~8}}
+      \put(63,22){\framebox(20,10){\small image~9}}
+      \put(84,22){\framebox(20,10){\small image~10}}
+      \put(0,11){\framebox(20,10){\small image~11}}
+      \put(21,11){\framebox(20,10){\small image~12}}
+      \put(42,11){\framebox(20,10){\small image~13}}
+      \put(63,11){\framebox(20,10){\small image~14}}
+      \put(84,11){\framebox(20,10){\small image~15}}
+      \put(0,0){\framebox(20,10){\small image~16}}
+      \put(21,0){\framebox(20,10){\small image~17}}
+    \end{picture}
+  \end{center}
+  Since this project is concerned with tomography, there have been tEXT chunks defined to describe the angles of projection. The first of these is called \emph{raxis}, which describes whether the images have been rotated about the x-axis or y-axis. The possible stored values are $\text{X}$ or $\text{Y}$. The second tEXT chunk concerned with projections is simply called \emph{angles}, which is a series of comma separated floating-point numbers that give the angle of rotation for each image. The angles are stored as degrees, as opposed to radians. A value of ``$\text{default}$'' here means that the angles are to be equi-spaced between $0^\circ$ and $180^\circ$. So, for the example above, the angle for image $i$ would be:
+  \[
+  \left( i-1 \right) \frac{180}{\text{no. images}} = \left( i - 1\right) \frac{180}{17} \text{.}
+  \]
+
+  
+  % BIBLIOGRAPHY
+  \pagebreak
+  \bibliographystyle{plain}
+  \bibliography{computing}
+\end{document}

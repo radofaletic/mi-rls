@@ -1,0 +1,95 @@
+\documentclass[12pt,a4paper]{article}
+
+% EXTERNAL PACKAGES
+\usepackage{amsfonts}
+\usepackage{amsmath}
+
+
+%
+%
+% BEGIN
+\begin{document}
+\begin{center}{\Huge test shapes}\end{center}
+
+\section{simple shapes}
+Four simple shapes were employed, based on standard measures on Euclidean space:
+\begin{description}
+\item[scalar] $f \left( \mathbf{x} \right) = 1$
+\item[diamond] $f \left( \mathbf{x} \right) = \begin{cases} 1, & \left\| \mathbf{x} \right\|_1 = \left| x_1 \right| + \left| x_2 \right| + \ldots + \left| x_n \right| \le 1 \\ 0, & \text{otherwise} \end{cases}$
+\item[sphere] $f \left( \mathbf{x} \right) = \begin{cases} 1, & \left\| \mathbf{x} \right\|_2 = \left( x_1^2 + x_2^2 + \ldots + x_n^2 \right)^\frac{1}{2} \le 1 \\ 0, & \text{otherwise} \end{cases}$
+\item[cube] $f \left( \mathbf{x} \right) = \begin{cases} 1, & \left\| \mathbf{x} \right\|_\infty = \max \left\{ x_1 , x_2, \ldots , x_n \right\} \le 1 \\ 0, & \text{otherwise} \end{cases}$
+\end{description}
+
+\section{bell}
+A broad, smooth bell-shaped object was also employed. This function peaks at the origin, and tapers to zero at the farthest corner from the origin. If $\mathbf{c}$ is any corner of the grid, then we describe the intensity by the function $\cos^2 \left( \frac{\pi}{2} \frac{\left\| \mathbf{x} \right\|}{\left\| \mathbf{c} \right\|}\right)$.
+
+\section{Shepp-Logan and Shepp-Logan-bold}
+From ~\cite{shepp:logan}.
+\subsection{2D}
+On a $[-1,1]\times[-1,1]$ grid, where the background intensity is $0$, and these values are additive. The ellipses are formed by taking the unit circle and dilating, rotating and shifting. This can be described as follows:\[
+\begin{bmatrix} x' \\ y' \end{bmatrix} = \begin{bmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{bmatrix} \begin{bmatrix} r_x & 0 \\ 0 & r_y \end{bmatrix} \begin{bmatrix} x \\ y \end{bmatrix} + \begin{bmatrix} c_x \\ c_y \end{bmatrix}
+\]\\
+\begin{tabular}{|c|c|c|c|c|c|c|} \hline
+  ellipse & $\theta$    &   $r_x$  &  $r_y$  & $\left(c_x, c_y\right)$ & level~1 & level~2 \\ \hline\hline
+     a    & $0^\circ$   &  $0.69$  & $0.92$  &         $(0,0)$         &   $2$   &  $1$    \\ \hline
+     b    & $0^\circ$   & $0.6624$ & $0.874$ &      $(0,-0.0184)$      & $-0.98$ & $-0.8$  \\ \hline
+     c    & $-18^\circ$ &  $0.11$  & $0.31$  &       $(0.22,0)$        & $-0.02$ & $-0.2$  \\ \hline
+     d    & $18^\circ$  &  $0.16$  & $0.41$  &       $(-0.22,0)$       & $-0.02$ & $-0.2$  \\ \hline
+     e    & $0^\circ$   &  $0.21$  & $0.25$  &        $(0,0.35)$       & $0.01$  & $0.1$   \\ \hline
+     f    & $0^\circ$   &  $0.046$ & $0.046$ &         $(0,0.1)$       & $0.01$  & $0.1$   \\ \hline
+     g    & $0^\circ$   &  $0.046$ & $0.046$ &        $(0,-0.1)$       & $0.02$  & $0.2$   \\ \hline
+     h    & $0^\circ$   &  $0.046$ & $0.023$ &    $(-0.08,-0.605)$     & $0.01$  & $0.1$   \\ \hline
+     i    & $0^\circ$   &  $0.023$ & $0.023$ &       $(0,-0.605)$      & $0.01$  & $0.1$   \\ \hline
+     j    & $0^\circ$   &  $0.023$ & $0.046$ &     $(0.06,-0.605)$     & $0.01$  & $0.1$   \\ \hline
+\end{tabular}
+\subsection{3D}
+On a $[-1,1]\times[-1,1]\times[-1,1]$ grid, again the values are additive. The ellipsoids are formed by taking the unit sphere and dilating, rotating, and shifting. This can be described as follows:\[
+\begin{bmatrix} x' \\ y' \\ z' \end{bmatrix} = \begin{bmatrix} \cos\theta & 0 & \sin\theta \\ 0 & 1 & 0 \\ -\sin\theta & 0 & \cos\theta \end{bmatrix} \begin{bmatrix} r_x & 0 & 0 \\ 0 & r_y & 0 \\ 0 & 0 & r_z \end{bmatrix} \begin{bmatrix} x \\ y \\ z \end{bmatrix} + \begin{bmatrix} c_x \\ c_y \\ c_z \end{bmatrix}
+\]\\
+\begin{tabular}{|c|c|c|c|c|c|c|c|} \hline
+  ellipse & $\theta$    &   $r_x$  &  $r_y$  &  $r_z$  & $\left(c_x, c_y, c_z \right)$ & level~1 & level~2 \\ \hline\hline
+     a    & $0^\circ$   &  $0.69$  &  $0.9$  & $0.92$  &           $(0,0,0)$           &   $2$   &  $1$    \\ \hline
+     b    & $0^\circ$   & $0.6624$ &  $0.88$ & $0.874$ &        $(0,0,-0.0184)$        & $-0.98$ & $-0.8$  \\ \hline
+     c    & $-18^\circ$ &  $0.11$  &  $0.22$ & $0.31$  &       $(0.22,-0.25,0)$        & $-0.02$ & $-0.2$  \\ \hline
+     d    & $18^\circ$  &  $0.16$  &  $0.21$ & $0.41$  &       $(-0.22,-0.25,0)$       & $-0.02$ & $-0.2$  \\ \hline
+     e    & $0^\circ$   &  $0.21$  &  $0.35$ & $0.25$  &       $(0,-0.25,0.35)$        & $0.01$  & $0.1$   \\ \hline
+     f    & $0^\circ$   &  $0.046$ & $0.046$ & $0.046$ &        $(0,-0.25,0.1)$        & $0.01$  & $0.1$   \\ \hline
+     g    & $0^\circ$   &  $0.046$ & $0.046$ & $0.046$ &        $(0,-0.25,-0.1)$       & $0.02$  & $0.2$   \\ \hline
+     h    & $0^\circ$   &  $0.046$ & $0.02$  & $0.023$ &     $(-0.08,-0.25,-0.605)$    & $0.01$  & $0.1$   \\ \hline
+     i    & $0^\circ$   &  $0.023$ & $0.023$ & $0.023$ &       $(0,-0.25,-0.605)$      & $0.01$  & $0.1$   \\ \hline
+     j    & $0^\circ$   &  $0.023$ & $0.02$  & $0.046$ &     $(0.06,-0.25,-0.605)$     & $0.01$  & $0.1$   \\ \hline
+     k    & $0^\circ$   &  $0.04$  &  $0.1$  & $0.056$ &      $(0.06,0.625,-0.105)$    & $0.02$  & $0.2$   \\ \hline
+     l    & $0^\circ$   &  $0.056$ &  $0.1$  & $0.056$ &         $(0,0.625,0.1)$       & $-0.02$ & $-0.2$  \\ \hline
+\end{tabular}
+
+\section{stark}
+From~\cite{stark:woods:paul:hingorani}.\\
+This test object, on a 100$\times$100 grid with background intensity of 0\%, can be completely defined as follows:\\
+triangle (has an intensity of 100\%)\\
+\begin{tabular}{|c||c|c|} \hline
+  vertex & $x$-coordinate & $y$-coordinate \\ \hline\hline
+     1   &       15       &        20      \\ \hline
+     2   &       20       &        20      \\ \hline
+     3   &       20       &        15      \\ \hline
+\end{tabular}\\
+circles\\
+\begin{tabular}{|c||c|c|c|} \hline
+  circle & $\left(c_x,c_y\right)$ & radius & intensity \\ \hline\hline
+     1   &       50,50       &   37.5   &    75\%   \\ \hline
+     2   &      31.25,50       &   18.75  &    60\%   \\ \hline
+     3   &     21.875,50       &   9.375  &    45\%   \\ \hline
+     4   &     17.1875,50       &   4.6875 &    30\%   \\ \hline
+     5   &    14.84375,50       &  2.34375 &    15\%   \\ \hline
+\end{tabular}
+
+\section{dorn\_house}
+This ``house'' shape is taken from Dorn~\cite{dorn:miller:rappaport}.
+
+
+%
+% BIBLIOGRAPHY
+\pagebreak
+\bibliographystyle{plain}
+\bibliography{mathematics,physics}
+
+\end{document}
