@@ -1,6 +1,6 @@
 # README #
 
-Tomographic Reconstruction of Shock Layer Flows
+Contains the code for the C++ routines used for the PhD thesis “Tomographic Reconstruction of Shock Layer Flows”, which can be read at http://hdl.handle.net/1885/46916
 Rado Faletic, May 2005
 
 The results are generally stored in plain PNG files, which should be viewable in any modern web browser or imaging programme. Note, however, that PNG images are integer. Also stored in these files, in textual IEEE number format are the decimal values of the results. These values can be retrieved with the Tomography::pngread function found in the include/tomography.h header file.
@@ -16,7 +16,7 @@ Any queries about this work should be directed, initially, to Rado Faletic. Fail
 > Routines for dealing with unstructured grids. In particular, it supports delaunay grids (much nicer than other structures)
 
 ### grid ###
-> Here are the classes and associated functions for grids stored in system memory. I have defined a grid to consist primarily of nodes. Overlayed is then information about the cell structure, and this is dependant on the type of grid. For _fast_ cell navigation I have also included support for storing the cell neighbours, which will enable the use of the â€œcell walkingâ€ algorithm. The user may also include a-priori data over the grid cells, which can be used as initial iteration values, or residual calculations. Support is included to project a straight line through the grid. (NOT COMPLETED)
+> Here are the classes and associated functions for grids stored in system memory. I have defined a grid to consist primarily of nodes. Overlayed is then information about the cell structure, and this is dependant on the type of grid. For _fast_ cell navigation I have also included support for storing the cell neighbours, which will enable the use of the “cell walking” algorithm. The user may also include a-priori data over the grid cells, which can be used as initial iteration values, or residual calculations. Support is included to project a straight line through the grid. (NOT COMPLETED)
 
 ### lines_and_planes ###
 > Exactly what the title suggests, code for dealing with lines and planes. These are different to the other geometric structures used here, since they have no defined boundary. A line is determined by a slope, and an initial point, and a (hyper)-plane is given by a normal vector and an initial point. These work in arbitrary dimension (at least two). Some of the functions include find the intersection of objects of these type, the determining if a point is contained in one of these objects, and finding the perpendicular distance to one of these objects, given any point in space.
