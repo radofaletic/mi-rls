@@ -1,6 +1,6 @@
 # README #
 
-Rado Faletic, May 2005
+Rado Faletič, May 2005
 
 Contains the code for the C++ routines used for my PhD thesis “Tomographic Reconstruction of Shock Layer Flows”, which can be read at http://hdl.handle.net/1885/46916
 
