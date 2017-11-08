@@ -8,7 +8,7 @@ The results are generally stored in plain PNG files, which should be viewable in
 
 This function, along with Tomography::pngwrite, allow for reading and writing of decimal data in PNG files. They are also able to store multiple images (of the same dimensions) in one PNG file, which makes displaying a set of images simply a matter of viewing the PNG image.
 
-Any queries about this work should be directed, initially, to Rado Faletic. Failing to contact Rado, you should try Frank Houwing. Failing that, contact the Department of Physics in the Faculty of Science at the Australian National University.
+Any queries about this work should be directed, initially, to Rado Faletič. Failing to contact Rado, you should try Frank Houwing. Failing that, contact the Department of Physics in the Faculty of Science at The Australian National University.
 
 ### byte_swap ###
 Contains routines for byte-swapping all of the standard C/C++ variable types. It has been verified to swap between SGI/IRIX and Intel/Linux platforms (the main motivation for this piece of code since I used an SGI at ANU and had an Intel machine at home
