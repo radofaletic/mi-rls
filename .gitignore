@@ -68,3 +68,13 @@ testarg
 ehthumbs.db
 Thumbs.db
 *~
+
+# folders with local files #
+############################
+*.dSYM/
+*.dSYM/*
+*.xcworkspace/xcuserdata/
+*.xcworkspace/xcuserdata/.*
+*.xcworkspace/xcshareddata/
+*.xcworkspace/xcshareddata/.*
+
