@@ -1,17 +1,17 @@
 /*
-  front-end
-  
-  generic interface
-  
-  Rado Faletic
-  Department of Physics
-  Faculty of Science
-  Australian National University  ACT  0200
-  Australia
-  
-  Rado.Faletic@anu.edu.au
-  2nd July 2002
-*/
+ front-end
+ 
+ generic interface
+ 
+ Rado Faletic
+ Department of Physics
+ Faculty of Science
+ Australian National University  ACT  0200
+ Australia
+ 
+ Rado.Faletic@anu.edu.au
+ 2nd July 2002
+ */
 
 
 #ifndef _FRONT_END_
