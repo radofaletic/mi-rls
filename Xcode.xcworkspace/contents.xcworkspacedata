@@ -11,18 +11,6 @@
    <Group
       location = "group:doc"
       name = "doc">
-      <FileRef
-         location = "group:computing.bib">
-      </FileRef>
-      <FileRef
-         location = "group:Plot3D.txt">
-      </FileRef>
-      <FileRef
-         location = "group:attenuation.pdf">
-      </FileRef>
-      <FileRef
-         location = "group:Plot3D.tex">
-      </FileRef>
       <Group
          location = "group:archive"
          name = "archive">
@@ -30,13 +18,25 @@
             location = "group:B-splines.pdf">
          </FileRef>
          <FileRef
-            location = "group:icosahedron.pdf">
+            location = "group:B-splines.tex">
+         </FileRef>
+         <FileRef
+            location = "group:endianness.pdf">
+         </FileRef>
+         <FileRef
+            location = "group:endianness.tex">
          </FileRef>
          <FileRef
             location = "group:frechet.pdf">
          </FileRef>
          <FileRef
-            location = "group:endianness.pdf">
+            location = "group:frechet.tex">
+         </FileRef>
+         <FileRef
+            location = "group:icosahedron.pdf">
+         </FileRef>
+         <FileRef
+            location = "group:icosahedron.tex">
          </FileRef>
          <FileRef
             location = "group:tube_conditions.pdf">
@@ -44,148 +44,97 @@
          <FileRef
             location = "group:tube_conditions.tex">
          </FileRef>
-         <FileRef
-            location = "group:endianness.tex">
-         </FileRef>
-         <FileRef
-            location = "group:icosahedron.tex">
-         </FileRef>
-         <FileRef
-            location = "group:frechet.tex">
-         </FileRef>
-         <FileRef
-            location = "group:B-splines.tex">
-         </FileRef>
       </Group>
       <FileRef
-         location = "group:cellshapes.tex">
-      </FileRef>
-      <FileRef
-         location = "group:rotation.pdf">
-      </FileRef>
-      <FileRef
-         location = "group:cellshapes.pdf">
-      </FileRef>
-      <FileRef
-         location = "group:rotation.tex">
+         location = "group:attenuation.pdf">
       </FileRef>
       <FileRef
          location = "group:attenuation.tex">
       </FileRef>
       <FileRef
-         location = "group:Plot3D.pdf">
+         location = "group:cellshapes.pdf">
       </FileRef>
       <FileRef
-         location = "group:seismology.bib">
+         location = "group:cellshapes.tex">
       </FileRef>
       <FileRef
-         location = "group:PNG.pdf">
-      </FileRef>
-      <FileRef
-         location = "group:fourier.tex">
-      </FileRef>
-      <FileRef
-         location = "group:mathematics.bib">
-      </FileRef>
-      <FileRef
-         location = "group:interferometry.pdf">
-      </FileRef>
-      <FileRef
-         location = "group:tomography.pdf">
-      </FileRef>
-      <FileRef
-         location = "group:geometry.tex">
-      </FileRef>
-      <FileRef
-         location = "group:physics.bib">
-      </FileRef>
-      <FileRef
-         location = "group:construction.tex">
-      </FileRef>
-      <FileRef
-         location = "group:phantoms.pdf">
-      </FileRef>
-      <FileRef
-         location = "group:time_stats.txt">
+         location = "group:computing.bib">
       </FileRef>
       <FileRef
          location = "group:construction.pdf">
       </FileRef>
       <FileRef
-         location = "group:phantoms.tex">
-      </FileRef>
-      <FileRef
-         location = "group:tomography.tex">
-      </FileRef>
-      <FileRef
-         location = "group:interferometry.tex">
-      </FileRef>
-      <FileRef
-         location = "group:geometry.pdf">
+         location = "group:construction.tex">
       </FileRef>
       <FileRef
          location = "group:fourier.pdf">
       </FileRef>
       <FileRef
+         location = "group:fourier.tex">
+      </FileRef>
+      <FileRef
+         location = "group:geometry.pdf">
+      </FileRef>
+      <FileRef
+         location = "group:geometry.tex">
+      </FileRef>
+      <FileRef
+         location = "group:interferometry.pdf">
+      </FileRef>
+      <FileRef
+         location = "group:interferometry.tex">
+      </FileRef>
+      <FileRef
+         location = "group:mathematics.bib">
+      </FileRef>
+      <FileRef
+         location = "group:phantoms.pdf">
+      </FileRef>
+      <FileRef
+         location = "group:phantoms.tex">
+      </FileRef>
+      <FileRef
+         location = "group:physics.bib">
+      </FileRef>
+      <FileRef
+         location = "group:Plot3D.pdf">
+      </FileRef>
+      <FileRef
+         location = "group:Plot3D.tex">
+      </FileRef>
+      <FileRef
+         location = "group:Plot3D.txt">
+      </FileRef>
+      <FileRef
+         location = "group:PNG.pdf">
+      </FileRef>
+      <FileRef
          location = "group:PNG.tex">
+      </FileRef>
+      <FileRef
+         location = "group:rotation.pdf">
+      </FileRef>
+      <FileRef
+         location = "group:rotation.tex">
+      </FileRef>
+      <FileRef
+         location = "group:seismology.bib">
+      </FileRef>
+      <FileRef
+         location = "group:time_stats.txt">
+      </FileRef>
+      <FileRef
+         location = "group:tomography.pdf">
+      </FileRef>
+      <FileRef
+         location = "group:tomography.tex">
       </FileRef>
    </Group>
    <Group
       location = "group:includes"
       name = "includes">
       <FileRef
-         location = "group:fortran_io.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:tomography.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
          location = "group:angles.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:extra_math.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:polygon.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:conversions.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:front-end.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:segment.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:polyhedron.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:lsqr.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:interpolation.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:Makefile">
-      </FileRef>
-      <FileRef
-         location = "group:plot3d.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:file.h"
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
       <FileRef
@@ -193,8 +142,51 @@
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
       <FileRef
-         location = "group:rotation.h"
+         location = "group:conversions.h"
          assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:extra_math.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:file.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:fortran_io.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:front-end.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:gaussian.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:grid.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:imglib.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:interpolation.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:line.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:lsqr.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:Makefile">
       </FileRef>
       <FileRef
          location = "group:matrix_utilities.h"
@@ -205,39 +197,35 @@
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
       <FileRef
-         location = "group:plane.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:shape.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:grid.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
-         location = "group:text-front.h"
-         assignedFileDataType = "public.c-plus-plus-header">
-      </FileRef>
-      <FileRef
          location = "group:nngridr.h"
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
       <FileRef
-         location = "group:triangle.h"
+         location = "group:plane.h"
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
       <FileRef
-         location = "group:line.h"
+         location = "group:plot3d.h"
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
       <FileRef
-         location = "group:imglib.h"
+         location = "group:polygon.h"
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
       <FileRef
-         location = "group:gaussian.h"
+         location = "group:polyhedron.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:rotation.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:segment.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:shape.h"
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
       <FileRef
@@ -248,81 +236,144 @@
          location = "group:tetrahedron.h"
          assignedFileDataType = "public.c-plus-plus-header">
       </FileRef>
+      <FileRef
+         location = "group:text-front.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:tomography.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
+      <FileRef
+         location = "group:triangle.h"
+         assignedFileDataType = "public.c-plus-plus-header">
+      </FileRef>
    </Group>
    <Group
       location = "group:src"
       name = "src">
       <FileRef
-         location = "group:flatten.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:png2plot3d.cpp">
+         location = "group:100pc.cpp">
       </FileRef>
       <FileRef
          location = "group:cfdrc_convert.cpp">
       </FileRef>
       <FileRef
-         location = "group:sinogram.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:pullout.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:error3d.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:plot3d_convert.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:stat.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:transparent.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:xy2rt.cpp">
+         location = "group:cutter.cpp">
       </FileRef>
       <FileRef
          location = "group:error.cpp">
       </FileRef>
       <FileRef
-         location = "group:Makefile">
+         location = "group:error3d.cpp">
       </FileRef>
       <FileRef
-         location = "group:projection.cpp">
+         location = "group:errorise.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:expand_csv.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:fft2d.cpp">
       </FileRef>
       <FileRef
          location = "group:fft3d.cpp">
       </FileRef>
       <FileRef
-         location = "group:errorise.cpp">
+         location = "group:flatten.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:getreal.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:halvepng.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:ieee2png.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:inv2d.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:inv3d.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:inversion.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:inversion2d.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:Makefile">
+      </FileRef>
+      <FileRef
+         location = "group:plot3d_convert.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:plot3dpng.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:png2plot3d.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:png2proj.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:projection.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:projinv2d.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:projinv3d.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:pullout.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:scaledata.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:sinogram.cpp">
+      </FileRef>
+      <FileRef
+         location = "group:stat.cpp">
       </FileRef>
       <Group
          location = "group:tests"
          name = "tests">
          <FileRef
-            location = "group:pngtest.cpp">
+            location = "group:endian.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:ffttest.cpp">
          </FileRef>
          <FileRef
             location = "group:gio.cpp">
          </FileRef>
          <FileRef
+            location = "group:invtest.cpp">
+         </FileRef>
+         <FileRef
             location = "group:Makefile">
-         </FileRef>
-         <FileRef
-            location = "group:endian.cpp">
-         </FileRef>
-         <FileRef
-            location = "group:mtest.cpp">
          </FileRef>
          <FileRef
             location = "group:makeshape.cpp">
          </FileRef>
          <FileRef
+            location = "group:mtest.cpp">
+         </FileRef>
+         <FileRef
             location = "group:nngridr.cpp">
          </FileRef>
          <FileRef
-            location = "group:invtest.cpp">
+            location = "group:p3dio.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:pngtest.cpp">
+         </FileRef>
+         <FileRef
+            location = "group:rot_test.cpp">
          </FileRef>
          <FileRef
             location = "group:some_maths.cpp">
@@ -330,63 +381,12 @@
          <FileRef
             location = "group:testarg.cpp">
          </FileRef>
-         <FileRef
-            location = "group:p3dio.cpp">
-         </FileRef>
-         <FileRef
-            location = "group:ffttest.cpp">
-         </FileRef>
-         <FileRef
-            location = "group:rot_test.cpp">
-         </FileRef>
       </Group>
       <FileRef
-         location = "group:fft2d.cpp">
+         location = "group:transparent.cpp">
       </FileRef>
       <FileRef
-         location = "group:expand_csv.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:ieee2png.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:inv3d.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:halvepng.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:inversion.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:scaledata.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:inv2d.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:plot3dpng.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:png2proj.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:100pc.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:cutter.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:projinv2d.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:inversion2d.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:getreal.cpp">
-      </FileRef>
-      <FileRef
-         location = "group:projinv3d.cpp">
+         location = "group:xy2rt.cpp">
       </FileRef>
    </Group>
 </Workspace>
