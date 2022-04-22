@@ -1,8 +1,9 @@
-/*
+/**
  Pull out one slice from the series of slices
  
  Rado Faletic
  7th December 2004
+ 22nd April 2022
  */
 
 /*
@@ -13,19 +14,18 @@
 #include <sstream>
 #include <string>
 #include <valarray>
+
 #include "angles.h"
 #include "conversions.h"
 #include "plot3d.h"
 #include "tomography.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
 	std::string ifilename = "input.png";
 	std::string ofilename = "";
 	std::string direction = "slice";
-	size_t slice = 1;
+    std::size_t slice = 1;
 	bool halve = false;
 	
 	// read command-line switches
@@ -83,7 +83,7 @@ int main(int argc, char* argv[])
 	}
 	if ( ofilename == "" )
 	{
-		ofilename = ifilename.substr(0, ifilename.size()-4)+"_slice"+ntos(slice)+".png";
+		ofilename = ifilename.substr(0, ifilename.size()-4)+"_slice"+std::to_string(slice)+".png";
 	}
 	else if ( ofilename.substr(ofilename.size()-4,4) != ".png" && ofilename.substr(ofilename.size()-4,4) != ".PNG" )
 	{
@@ -91,23 +91,23 @@ int main(int argc, char* argv[])
 	}
 	
 	// search for PNG files
-	size_t Nrows = 0;
-	size_t Ncols = 0;
-	std::valarray<real> data;
+    std::size_t Nrows = 0;
+    std::size_t Ncols = 0;
+	std::valarray<double> data;
 	std::valarray<bool> blanks;
 	Angle::axes raxis = Angle::X;
-	std::valarray<real> angles;
-	real scale = 1;
+	std::valarray<double> angles;
+    double scale = 1;
 	bool realdata = true;
 	std::cout << "reading " << ifilename << std::endl;
 	Tomography::pngread(ifilename, Nrows, Ncols, data, blanks, raxis, angles, scale, realdata);
 	
-	std::valarray<real> sdata;
-	size_t npics = data.size()/(Nrows*Ncols);
+	std::valarray<double> sdata;
+    std::size_t npics = data.size()/(Nrows*Ncols);
 	if ( halve )
 	{
 		sdata.resize(Nrows*Ncols*npics/2);
-		for (size_t i=0; i<npics/2; i++)
+		for (std::size_t i=0; i<npics/2; i++)
 		{
 			sdata[std::slice(i*Nrows*Ncols,Nrows*Ncols,1)] = data[std::slice(2*i*Nrows*Ncols,Nrows*Ncols,1)];
 		}
@@ -116,8 +116,8 @@ int main(int argc, char* argv[])
 	{
 		sdata.resize(Nrows*angles.size());
 		
-		std::vector< std::valarray<real> > ts(angles.size(), std::valarray<real>(Nrows*Ncols));
-		for (size_t i=0; i<ts.size(); i++)
+		std::vector< std::valarray<double> > ts(angles.size(), std::valarray<double>(Nrows*Ncols));
+		for (std::size_t i=0; i<ts.size(); i++)
 		{
 			ts[i] = data[std::slice(i*Nrows*Ncols,Nrows*Ncols,1)];
 		}

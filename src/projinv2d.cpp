@@ -1,8 +1,9 @@
-/*
+/**
  A programme to perform a tomographic inversion of any greyscale PNG file
  
  Rado Faletic
  9th July 2004
+ 22nd April 2022
  */
 
 /*
@@ -14,6 +15,7 @@
 #include <string>
 #include <valarray>
 #include <vector>
+
 #include "angles.h"
 #include "argv.h"
 #include "front-end.h"
@@ -25,21 +27,19 @@
 #include "sparse_matrix.h"
 #include "tomography.h"
 
-typedef double real;
-
 int main(int argc, char* argv[])
 {
 	std::string ipngfilename = "input.png";
 	std::string opngfilename = "output.png";
-	size_t resolution = 256;
-	size_t nangles = 180;
+    std::size_t resolution = 256;
+    std::size_t nangles = 180;
 	interpolation_method iterp = BILINEAR;
 	bool write_intermediates = false;
 	bool fft_on = true;
 	bool inv_on = true;
-	size_t iterations = 1000;
-	real damping = 0.0;
-	real smoothing = 0.0;
+    std::size_t iterations = 1000;
+    double damping = 0.0;
+    double smoothing = 0.0;
 	
 	std::vector<args> fswitch = get_args(argc, argv);
 	if ( !fswitch.size() )
@@ -48,7 +48,7 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
@@ -56,14 +56,14 @@ int main(int argc, char* argv[])
 			message("below is a list of flags:\n");
 			message("--input=<inputfile>\n\tthe input PNG file ("+ipngfilename+")");
 			message("--output=<outputfile>\n\tthe output PNG file ("+opngfilename+")");
-			message("--resolution=<res>\n\tthe number of data points in each projection ("+ntos(resolution)+")");
-			message("--angles=<nangles>\n\tthe number of angles, or projections ("+ntos(nangles)+")");
+			message("--resolution=<res>\n\tthe number of data points in each projection ("+std::to_string(resolution)+")");
+			message("--angles=<nangles>\n\tthe number of angles, or projections ("+std::to_string(nangles)+")");
 			message("--interpolation=bilinear/nn\n\tchoose the interpolation method(bilinear)");
 			message("--intermediades=on/off\n\twrite PNG files of intermediate steps (off)");
 			message("--method=fft/inv\n\twhich inversion method to use (fft & inv)");
-			message("--iterations=<iterations>\n\tnumber of interations to use for inv ("+ntos(iterations)+")");
-			message("--damping=<damping>\n\tmatrix damping value for inv ("+ntos(damping)+")");
-			message("--smoothing=<smoothing>\n\tmatrix smoothing value for inv ("+ntos(smoothing)+")");
+			message("--iterations=<iterations>\n\tnumber of interations to use for inv ("+std::to_string(iterations)+")");
+			message("--damping=<damping>\n\tmatrix damping value for inv ("+std::to_string(damping)+")");
+			message("--smoothing=<smoothing>\n\tmatrix smoothing value for inv ("+std::to_string(smoothing)+")");
 			return 1;
 		}
 		else if ( fswitch[i].var("input") || fswitch[i].var("i") )
@@ -86,7 +86,8 @@ int main(int argc, char* argv[])
 			if ( !nangles )
 			{
 				message("\"angles\" must be non-zero.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("interpolation") || fswitch[i].var("interpolate") )
@@ -143,7 +144,8 @@ int main(int argc, char* argv[])
 		else
 		{
 			message("Unrecognised option '"+fswitch[i].var()+"'.\nUse the --help option to learn more.");
-			throw; return 1;
+			throw;
+            return 1;
 		}
 	}
 	if ( ipngfilename.substr(ipngfilename.size()-4,4) != ".png" && ipngfilename.substr(ipngfilename.size()-4,4) != ".PNG" )
@@ -157,18 +159,19 @@ int main(int argc, char* argv[])
 	
 	// read PNG image file
 	message("reading '"+ipngfilename+"'");
-	size_t Nrows, Ncols;
-	std::valarray<real> input_data;
+    std::size_t Nrows, Ncols;
+	std::valarray<double> input_data;
 	Angle::axes sino_axis;
-	std::valarray<real> angles;
-	real scale;
+	std::valarray<double> angles;
+    double scale;
 	bool realdata;
 	std::valarray<bool> blanks;
 	Tomography::pngread(ipngfilename, Nrows, Ncols, input_data, blanks, sino_axis, angles, scale, realdata);
 	if ( Nrows*Ncols != input_data.size() )
 	{
 		message("'"+ipngfilename+"' seems to be a multi-image tomographic file, this software will only read a single-image file.");
-		throw; return 1;
+		throw;
+        return 1;
 	}
 	
 	// set up grid
@@ -180,7 +183,7 @@ int main(int argc, char* argv[])
 	mygrid.g_nY() = Nrows;
 	mygrid.g_nZ() = 0;
 	mygrid.g_scale() = scale;
-	grid<real> the_grid(mygrid);
+	grid<double> the_grid(mygrid);
 	
 	the_grid.put_adata(input_data);
 	std::string gdn = opngfilename.substr(0,opngfilename.size()-4);
@@ -190,13 +193,13 @@ int main(int argc, char* argv[])
 	message("setting up projection rays");
 	if ( !resolution )
 	{
-		resolution = size_t(std::ceil(std::sqrt((real)(Ncols*Ncols+Nrows*Nrows))));
+		resolution = std::size_t(std::ceil(std::sqrt((double)(Ncols*Ncols+Nrows*Nrows))));
 	}
-	real dlength = scale * std::sqrt((real)(Ncols*Ncols+Nrows*Nrows));
+    double dlength = scale * std::sqrt((double)(Ncols*Ncols+Nrows*Nrows));
 	scale = dlength / ( resolution + 1 );
 	dlength /= 2;
-	std::vector< std::valarray<real> > ipoints(resolution+2);
-	for (size_t i=0; i<ipoints.size(); i++)
+	std::vector< std::valarray<double> > ipoints(resolution+2);
+	for (std::size_t i=0; i<ipoints.size(); i++)
 	{
 		ipoints[i].resize(2);
 		ipoints[i][0] = i * scale - dlength;
@@ -206,32 +209,32 @@ int main(int argc, char* argv[])
 	ipoints.erase(ipoints.end()-1);
 	ipoints.erase(ipoints.begin());
 	angles.resize(nangles);
-	for (size_t i=0; i<angles.size(); i++)
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
-		angles[i] = ((real)(180*i))/((real)(nangles));
+		angles[i] = ((double)(180*i))/((double)(nangles));
 	}
 	
-	Rotation<real> rot(2);
+	Rotation<double> rot(2);
 	rot.set_origin(the_grid.center());
-	std::valarray<real> islope(2);
+	std::valarray<double> islope(2);
 	islope[0] = 0;
 	islope[1] = 1;
-	std::vector< line<real> > rays(0);
-	for (size_t i=0; i<angles.size(); i++)
+	std::vector< line<double> > rays(0);
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
 		rot.reset(angles[i], Angle::XY);
-		std::valarray<real> slope = rot.O(islope);
-		for (size_t j=0; j<ipoints.size(); j++)
+		std::valarray<double> slope = rot.O(islope);
+		for (std::size_t j=0; j<ipoints.size(); j++)
 		{
-			line<real> tline(slope, rot(ipoints[j]));
+			line<double> tline(slope, rot(ipoints[j]));
 			rays.push_back(tline);
 		}
 	}
 	
 	// create tomograms
 	message("creating tomograms");
-	SparseMatrix<real> A(0,the_grid.ncells());
-	std::valarray<real> b;
+	SparseMatrix<double> A(0,the_grid.ncells());
+	std::valarray<double> b;
 	Tomography::projection(the_grid, rays, blanks, b, A, walkfast, true, true, true);
 	
 	if ( write_intermediates ) // save sinogram
@@ -239,34 +242,34 @@ int main(int argc, char* argv[])
 		std::string o = opngfilename.substr(0,opngfilename.size()-4);
 		o += "_1-tomograms.png";
 		message("saving '"+o+"'");
-		std::valarray<real> otb(real(0), blanks.size());
+		std::valarray<double> otb(double(0), blanks.size());
 		otb[blanks] = b;
 		Tomography::pngwrite(o, nangles, resolution, otb, sino_axis, angles, scale, false, true);
 	}
 	
 	if ( fft_on )
 	{
-		std::valarray<real> ftb(real(0), blanks.size());
+		std::valarray<double> ftb(double(0), blanks.size());
 		ftb[blanks] = b;
 		// perform 1D Fourier Transform on each tomogram
 		message("performing 1D FFT on tomograms");
 		fftw_complex* one_d_in = (fftw_complex*)fftw_malloc(resolution * sizeof(fftw_complex));
 		fftw_complex* one_d_out = (fftw_complex*)fftw_malloc(resolution * sizeof(fftw_complex));
 		fftw_plan p1 = fftw_plan_dft_1d(resolution, one_d_in, one_d_out, FFTW_FORWARD, FFTW_MEASURE);
-		std::valarray<real> fft_re(ftb.size());
-		std::valarray<real> fft_im(ftb.size());
-		size_t DC = ( !(resolution%2) ) ? (resolution-2)/2 : (resolution-1)/2;
-		real sres = std::sqrt(real(resolution));
-		for (size_t j=0; j<nangles; j++)
+		std::valarray<double> fft_re(ftb.size());
+		std::valarray<double> fft_im(ftb.size());
+        std::size_t DC = ( !(resolution%2) ) ? (resolution-2)/2 : (resolution-1)/2;
+        double sres = std::sqrt(double(resolution));
+		for (std::size_t j=0; j<nangles; j++)
 		{
-			for (size_t i=0; i<resolution; i++)
+			for (std::size_t i=0; i<resolution; i++)
 			{
 				// shift the data so that negative parts are tagged on the end, rather than the beginning
 				one_d_in[i][0] = ftb[j*resolution+(i+DC)%resolution];
 				one_d_in[i][1] = 0;
 			}
 			fftw_execute(p1);
-			for (size_t i=0; i<resolution; i++)
+			for (std::size_t i=0; i<resolution; i++)
 			{
 				// be sure to shift the DFT output so that negative frequencies come before the DC (ready for 2D interpolation)
 				fft_re[j*resolution+i] = one_d_out[(i+(resolution-DC))%resolution][0]/sres;
@@ -283,7 +286,7 @@ int main(int argc, char* argv[])
 			std::string o1fft = opngfilename.substr(0,opngfilename.size()-4);
 			o1fft += "_2-fft_tomograms.png";
 			message("saving '"+o1fft+"'");
-			std::valarray<real> fout(fft_re.size()+fft_im.size());
+			std::valarray<double> fout(fft_re.size()+fft_im.size());
 			fout[std::slice(0,fft_re.size(),1)] = fft_re;
 			fout[std::slice(fft_re.size(),fft_im.size(),1)] = fft_im;
 			Tomography::pngwrite(o1fft, nangles, resolution, fout, sino_axis, angles, scale, false, true);
@@ -309,7 +312,7 @@ int main(int argc, char* argv[])
 			std::string o2fft = opngfilename.substr(0,opngfilename.size()-4);
 			o2fft += "_3-fft_2d.png";
 			message("saving '"+o2fft+"'");
-			std::valarray<real> fout(fft_re.size()+fft_im.size());
+			std::valarray<double> fout(fft_re.size()+fft_im.size());
 			fout[std::slice(0,fft_re.size(),1)] = fft_re;
 			fout[std::slice(fft_re.size(),fft_im.size(),1)] = fft_im;
 			Tomography::pngwrite(o2fft, resolution, resolution, fout, sino_axis, angles, scale, false, true);
@@ -320,9 +323,9 @@ int main(int argc, char* argv[])
 		fftw_complex* two_d_in = (fftw_complex*)fftw_malloc(resolution * resolution * sizeof(fftw_complex));
 		fftw_complex* two_d_out = (fftw_complex*)fftw_malloc(resolution * resolution * sizeof(fftw_complex));
 		fftw_plan p2 = fftw_plan_dft_2d(resolution, resolution, two_d_in, two_d_out, FFTW_BACKWARD, FFTW_MEASURE);
-		for (size_t i=0; i<resolution; i++) // NOTE: swap x-y format from Column-major to Row-major for FFTW
+		for (std::size_t i=0; i<resolution; i++) // NOTE: swap x-y format from Column-major to Row-major for FFTW
 		{
-			for (size_t j=0; j<resolution; j++)
+			for (std::size_t j=0; j<resolution; j++)
 			{
 				// be sure to shift the x,y frequencies so that the negative frequencies are reversed
 				two_d_in[j*resolution+i][0] = fft_re[((i+DC)%resolution)*resolution+(j+DC)%resolution];
@@ -330,9 +333,9 @@ int main(int argc, char* argv[])
 			}
 		}
 		fftw_execute(p2);
-		for (size_t i=0; i<resolution; i++) // NOTE: swap x-y format from Row-major back to Column-major
+		for (std::size_t i=0; i<resolution; i++) // NOTE: swap x-y format from Row-major back to Column-major
 		{
-			for (size_t j=0; j<resolution; j++)
+			for (std::size_t j=0; j<resolution; j++)
 			{
 				// swap the x-y components so that negative frequencies come before DC
 				fft_re[j*resolution+i] = two_d_out[((i+(resolution-DC))%resolution)*resolution+(j+(resolution-DC))%resolution][0] / resolution;
@@ -348,7 +351,7 @@ int main(int argc, char* argv[])
 			std::string orf = opngfilename.substr(0,opngfilename.size()-4);
 			orf += "_4-2dfft.png";
 			message("saving '"+orf+"'");
-			std::valarray<real> fout(fft_re.size()+fft_im.size());
+			std::valarray<double> fout(fft_re.size()+fft_im.size());
 			fout[std::slice(0,fft_re.size(),1)] = fft_re;
 			fout[std::slice(fft_re.size(),fft_im.size(),1)] = fft_im;
 			Tomography::pngwrite(orf, resolution, resolution, fout, sino_axis, angles, scale, false, true);
@@ -358,7 +361,7 @@ int main(int argc, char* argv[])
 		std::string offtn = opngfilename.substr(0,opngfilename.size()-4);
 		offtn += "_fft.png";
 		message("saving '"+offtn+"'");
-		std::valarray<real> sqrfft(resolution*resolution);
+		std::valarray<double> sqrfft(resolution*resolution);
 		sqrfft = std::sqrt(fft_re*fft_re + fft_im*fft_im);
 		Tomography::pngwrite(offtn, resolution, resolution, sqrfft, sino_axis, angles, scale, true, true);
 	}
@@ -382,9 +385,9 @@ int main(int argc, char* argv[])
 		the_grid.clear_aux();
 		
 		// doing matrix inversion
-		std::valarray<real> x(real(0), A.cols());
+		std::valarray<double> x(double(0), A.cols());
 		message("inverting matrix");
-		lsqr_input<real> linput(damping,0,0,0,iterations);
+		lsqr_input<double> linput(damping,0,0,0,iterations);
 		LSQR(A, x, b, linput);
 		
 		// write output

@@ -1,8 +1,9 @@
-/*
+/**
  A programme to perform an FFT tomographic inversion on any 3D Plot3D file
  
  Rado Faletic
  7th July 2004
+ 22nd April 2022
  */
 
 /*
@@ -14,6 +15,7 @@
 #include <string>
 #include <valarray>
 #include <vector>
+
 #include "angles.h"
 #include "argv.h"
 #include "front-end.h"
@@ -31,9 +33,9 @@ int main(int argc, char* argv[])
 	std::string ip3dqfilename = "input.PBS";
 	short ip3dqi = 1;
 	std::string opngfilename = "output.png";
-	size_t resolution = 32;
-	size_t nslices = 32;
-	size_t nangles = 12;
+	std::size_t resolution = 32;
+    std::size_t nslices = 32;
+    std::size_t nangles = 12;
 	Angle::axes rot_axis = Angle::X;
 	interpolation_method iterp = BILINEAR;
 	bool write_intermediates = false;
@@ -45,7 +47,7 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
@@ -53,11 +55,11 @@ int main(int argc, char* argv[])
 			message("below is a list of flags:\n");
 			message("--input_g=<inputfile>\n\tthe Plot3D grid file ("+ip3dgfilename+")");
 			message("--input_q=<inputfile>\n\tthe Plot3D Q file ("+ip3dqfilename+")");
-			message("--input_i=<n>\n\tthe Plot3D Q variable number between 1 and 5 ("+ntos(ip3dqi)+")");
+			message("--input_i=<n>\n\tthe Plot3D Q variable number between 1 and 5 ("+std::to_string(ip3dqi)+")");
 			message("--output=<outputfile>\n\tthe output PNG file ("+opngfilename+")");
-			message("--resolution=<res>\n\tresolution of each slice ("+ntos(resolution)+")");
-			message("--slices=<n>\n\tthe number of slices ("+ntos(nslices)+")");
-			message("--angles=<nangles>\n\tthe number of angles, or projections ("+ntos(nangles)+")");
+			message("--resolution=<res>\n\tresolution of each slice ("+std::to_string(resolution)+")");
+			message("--slices=<n>\n\tthe number of slices ("+std::to_string(nslices)+")");
+			message("--angles=<nangles>\n\tthe number of angles, or projections ("+std::to_string(nangles)+")");
 			message("--axis=<axis>\n\taxis of rotation (X)");
 			message("--interpolation=<method>\n\twhich interpolation method to use (bilinear)");
 			message("--intermediates=on/off\n\twrite PNG files of intermediate steps (off)");
@@ -78,7 +80,8 @@ int main(int argc, char* argv[])
 			if ( ip3dqi < 1 || 5 < ip3dqi )
 			{
 				message("\"input_i\" must be between 1 and 5.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("output") || fswitch[i].var("o") )
@@ -102,7 +105,8 @@ int main(int argc, char* argv[])
 			if ( !nangles )
 			{
 				message("\"angles\" must be non-zero.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("axis") )
@@ -122,7 +126,8 @@ int main(int argc, char* argv[])
 			else
 			{
 				message("\"axis\" must be one of X or Y.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("interpolation") || fswitch[i].var("interpolate") )
@@ -151,7 +156,8 @@ int main(int argc, char* argv[])
 		else
 		{
 			message("Unrecognised option '"+fswitch[i].var()+"'.\nUse the --help option to learn more.");
-			throw; return 1;
+			throw;
+            return 1;
 		}
 	}
 	if ( opngfilename.substr(opngfilename.size()-4,4) != ".png" && opngfilename.substr(opngfilename.size()-4,4) != ".PNG" )
@@ -160,7 +166,7 @@ int main(int argc, char* argv[])
 	}
 	
 	// read PNG image file
-	std::valarray<real> angles;
+	std::valarray<double> angles;
 	
 	// read grid
 	message("reading the grid");
@@ -174,7 +180,7 @@ int main(int argc, char* argv[])
 	mygrid.gridfile() = ip3dgfilename;
 	mygrid.datafile() = ip3dqfilename;
 	mygrid.qdata() = ip3dqi;
-	grid<real> the_grid(mygrid);
+	grid<double> the_grid(mygrid);
 	the_grid.read_data(mygrid);
 	
 	std::string gdn = opngfilename.substr(0,opngfilename.size()-4);
@@ -182,12 +188,12 @@ int main(int argc, char* argv[])
 	
 	// generate projection lines
 	message("setting up rays");
-	real dlength = 1;
-	real dlength_s = 1;
-	std::valarray<real> min2(2);
-	std::valarray<real> max2(2);
-	std::valarray<real> min3 = the_grid.min();
-	std::valarray<real> max3 = the_grid.max();
+    double dlength = 1;
+    double dlength_s = 1;
+	std::valarray<double> min2(2);
+	std::valarray<double> max2(2);
+	std::valarray<double> min3 = the_grid.min();
+	std::valarray<double> max3 = the_grid.max();
 	switch(rot_axis)
 	{
 		case Angle::X: case Angle::YZ:
@@ -206,19 +212,21 @@ int main(int argc, char* argv[])
 			dlength = norm(&min2, &max2);
 			dlength_s = std::abs(max3[1]-min3[1]);
 			break;
+        default:
+            break;
 	}
-	real scale = dlength / (resolution + 1);
-	real scale_s = dlength_s / (nslices + 1);
+    double scale = dlength / (resolution + 1);
+    double scale_s = dlength_s / (nslices + 1);
 	dlength /= 2;
 	dlength_s /= 2;
-	std::vector< std::valarray<real> > ipoints(resolution*nslices, std::valarray<real>(3));
-	size_t counter = 0;
+	std::vector< std::valarray<double> > ipoints(resolution*nslices, std::valarray<double>(3));
+    std::size_t counter = 0;
 	switch(rot_axis)
 	{
 		case Angle::X: case::Angle::YZ:
-			for (size_t j=1; j<resolution+1; j++)
+			for (std::size_t j=1; j<resolution+1; j++)
 			{
-				for (size_t i=1; i<nslices+1; i++)
+				for (std::size_t i=1; i<nslices+1; i++)
 				{
 					ipoints[counter][0] = i * scale_s - dlength_s;
 					ipoints[counter][1] = j * scale - dlength;
@@ -229,9 +237,9 @@ int main(int argc, char* argv[])
 			}
 			break;
 		case Angle::Y: case::Angle::ZX:
-			for (size_t j=1; j<nslices+1; j++)
+			for (std::size_t j=1; j<nslices+1; j++)
 			{
-				for (size_t i=1; i<resolution+1; i++)
+				for (std::size_t i=1; i<resolution+1; i++)
 				{
 					ipoints[counter][0] = i * scale - dlength;
 					ipoints[counter][1] = j * scale_s - dlength_s;
@@ -241,39 +249,41 @@ int main(int argc, char* argv[])
 				}
 			}
 			break;
+        default:
+            break;
 	}
 	
 	angles.resize(nangles);
-	for (size_t i=0; i<angles.size(); i++)
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
-		angles[i] = ((real)(180*i))/((real)(nangles));
+		angles[i] = ((double)(180*i))/((double)(nangles));
 	}
 	
-	Rotation<real> rot(3);
+	Rotation<double> rot(3);
 	rot.set_origin(the_grid.center());
-	std::valarray<real> islope(3);
+	std::valarray<double> islope(3);
 	islope[0] = 0;
 	islope[1] = 0;
 	islope[2] = 1;
-	std::vector< line<real> > rays(0);
-	for (size_t i=0; i<angles.size(); i++)
+	std::vector< line<double> > rays(0);
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
 		rot.reset(angles[i], rot_axis);
-		std::valarray<real> slope = rot.O(islope);
-		for (size_t j=0; j<ipoints.size(); j++)
+		std::valarray<double> slope = rot.O(islope);
+		for (std::size_t j=0; j<ipoints.size(); j++)
 		{
-			line<real> tline(slope, rot(ipoints[j]));
+			line<double> tline(slope, rot(ipoints[j]));
 			rays.push_back(tline);
 		}
 	}
 	
 	// project rays
 	message("projecting rays");
-	SparseMatrix<real> A(0,the_grid.ncells());
-	std::valarray<real> tproj;
+	SparseMatrix<double> A(0,the_grid.ncells());
+	std::valarray<double> tproj;
 	std::valarray<bool> blanks(true, rays.size());
 	Tomography::projection(the_grid, rays, blanks, tproj, A, walkfast, true, false, true);
-	std::valarray<real> projected(real(0), blanks.size());
+	std::valarray<double> projected(double(0), blanks.size());
 	projected[blanks] = tproj;
 	tproj.resize(0);
 	
@@ -290,14 +300,16 @@ int main(int argc, char* argv[])
 			case Angle::Y: case::Angle::ZX:
 				Tomography::pngwrite(o, nslices, resolution, projected, rot_axis, angles, scale, false, true);
 				break;
+            default:
+                break;
 		}
 	}
 	
 	// create series of sinograms
-	std::vector< std::valarray<real> > sinogram(nslices, std::valarray<real>(nangles*resolution));
-	for (size_t i=0; i<nslices; i++)
+	std::vector< std::valarray<double> > sinogram(nslices, std::valarray<double>(nangles*resolution));
+	for (std::size_t i=0; i<nslices; i++)
 	{
-		for (size_t j=0; j<nangles; j++)
+		for (std::size_t j=0; j<nangles; j++)
 		{
 			switch(rot_axis)
 			{
@@ -309,6 +321,8 @@ int main(int argc, char* argv[])
 					sinogram[i][std::slice(j*resolution,resolution,1)] =
 					projected[std::slice(j*resolution*nslices+i*resolution,resolution,1)];
 					break;
+                default:
+                    break;
 			}
 		}
 	}
@@ -317,8 +331,8 @@ int main(int argc, char* argv[])
 		std::string o = opngfilename.substr(0,opngfilename.size()-4);
 		o += "_2-sinograms.png";
 		message("saving '"+o+"'");
-		std::valarray<real> osinogram(sinogram.size()*nangles*resolution);
-		for (size_t i=0; i<sinogram.size(); i++)
+		std::valarray<double> osinogram(sinogram.size()*nangles*resolution);
+		for (std::size_t i=0; i<sinogram.size(); i++)
 		{
 			osinogram[std::slice(i*nangles*resolution, nangles*resolution, 1)] = sinogram[i];
 		}
@@ -330,22 +344,22 @@ int main(int argc, char* argv[])
 	fftw_complex* one_d_in = (fftw_complex*)fftw_malloc(resolution * sizeof(fftw_complex));
 	fftw_complex* one_d_out = (fftw_complex*)fftw_malloc(resolution * sizeof(fftw_complex));
 	fftw_plan p1 = fftw_plan_dft_1d(resolution, one_d_in, one_d_out, FFTW_FORWARD, FFTW_MEASURE);
-	std::vector< std::valarray<real> > fft_re(sinogram.size(), std::valarray<real>(nangles*resolution));
-	std::vector< std::valarray<real> > fft_im(sinogram.size(), std::valarray<real>(nangles*resolution));
-	size_t DC = ( !(resolution%2) ) ? (resolution-2)/2 : (resolution-1)/2;
-	real sres = std::sqrt(real(resolution));
-	for (size_t slice=0; slice<sinogram.size(); slice++)
+	std::vector< std::valarray<double> > fft_re(sinogram.size(), std::valarray<double>(nangles*resolution));
+	std::vector< std::valarray<double> > fft_im(sinogram.size(), std::valarray<double>(nangles*resolution));
+    std::size_t DC = ( !(resolution%2) ) ? (resolution-2)/2 : (resolution-1)/2;
+    double sres = std::sqrt(double(resolution));
+	for (std::size_t slice=0; slice<sinogram.size(); slice++)
 	{
-		for (size_t j=0; j<nangles; j++)
+		for (std::size_t j=0; j<nangles; j++)
 		{
-			for (size_t i=0; i<resolution; i++)
+			for (std::size_t i=0; i<resolution; i++)
 			{
 				// shift the data so that negative parts are tagged on the end, rather than the beginning
 				one_d_in[i][0] = sinogram[slice][j*resolution+(i+DC)%resolution];
 				one_d_in[i][1] = 0;
 			}
 			fftw_execute(p1);
-			for (size_t i=0; i<resolution; i++)
+			for (std::size_t i=0; i<resolution; i++)
 			{
 				// be sure to shift the DFT output so that negative frequencies come before the DC (ready for 2D interpolation)
 				fft_re[slice][j*resolution+i] = one_d_out[(i+(resolution-DC))%resolution][0]/sres;
@@ -362,8 +376,8 @@ int main(int argc, char* argv[])
 		std::string o1fft = opngfilename.substr(0,opngfilename.size()-4);
 		o1fft += "_3-fft_tomograms.png";
 		message("saving '"+o1fft+"'");
-		std::valarray<real> fout(2*sinogram.size()*nangles*resolution);
-		for (size_t i=0; i<sinogram.size(); i++)
+		std::valarray<double> fout(2*sinogram.size()*nangles*resolution);
+		for (std::size_t i=0; i<sinogram.size(); i++)
 		{
 			fout[std::slice(2*i*nangles*resolution,nangles*resolution,1)] = fft_re[i];
 			fout[std::slice(2*i*nangles*resolution+nangles*resolution,nangles*resolution,1)] = fft_im[i];
@@ -376,7 +390,7 @@ int main(int argc, char* argv[])
 	{
 		case NN:
 			message("natural neighbour interpolating in 2D Fourier space");
-			for (size_t i=0; i<sinogram.size(); i++)
+			for (std::size_t i=0; i<sinogram.size(); i++)
 			{
 				nn_interpolate(fft_re[i], angles);
 				nn_interpolate(fft_im[i], angles);
@@ -386,12 +400,14 @@ int main(int argc, char* argv[])
 						rotate_matrix(resolution, resolution, fft_re[i]);
 						rotate_matrix(resolution, resolution, fft_im[i]);
 						break;
+                    default:
+                        break;
 				}
 			}
 			break;
 		case BILINEAR:
 			message("bilinear interpolating in 2D Fourier space");
-			for (size_t i=0; i<sinogram.size(); i++)
+			for (std::size_t i=0; i<sinogram.size(); i++)
 			{
 				bilinear_interpolate(fft_re[i], angles);
 				bilinear_interpolate(fft_im[i], angles);
@@ -401,9 +417,13 @@ int main(int argc, char* argv[])
 						rotate_matrix(resolution, resolution, fft_re[i]);
 						rotate_matrix(resolution, resolution, fft_im[i]);
 						break;
+                    default:
+                        break;
 				}
 			}
 			break;
+        default:
+            break;
 	}
 	
 	if ( write_intermediates ) // saving 2D Fourier space image
@@ -411,8 +431,8 @@ int main(int argc, char* argv[])
 		std::string o2fft = opngfilename.substr(0,opngfilename.size()-4);
 		o2fft += "_4-fft_2d.png";
 		message("saving '"+o2fft+"'");
-		std::valarray<real> fout(2*sinogram.size()*resolution*resolution);
-		for (size_t i=0; i<sinogram.size(); i++)
+		std::valarray<double> fout(2*sinogram.size()*resolution*resolution);
+		for (std::size_t i=0; i<sinogram.size(); i++)
 		{
 			fout[std::slice(2*i*resolution*resolution,resolution*resolution,1)] = fft_re[i];
 			fout[std::slice(2*i*resolution*resolution+resolution*resolution,resolution*resolution,1)] = fft_im[i];
@@ -425,11 +445,11 @@ int main(int argc, char* argv[])
 	fftw_complex* two_d_in = (fftw_complex*)fftw_malloc(resolution * resolution * sizeof(fftw_complex));
 	fftw_complex* two_d_out = (fftw_complex*)fftw_malloc(resolution * resolution * sizeof(fftw_complex));
 	fftw_plan p2 = fftw_plan_dft_2d(resolution, resolution, two_d_in, two_d_out, FFTW_BACKWARD, FFTW_MEASURE);
-	for (size_t s=0; s<sinogram.size(); s++)
+	for (std::size_t s=0; s<sinogram.size(); s++)
 	{
-		for (size_t i=0; i<resolution; i++) // NOTE: swap x-y format from Column-major to Row-major for FFTW
+		for (std::size_t i=0; i<resolution; i++) // NOTE: swap x-y format from Column-major to Row-major for FFTW
 		{
-			for (size_t j=0; j<resolution; j++)
+			for (std::size_t j=0; j<resolution; j++)
 			{
 				// be sure to shift the x,y frequencies so that the negative frequencies are reversed
 				two_d_in[j*resolution+i][0] = fft_re[s][((i+DC)%resolution)*resolution+(j+DC)%resolution];
@@ -437,9 +457,9 @@ int main(int argc, char* argv[])
 			}
 		}
 		fftw_execute(p2);
-		for (size_t i=0; i<resolution; i++) // NOTE: swap x-y format from Row-major back to Column-major
+		for (std::size_t i=0; i<resolution; i++) // NOTE: swap x-y format from Row-major back to Column-major
 		{
-			for (size_t j=0; j<resolution; j++)
+			for (std::size_t j=0; j<resolution; j++)
 			{
 				// swap the x-y components so that negative frequencies come before DC
 				fft_re[s][j*resolution+i] = two_d_out[((i+(resolution-DC))%resolution)*resolution+(j+(resolution-DC))%resolution][0] / resolution;
@@ -456,8 +476,8 @@ int main(int argc, char* argv[])
 		std::string orf = opngfilename.substr(0,opngfilename.size()-4);
 		orf += "_5-2d.png";
 		message("saving '"+orf+"'");
-		std::valarray<real> fout(2*sinogram.size()*resolution*resolution);
-		for (size_t i=0; i<sinogram.size(); i++)
+		std::valarray<double> fout(2*sinogram.size()*resolution*resolution);
+		for (std::size_t i=0; i<sinogram.size(); i++)
 		{
 			fout[std::slice(2*i*resolution*resolution,resolution*resolution,1)] = fft_re[i];
 			fout[std::slice(2*i*resolution*resolution+resolution*resolution,resolution*resolution,1)] = fft_im[i];
@@ -467,8 +487,8 @@ int main(int argc, char* argv[])
 	
 	// write output
 	message("saving '"+opngfilename+"'");
-	std::valarray<real> sqrfft(sinogram.size()*resolution*resolution);
-	for (size_t i=0; i<sinogram.size(); i++)
+	std::valarray<double> sqrfft(sinogram.size()*resolution*resolution);
+	for (std::size_t i=0; i<sinogram.size(); i++)
 	{
 		sqrfft[std::slice(i*resolution*resolution,resolution*resolution,1)] =
 		std::sqrt(fft_re[i]*fft_re[i] + fft_im[i]*fft_im[i]);

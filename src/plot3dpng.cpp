@@ -1,14 +1,15 @@
-/*
- A programme to convert any 2D structured Plot3D file (XYZ and Q)
- into a PNG image file.
+/**
+ A programme to convert any 2D structured Plot3D file (XYZ and Q) into a PNG image file.
  
  Rado Faletic
  6th July 2004
+ 22nd April 2022
  */
 
 #include <sstream>
 #include <string>
 #include <valarray>
+
 #include "argv.h"
 #include "file.h"
 #include "front-end.h"
@@ -21,7 +22,7 @@ int main(int argc, char* argv[])
 	std::string dfilename = "";
 	std::valarray<double> X, Y, Z;
 	std::valarray<bool> B;
-	std::valarray<size_t> Nx, Ny, Nz;
+	std::valarray<std::size_t> Nx, Ny, Nz;
 	dataformat format = Binary;
 	dataprecision precision = Single;
 	bool multidomain = false;
@@ -37,7 +38,7 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
@@ -116,7 +117,7 @@ int main(int argc, char* argv[])
 		}
 		else
 		{
-			message("unrecognised option '"+fswitch[i].var()+"'\nuse the --help option to learn more");
+			message("unrecognised option '" + fswitch[i].var() + "'\nuse the --help option to learn more");
 			return 1;
 		}
 	}

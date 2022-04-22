@@ -1,8 +1,9 @@
-/*
+/**
  A programme to collate a series of PNG files
  
  Rado Faletic
  15th June 2004
+ 22nd April 2022
  */
 
 /*
@@ -19,15 +20,13 @@
 #include "extra_math.h"
 #include "tomography.h"
 
-typedef double real;
-
 int main(int argc, char* argv[])
 {
 	std::string ifilename = "input";
 	std::string ofilename = "";
-	size_t trans = 0;
+    std::size_t trans = 0;
 	bool tpcy = false;
-	size_t xchop = 0;
+    std::size_t xchop = 0;
 	bool xdir = true;
 	Angle::axes rot_axis = Angle::X;
 	
@@ -113,13 +112,13 @@ int main(int argc, char* argv[])
 	}
 	
 	// search for PNG files
-	size_t Nrows = 0;
-	size_t Ncols = 0;
-	std::valarray<real> angles;
-	std::vector< std::valarray<real> > inputs;
-	real scale = 1;
+    std::size_t Nrows = 0;
+    std::size_t Ncols = 0;
+	std::valarray<double> angles;
+	std::vector< std::valarray<double> > inputs;
+    double scale = 1;
 	bool realdata = false;
-	for (size_t i=0; i<180; i++)
+	for (std::size_t i=0; i<180; i++)
 	{
 		std::string thisfilename = ifilename + "_";
 		if ( i < 100 )
@@ -144,11 +143,11 @@ int main(int argc, char* argv[])
 			tryfile.close();
 		}
 		std::cout << "reading " << thisfilename;
-		size_t tNrows, tNcols, rNrows, rNcols;
-		std::valarray<real> tinput;
+        std::size_t tNrows, tNcols, rNrows, rNcols;
+		std::valarray<double> tinput;
 		Angle::axes taxis;
-		std::valarray<real> tangle;
-		real tscale;
+		std::valarray<double> tangle;
+        double tscale;
 		std::valarray<bool> blanks;
 		if ( Tomography::pngread(thisfilename, tNrows, tNcols, tinput, blanks, taxis, tangle, tscale, realdata) )
 		{
@@ -167,9 +166,9 @@ int main(int argc, char* argv[])
 			if ( xchop )
 			{
 				Ncols = xchop;
-				std::valarray<real> otinput = tinput;
+				std::valarray<double> otinput = tinput;
 				tinput.resize(Ncols*Nrows);
-				for (size_t j=0; j<Nrows; j++)
+				for (std::size_t j=0; j<Nrows; j++)
 				{
 					if ( xdir )
 					{
@@ -205,16 +204,16 @@ int main(int argc, char* argv[])
 	{
 		ofilename = ifilename + "_proj.png";
 	}
-	std::valarray<real> output(inputs.size()*Nrows*Ncols);
-	for (size_t i=0; i<inputs.size(); i++)
+	std::valarray<double> output(inputs.size()*Nrows*Ncols);
+	for (std::size_t i=0; i<inputs.size(); i++)
 	{
 		output[std::slice(i*Nrows*Ncols, Nrows*Ncols, 1)] = inputs[i];
 	}
 	if ( tpcy )
 	{
 		output += 1.0;
-		real tv = trans + 1.0;
-		for (size_t i=0; i<output.size(); i++)
+        double tv = trans + 1.0;
+		for (std::size_t i=0; i<output.size(); i++)
 		{
 			if ( eq(output[i], tv) )
 			{

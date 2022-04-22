@@ -1,4 +1,4 @@
-/*
+/**
  line
  
  A collection of C++ routines for dealing with straight lines.
@@ -11,31 +11,41 @@
  
  Rado.Faletic@anu.edu.au
  17th May 2004
+ 20th April 2022
  */
-template<class T> class line;
+
+
+
+
 
 #ifndef _LINE_
 #define _LINE_
+
+
+
 
 
 /* ---------- standard header files ---------- */
 #include <sstream>
 #include <string>
 #include <valarray>
+
+
+
+
+
 /* ------- user header files -------- */
 #include "extra_math.h"
 #include "shape.h"
-/* ---------------------------------- */
 
 
-/* -------------------------------------------------- */
+
+
+
 /* ---------- class & function declaration ---------- */
-/* -------------------------------------------------- */
-
 
 // 'line' class
-template<class T>
-class line : public shape<T>
+template<class T> class line : public shape<T>
 {
 private:
 	std::valarray<T> zero_;
@@ -58,18 +68,22 @@ public:
 };
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- init ---------- */
-template<class T> void
-line<T>::init(const std::valarray<T>& gr, const std::valarray<T>& ze)
+template<class T> void line<T>::init(const std::valarray<T>& gr, const std::valarray<T>& ze)
 {
 	if ( gr.size() != ze.size() || !gr.size() )
 	{
-		throw; return;
+		throw;
+        return;
 	}
 	
 	// allocate line properties
@@ -78,43 +92,53 @@ line<T>::init(const std::valarray<T>& gr, const std::valarray<T>& ze)
 	this->zero_.resize(ze.size());
 	this->zero_ = ze;
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- init ---------- */
-template<class T> void
-line<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2)
+template<class T> void line<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2)
 {
 	this->init(*pt2 - *pt1, *pt1);
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- line ---------- */
-template<class T> inline
-line<T>::line(const std::valarray<T>& gr, const std::valarray<T>& ze)
+template<class T> inline line<T>::line(const std::valarray<T>& gr, const std::valarray<T>& ze)
 {
 	this->init(gr, ze);
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- line ---------- */
-template<class T> inline
-line<T>::line(const std::valarray<T>* pt1, const std::valarray<T>* pt2)
+template<class T> inline line<T>::line(const std::valarray<T>* pt1, const std::valarray<T>* pt2)
 {
 	this->init(pt1, pt2);
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- dim ---------- */
-template<class T> inline unsigned short
-line<T>::dim() const
+template<class T> inline unsigned short line<T>::dim() const
 {
 	return this->zero_.size();
 }
-/* ------------------------- */
+
+
+
+
 
 /* ---------- print ---------- */
-template<class T> std::string
-line<T>::print() const
+template<class T> std::string line<T>::print() const
 {
 	std::ostringstream tmp;
 	tmp << '(';
@@ -138,35 +162,43 @@ line<T>::print() const
 	tmp << ')';
 	return tmp.str();
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- gradient_p ---------- */
-template<class T> inline const std::valarray<T>*
-line<T>::gradient_p() const
+template<class T> inline const std::valarray<T>* line<T>::gradient_p() const
 {
 	return &(this->gradient_);
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- zero ---------- */
-template<class T> inline std::valarray<T>
-line<T>::zero() const
+template<class T> inline std::valarray<T> line<T>::zero() const
 {
 	return this->zero_;
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- evaluate ---------- */
-template<class T> inline std::valarray<T>
-line<T>::evaluate(const T& t_value) const
+template<class T> inline std::valarray<T> line<T>::evaluate(const T& t_value) const
 {
 	return this->zero_ + ( this->gradient_ * t_value );
 }
-/* ------------------------------ */
+
+
+
+
 
 /* ---------- distance_p ---------- */
-template<class T> inline T
-line<T>::distance_p(const std::valarray<T>* pt) const
+template<class T> inline T line<T>::distance_p(const std::valarray<T>* pt) const
 {
 	// use projected length along the line, then Pythagoras
 	std::valarray<T> tmp = *pt - this->zero_;
@@ -178,33 +210,40 @@ line<T>::distance_p(const std::valarray<T>* pt) const
 	return ( is_zero(d) ) ? T(0) : std::sqrt(d);
 	//return norm(std::valarray<T>((*pt) - this->closest(*pt))); // OLD METHOD
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- closest ---------- */
-template<class T> inline std::valarray<T>
-line<T>::closest(const std::valarray<T>& pt) const
+template<class T> inline std::valarray<T> line<T>::closest(const std::valarray<T>& pt) const
 {
 	return this->evaluate(dot(std::valarray<T>(pt - this->zero_), this->gradient_));
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- contains_p ---------- */
-template<class T> inline bool
-line<T>::contains_p(const std::valarray<T>* pt) const
+template<class T> inline bool line<T>::contains_p(const std::valarray<T>* pt) const
 {
 	return is_zero(this->distance_p(pt));
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- intersect ---------- */
-template<class T> T
-line<T>::intersect(const line<T>& line2, std::valarray<T>& intercept, bool& parallel) const
+template<class T> T line<T>::intersect(const line<T>& line2, std::valarray<T>& intercept, bool& parallel) const
 {
 	intercept.resize(0);
 	parallel = false;
 	if ( this->dim() != line2.dim() )
 	{
-		throw; return T(0);
+		throw;
+        return T(0);
 	}
 	else if ( this->dim() == 1 )
 	{
@@ -233,11 +272,7 @@ line<T>::intersect(const line<T>& line2, std::valarray<T>& intercept, bool& para
 	}
 	
 	// solve for the free variables t_1 and t_2 by projection onto 2-space
-	// NOTE: these do not necessarily solve for the interestion, but will
-	//       be correct in the event that the lines actually do intersect
-	//       in <dim>-space, otherwise intersect return falsly (above).
-	//       Also, we take the average of the two solutions, to try and
-	//       smear out numerical errors.
+	// NOTE: these do not necessarily solve for the interestion, but will be correct in the event that the lines actually do intersect in <dim>-space, otherwise intersect return falsly (above). Also, we take the average of the two solutions, to try and smear out numerical errors.
 	T t_1 = T(0);
 	T t_2 = T(0);
 	for (unsigned short i=0; i<this->dim()-1; i++)
@@ -266,7 +301,9 @@ line<T>::intersect(const line<T>& line2, std::valarray<T>& intercept, bool& para
 	
 	return T(1);
 }
-/* ------------------------------- */
+
+
+
 
 
 #endif /* _LINE_ */

@@ -1,30 +1,28 @@
-/*
- A programme to convert any structured Plot3D file (XYZ and Q)
- into a simple Plot3D file format. This consists of a Binary file
- with no I-blanking and no multidomains wherever possible.
+/**
+ A programme to convert any structured Plot3D file (XYZ and Q) into a simple Plot3D file format. This consists of a Binary file with no I-blanking and no multidomains wherever possible.
  
  Rado Faletic
  15th May 2004
+ 22nd April 2022
  */
 
 #include <string>
 #include <valarray>
 #include <vector>
+
 #include "argv.h"
 #include "file.h"
 #include "front-end.h"
 #include "plot3d.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
 	
 	std::string gfilename = "";
 	std::string qfilename = "";
-	std::valarray<real> X, Y, Z;
+	std::valarray<double> X, Y, Z;
 	std::valarray<bool> B;
-	std::valarray<size_t> Nx, Ny, Nz;
+	std::valarray<std::size_t> Nx, Ny, Nz;
 	dataformat format = Formatted;
 	dataprecision precision = Single;
 	bool multidomain = false;
@@ -38,7 +36,7 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
@@ -110,7 +108,7 @@ int main(int argc, char* argv[])
 	}
 	Plot3D::read(X, Y, Z, B, Nx, Ny, Nz, gfilename, format, precision, multidomain, blanking);
 	
-	std::vector< std::valarray<real> > data(5);
+	std::vector< std::valarray<double> > data(5);
 	if ( qfilename.size() > 0 )
 	{
 		Plot3D::read_data(data[0], data[1], data[2], data[3], data[4], qfilename, format, precision, multidomain);

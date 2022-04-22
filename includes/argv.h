@@ -1,4 +1,4 @@
-/*
+/**
  argv.h
  
  Functions for getting any command line inputs and options.
@@ -11,12 +11,22 @@
  
  Rado.Faletic@anu.edu.au
  8th September 2004
+ 16th April 2022
  */
 
 
+
+
+
+/* ---------- standard header files ---------- */
 #include <string>
 #include <vector>
 
+
+
+
+
+/* ---------- classes ---------- */
 
 class args
 {
@@ -37,7 +47,7 @@ public:
 std::vector<args> get_args(const int& argc, char* argv[])
 {
 	std::vector<args> output(argc-1);
-	for (size_t i=0; i<output.size(); i++)
+	for (std::size_t i=0; i<output.size(); i++)
 	{
 		std::string istring(argv[i+1]);
 		if ( istring.substr(0,2) != std::string("--") )

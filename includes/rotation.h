@@ -1,4 +1,4 @@
-/*
+/**
  rotation
  
  A functional for rotating vectors
@@ -11,11 +11,18 @@
  
  Rado.Faletic@anu.edu.au
  13th October 2004
+ 18th April 2022
  */
+
+
+
 
 
 #ifndef _ROTATION_
 #define _ROTATION_
+
+
+
 
 
 /* ---------- header files ---------- */
@@ -23,17 +30,21 @@
 #include <sstream>
 #include <string>
 #include <valarray>
+
+
+
+
+
 /* -------- user header files ------- */
 #include "angles.h"
 #include "extra_math.h"
 #include "matrix.h"
-/* ---------------------------------- */
 
 
-/* -------------------------------------------------- */
+
+
+
 /* ---------- class & function declaration ---------- */
-/* -------------------------------------------------- */
-
 
 template<class T> class Rotation
 {
@@ -41,120 +52,117 @@ private:
 	Matrix<T> r_m_;
 	bool set_r_m_;
 	std::valarray<T> origin_;
-	
 	void set_dim(const unsigned short&);
-	
 public:
-	
 	Rotation(const unsigned short&);
-	
 	~Rotation();
-	
 	void reset();
-	
 	void clear();
-	
 	unsigned short dim() const;
-	
 	std::string print() const;
-	
 	std::string origin_print() const;
-	
 	void set_origin(const std::valarray<T>&);
-	
 	void clear_origin();
 	void reset_origin();
-	
 	std::valarray<T> operator()(const std::valarray<T>&) const;
 	std::valarray<T> O(const std::valarray<T>&) const;
-	
 	void set(const T&, const Angle::axes& = Angle::XY);
 	void reset(const T&, const Angle::axes& = Angle::XY);
 };
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- set_dim ---------- */
-/* create a rotation matrix
- that is the dimension*
- dimesion identity matrix  */
-template<class T> inline void
-Rotation<T>::set_dim(const unsigned short& dimension)
+/// create a rotation matrix that is the dimension*dimension identity matrix
+template<class T> inline void Rotation<T>::set_dim(const unsigned short& dimension)
 {
 	this->set_r_m_ = false;
 	this->r_m_.init(dimension);
 }
-/* ------------------------------- */
+
+
+
+
 
 /* ---------- Rotation ---------- */
-/* create a rotation matrix of
- size dimension*dimension, ie
- the identity matrix            */
-template<class T> inline
-Rotation<T>::Rotation(const unsigned short& dimension)
+/// create a rotation matrix of size dimension*dimension, ie the identity matrix
+template<class T> inline Rotation<T>::Rotation(const unsigned short& dimension)
 {
 	this->set_dim(dimension);
 }
-/* ------------------------------ */
+
+
+
+
 
 /* ---------- ~Rotation ---------- */
-template<class T> inline
-Rotation<T>::~Rotation()
+template<class T> inline Rotation<T>::~Rotation()
 {
 	this->clear();
 }
-/* ------------------------------- */
+
+
+
+
 
 /* ---------- reset ---------- */
-/* reset the rotation matrix
- to the identity matrix      */
-template<class T> inline void
-Rotation<T>::reset()
+/// reset the rotation matrix to the identity matrix
+template<class T> inline void Rotation<T>::reset()
 {
 	this->set_r_m_ = false;
 	this->r_m_.init(this->dim());
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- clear ---------- */
-/* delete the rotation matrix
- and the origin              */
-template<class T> inline void
-Rotation<T>::clear()
+/// delete the rotation matrix and the origin
+template<class T> inline void Rotation<T>::clear()
 {
 	this->set_r_m_ = false;
 	this->r_m_.clear();
 	this->clear_origin();
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- dim ---------- */
-/* return the dimension of
- the rotation matrix       */
-template<class T> inline unsigned short
-Rotation<T>::dim() const
+/// return the dimension of the rotation matrix
+template<class T> inline unsigned short Rotation<T>::dim() const
 {
 	return this->r_m_.col_dim();
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- print ---------- */
-/* print the rotation matrix   */
-template<class T> std::string
-Rotation<T>::print() const
+/// print the rotation matrix
+template<class T> std::string Rotation<T>::print() const
 {
 	return this->r_m_.print();
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- origin_print ---------- */
-/* print the origin of the rotation   */
-template<class T> std::string
-Rotation<T>::origin_print() const
+/// print the origin of the rotation
+template<class T> std::string Rotation<T>::origin_print() const
 {
 	std::ostringstream tmp;
 	tmp << '(';
@@ -169,12 +177,14 @@ Rotation<T>::origin_print() const
 	tmp << ')';
 	return tmp.str();
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- set_origin ---------- */
-/* set the origin of the rotation   */
-template<class T> void
-Rotation<T>::set_origin(const std::valarray<T>& new_origin)
+/// set the origin of the rotation
+template<class T> void Rotation<T>::set_origin(const std::valarray<T>& new_origin)
 {
 	if ( is_zero(new_origin,T(1)) )
 	{
@@ -184,31 +194,36 @@ Rotation<T>::set_origin(const std::valarray<T>& new_origin)
 	this->origin_.resize(new_origin.size());
 	this->origin_ = new_origin;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- clear_origin ---------- */
-/* delete the rotation origin         */
-template<class T> inline void
-Rotation<T>::clear_origin()
+/// delete the rotation origin
+template<class T> inline void Rotation<T>::clear_origin()
 {
 	this->origin_.resize(0);
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- reset_origin ---------- */
-/* reset the rotation origin to zero  */
-template<class T> inline void
-Rotation<T>::reset_origin()
+/// reset the rotation origin to zero
+template<class T> inline void Rotation<T>::reset_origin()
 {
 	this->clear_origin();
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- operator() ---------- */
-/* rotate the vector `vec' about the
- stored origin                    */
-template<class T> std::valarray<T>
-Rotation<T>::operator()(const std::valarray<T>& vec) const
+/// rotate the vector `vec' about the stored origin
+template<class T> std::valarray<T> Rotation<T>::operator()(const std::valarray<T>& vec) const
 {
 	std::valarray<T> origvec = vec;
 	
@@ -238,24 +253,25 @@ Rotation<T>::operator()(const std::valarray<T>& vec) const
 	
 	return origvec;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- O ---------- */
-/* rotate the vector `vec'
- about the zero vector   */
-template<class T> std::valarray<T>
-Rotation<T>::O(const std::valarray<T>& vec) const
+/// rotate the vector `vec' about the zero vector
+template<class T> std::valarray<T> Rotation<T>::O(const std::valarray<T>& vec) const
 {
 	return this->r_m_ * vec;
 }
-/* ----------------------- */
+
+
+
+
 
 /* ---------- set ---------- */
-/* assign the rotation matrix
- using the given angle and
- axis                      */
-template<class T> void
-Rotation<T>::set(const T& angle, const Angle::axes& input_axes)
+/// assign the rotation matrix using the given angle and axis
+template<class T> void Rotation<T>::set(const T& angle, const Angle::axes& input_axes)
 {
 	const unsigned short ldim = this->dim();
 	Matrix<T> n_m(this->dim());
@@ -271,6 +287,8 @@ Rotation<T>::set(const T& angle, const Angle::axes& input_axes)
 		case Angle::ZX: case Angle::Y: // rotate the ZX plane about the Y axis
 			axis = 1;
 			break;
+        default:
+            break;
 	}
 	switch(this->dim())
 	{
@@ -361,18 +379,21 @@ Rotation<T>::set(const T& angle, const Angle::axes& input_axes)
 		this->set_r_m_ = true;
 	}
 }
-/* ------------------------- */
+
+
+
+
 
 /* ---------- reset ---------- */
-/* reset the rotation matrix,
- then reassign values to it  */
-template<class T> inline void
-Rotation<T>::reset(const T& angle, const Angle::axes& axis)
+/// reset the rotation matrix, then reassign values to it
+template<class T> inline void Rotation<T>::reset(const T& angle, const Angle::axes& axis)
 {
 	this->reset();
 	this->set(angle, axis);
 }
-/* --------------------------- */
+
+
+
 
 
 #endif /* _ROTATION_ */

@@ -1,8 +1,9 @@
-/*
+/**
  create errors in an image
  
  Rado Faletic
  21st April 2005
+ 22nd April 2022
  */
 
 /*
@@ -13,17 +14,16 @@
 #include <sstream>
 #include <string>
 #include <valarray>
+
 #include "angles.h"
 #include "gaussian.h"
 #include "tomography.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
 	std::string ifilename = "input.png";
 	std::string ofilename = "";
-	real error = real(10);
+    double error = double(10);
 	bool fullmode = true;
 	
 	// read command-line switches
@@ -78,30 +78,30 @@ int main(int argc, char* argv[])
 	}
 	
 	// search for PNG files
-	size_t Nrows = 0;
-	size_t Ncols = 0;
-	std::valarray<real> data;
+	std::size_t Nrows = 0;
+    std::size_t Ncols = 0;
+	std::valarray<double> data;
 	std::valarray<bool> blanks;
 	Angle::axes raxis = Angle::X;
-	std::valarray<real> angles;
-	real scale = 1;
+	std::valarray<double> angles;
+    double scale = 1;
 	bool realdata = true;
 	bool tpcy = false;
 	std::cout << "reading " << ifilename << std::endl;
 	Tomography::pngread(ifilename, Nrows, Ncols, data, blanks, raxis, angles, scale, realdata);
 	
 	// create the errors
-	for (size_t t=0; t<angles.size(); t++)
+	for (std::size_t t=0; t<angles.size(); t++)
 	{
-		std::valarray<real> tdata = data[std::slice(t*Nrows*Ncols,Nrows*Ncols,1)];
-		real dave = real(tdata.sum()) / real(tdata.size());
-		real variance = error / real(100);
-		for (size_t i=0; i<Nrows*Ncols; i++)
+		std::valarray<double> tdata = data[std::slice(t*Nrows*Ncols,Nrows*Ncols,1)];
+        double dave = double(tdata.sum()) / double(tdata.size());
+        double variance = error / double(100);
+		for (std::size_t i=0; i<Nrows*Ncols; i++)
 		{
 			if ( blanks[i] || fullmode )
 			{
 				data[t*Nrows*Ncols+i] += dave * gaussian(variance);
-				if ( data[t*Nrows*Ncols+i] < real(0) ) data[t*Nrows*Ncols+i] = real(0);
+				if ( data[t*Nrows*Ncols+i] < double(0) ) data[t*Nrows*Ncols+i] = double(0);
 			}
 			else
 			{

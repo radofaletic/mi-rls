@@ -1,4 +1,4 @@
-/*
+/**
  conversions
  
  convert various formats strings
@@ -11,36 +11,38 @@
  
  Rado.Faletic@anu.edu.au
  8th July 2004
+ 19th April 2022, updated to C++20
  */
+
+
+
 
 
 #ifndef _CONVERSIONS_
 #define _CONVERSIONS_
 
 
+
+
+
 /* ---------- standard header files ---------- */
 #include <algorithm>
+#include <bit>
 #include <iomanip>
 #include <sstream>
 #include <string>
 #include <valarray>
-/* ------------------------------------------- */
 
 
-/* ------------------------------------------- */
+
+
+
 /* ---------- function declarations ---------- */
-/* ------------------------------------------- */
-
-
-template<class T> std::string ctos(const T&);
-
-template<class T> std::string ntos(const T&);
-long int stoi(const std::string&);
 
 template<class T> std::string ntoIEEE(const T&);
-double IEEEton(const std::string&);
 
 template<class T> std::string vtoIEEE(const std::valarray<T>&);
+
 template<class T> std::valarray<T> IEEEtov(const std::string&);
 
 template<class T> std::string vtos(const T&);
@@ -49,58 +51,23 @@ template<class T> std::string vtos(const T&, const T&);
 
 template<class T> std::string vtos(const T&, const T&, const T&);
 
-bool is_nbo();
-
 template<class T> void byte_swap(T&, const unsigned short& = sizeof(T));
 
 std::string indent(const std::string&, const unsigned short& = 1);
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
 
 
-/* ---------- ctos ---------- */
-/* returns a string from a
- char                       */
-template<class T> inline std::string
-ctos(const T& character_string)
-{
-	return std::string(character_string);
-}
-/* -------------------------- */
 
-/* ---------- ntos ---------- */
-/* returns a string from a
- number                     */
-template<class T> std::string
-ntos(const T& number)
-{
-	std::ostringstream word;
-	word << number;
-	return word.str();
-}
-/* -------------------------- */
 
-/* ---------- stoi ---------- */
-/* returns an integer from a
- string                     */
-long int
-stoi(const std::string& number)
-{
-	std::istringstream word(number);
-	long int ret;
-	word >> ret;
-	return ret;
-}
-/* -------------------------- */
 
 /* ---------- ntoIEEE ---------- */
-/* returns an IEEE string from a
- number                        */
-template<class T> std::string
-ntoIEEE(const T& number)
+/// returns an IEEE string from a number
+template<class T> std::string ntoIEEE(const T& number)
 {
 	short ntoi_precision = 8;
 	std::ostringstream word;
@@ -115,17 +82,17 @@ ntoIEEE(const T& number)
 		std::string::size_type get_e = bw.find("e");
 		if ( get_e != bw.npos )
 		{
-			bw = bw.substr(0,get_e);
+			bw = bw.substr(0, get_e);
 		}
-		for (size_t i=bw.size(); 0<i; i--)
+		for (std::size_t i=bw.size(); 0<i; i--)
 		{
 			if ( bw[i-1] == '0' )
 			{
-				bw = bw.substr(0,bw.size()-1);
+				bw = bw.substr(0, bw.size()-1);
 			}
 			else if ( bw[i-1] == '.' )
 			{
-				bw = bw.substr(0,bw.size()-1);
+				bw = bw.substr(0, bw.size()-1);
 				break;
 			}
 			else
@@ -146,9 +113,9 @@ ntoIEEE(const T& number)
 			if ( get_pm != ew.npos && get_pm < ew.size()-1 )
 			{
 				get_pm++;
-				if ( ew.substr(get_pm,ew.size()-get_pm) == std::string("0")
-					|| ew.substr(get_pm,ew.size()-get_pm) == std::string("00")
-					|| ew.substr(get_pm,ew.size()-get_pm) == std::string("000") )
+				if ( ew.substr(get_pm, ew.size() - get_pm) == std::string("0")
+					|| ew.substr(get_pm, ew.size() - get_pm) == std::string("00")
+					|| ew.substr(get_pm, ew.size() - get_pm) == std::string("000") )
 				{
 					ew = "";
 				}
@@ -164,31 +131,19 @@ ntoIEEE(const T& number)
 		is_i = true;
 		word << (long int)(number);
 	}
-	return ( is_i ) ? word.str() : bw+ew;
+	return ( is_i ) ? word.str() : bw + ew;
 }
-/* ----------------------------- */
 
-/* ---------- IEEEton ---------- */
-/* returns an number from an IEEE
- string                        */
-double
-IEEEton(const std::string& number)
-{
-	std::istringstream word(number);
-	double ret;
-	word >> ret;
-	return ret;
-}
-/* ----------------------------- */
+
+
+
 
 /* ---------- vtoIEEE ---------- */
-/* returns an IEEE string from a
- vector of number              */
-template<class T> std::string
-vtoIEEE(const std::valarray<T>& v)
+/// returns an IEEE string from a vector of number
+template<class T> std::string vtoIEEE(const std::valarray<T>& v)
 {
 	std::ostringstream word;
-	for (size_t i=0; i<v.size(); i++)
+	for (std::size_t i=0; i<v.size(); i++)
 	{
 		if ( i )
 		{
@@ -198,45 +153,47 @@ vtoIEEE(const std::valarray<T>& v)
 	}
 	return word.str();
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- IEEEtov ---------- */
-/* returns a vector from an IEEE
- string                        */
-template<class T> std::valarray<T>
-IEEEtov(const std::string& number)
+/// returns a vector from an IEEE string
+template<class T> std::valarray<T> IEEEtov(const std::string& number)
 {
-	size_t nsz = std::count(number.begin(), number.end(), ',') + 1;
+	std::size_t nsz = std::count(number.begin(), number.end(), ',') + 1;
 	std::valarray<T> ret(nsz);
-	size_t fp = 0;
-	size_t sp = 1;
-	for (size_t i=0; i<ret.size(); i++)
+	std::size_t fp = 0;
+	std::size_t sp = 1;
+	for (std::size_t i=0; i<ret.size(); i++)
 	{
-		for (size_t j=sp; j<number.size(); j++)
+		for (std::size_t j=sp; j<number.size(); j++)
 		{
 			if ( number[j] == ',' || j == number.size() - 1 )
 			{
-				sp = ( j == number.size() - 1 ) ? j+1 : j;
+				sp = ( j == number.size() - 1 ) ? j + 1 : j;
 				break;
 			}
 		}
-		ret[i] = IEEEton(number.substr(fp,sp-fp));
+		ret[i] = std::stod(number.substr(fp, sp-fp));
 		fp = sp + 1;
 		sp = fp + 1;
 	}
 	return ret;
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- vtos ---------- */
-/* returns a string from a
- vector/valarray            */
-template<class T> std::string
-vtos(const T& v)
+/// returns a string from a vector/valarray
+template<class T> std::string vtos(const T& v)
 {
 	std::ostringstream word;
 	word << '(';
-	for (size_t i=0; i<v.size(); i++)
+	for (std::size_t i=0; i<v.size(); i++)
 	{
 		if (i != 0 )
 		{
@@ -247,17 +204,18 @@ vtos(const T& v)
 	word << ')';
 	return word.str();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- vtos ---------- */
-/* returns a strings from two
- vectors/valarrays          */
-template<class T> std::string
-vtos(const T& u, const T& v)
+/// returns a strings from two vectors/valarrays
+template<class T> std::string vtos(const T& u, const T& v)
 {
 	std::ostringstream word;
 	word << '(';
-	for (size_t i=0; i<u.size(); i++)
+	for (std::size_t i=0; i<u.size(); i++)
 	{
 		if (i != 0 )
 		{
@@ -268,17 +226,18 @@ vtos(const T& u, const T& v)
 	word << ')';
 	return word.str();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- vtos ---------- */
-/* returns a string from three
- vectors/valarrays          */
-template<class T> std::string
-vtos(const T& u, const T& v, const T& w)
+/// returns a string from three vectors/valarrays
+template<class T> std::string vtos(const T& u, const T& v, const T& w)
 {
 	std::ostringstream word;
 	word << '(';
-	for (size_t i=0; i<u.size(); i++)
+	for (std::size_t i=0; i<u.size(); i++)
 	{
 		if (i != 0 )
 		{
@@ -289,36 +248,14 @@ vtos(const T& u, const T& v, const T& w)
 	word << ')';
 	return word.str();
 }
-/* -------------------------- */
 
-/* ---------- is_nbo ---------- */
-/* true if system is in Network
- Byte Order (Big Endian), false
- otherwise                    */
-bool
-is_nbo()
-{
-	int mynumber = 67305985;
-	char* c = (char*) &mynumber;
-	int c1 = int(*(c+0));
-	int c2 = int(*(c+1));
-	int c3 = int(*(c+2));
-	int c4 = int(*(c+3));
-	int newnum = (c4*1) + (c3*256) + (c2*65536) + (c1*16777216);
-	if ( newnum == mynumber )
-	{
-		return true;
-	}
-	return false;
-}
-/* ---------------------------- */
+
+
+
 
 /* ---------- byte_swap ---------- */
-/* given any value reverse the
- byte order, ie change the
- endiannes                       */
-template<class T> void
-byte_swap(T& number, const unsigned short& size_of)
+/// given any value reverse the byte order, ie change the endiannes
+template<class T> void byte_swap(T& number, const unsigned short& size_of)
 {
 	T* number_ref = &number;
 	unsigned char* swapper = (unsigned char*) number_ref;
@@ -329,13 +266,13 @@ byte_swap(T& number, const unsigned short& size_of)
 	return;
 }
 
-/* ------------------------------- */
+
+
+
 
 /* ---------- indent ---------- */
-/* indent the given string by
- `n' tabulatures              */
-std::string
-indent(const std::string& str, const unsigned short& n)
+/// indent the given string by `n' tabulatures
+std::string indent(const std::string& str, const unsigned short& n)
 {
 	std::string tabs("");
 	for (unsigned short i=0; i<n; i++)
@@ -348,13 +285,15 @@ indent(const std::string& str, const unsigned short& n)
 	{
 		if ( s[pb] == '\n' )
 		{
-			s.replace(pb,1,"\n"+tabs);
+			s.replace(pb, 1, "\n" + tabs);
 		}
 		pb++;
 	}
 	return s;
 }
-/* ---------------------------- */
+
+
+
 
 
 #endif /* _CONVERSIONS_ */

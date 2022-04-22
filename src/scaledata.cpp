@@ -1,8 +1,9 @@
-/*
+/**
  linearly scale real data in a PNG file
  
  Rado Faletic
  7th December 2004
+ 22nd April 2022
  */
 
 /*
@@ -13,17 +14,16 @@
 #include <sstream>
 #include <string>
 #include <valarray>
+
 #include "angles.h"
 #include "tomography.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
 	std::string ifilename = "input.png";
 	std::string ofilename = "";
-	real scale_mul = real(1);
-	real scale_add = real(0);
+    double scale_mul = double(1);
+    double scale_add = double(0);
 	
 	// read command-line switches
 	if ( argc == 1 )
@@ -82,13 +82,13 @@ int main(int argc, char* argv[])
 	}
 	
 	// search for PNG files
-	size_t Nrows = 0;
-	size_t Ncols = 0;
-	std::valarray<real> data;
+    std::size_t Nrows = 0;
+    std::size_t Ncols = 0;
+	std::valarray<double> data;
 	std::valarray<bool> blanks;
 	Angle::axes raxis = Angle::X;
-	std::valarray<real> angles;
-	real scale = 1;
+	std::valarray<double> angles;
+    double scale = 1;
 	bool realdata = true;
 	std::cout << "reading " << ifilename << std::endl;
 	Tomography::pngread(ifilename, Nrows, Ncols, data, blanks, raxis, angles, scale, realdata);
@@ -99,11 +99,11 @@ int main(int argc, char* argv[])
 		//return 1;
 	}
 	
-	if ( scale_mul != real(1) )
+	if ( scale_mul != double(1) )
 	{
 		data *= scale_mul;
 	}
-	if ( scale_add != real(0) )
+	if ( scale_add != double(0) )
 	{
 		data += scale_add;
 	}

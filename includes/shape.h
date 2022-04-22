@@ -1,4 +1,4 @@
-/*
+/**
  shape
  
  A collection of C++ routines for dealing with generic shapes.
@@ -11,11 +11,18 @@
  
  Rado.Faletic@anu.edu.au
  21st June 2004
+ 22nd April 2022
  */
+
+
+
 
 
 #ifndef _SHAPE_
 #define _SHAPE_
+
+
+
 
 
 /* ---------- standard header files ---------- */
@@ -23,19 +30,16 @@
 #include <sstream>
 #include <string>
 #include <valarray>
-/* ------- user header files -------- */
-#include "line.h"
-/* ---------------------------------- */
 
 
-/* --------------------------------------- */
+
+
+
 /* ---------- class declaration ---------- */
-/* --------------------------------------- */
-
+template<class T> class line;
 
 // `shape' base class
-template<class T>
-class shape
+template<class T> class shape
 {
 public:
 	shape() { };
@@ -51,8 +55,7 @@ public:
 };
 
 // `compact_shape' base class
-template<class T>
-class compact_shape : public shape<T>
+template<class T> class compact_shape : public shape<T>
 {
 private:
 	std::valarray< const std::valarray<T>* > node_;
@@ -70,18 +73,21 @@ public:
 	virtual T make_measure() const = 0;
 	virtual T scale() const = 0;
 	virtual const compact_shape<T>* face(const unsigned short&) const = 0;
-	size_t adjacent(const compact_shape<T>&, const bool& = true) const;
+	std::size_t adjacent(const compact_shape<T>&, const bool& = true) const;
 };
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- assign_nodes ---------- */
-template<class T> void
-compact_shape<T>::assign_nodes(const unsigned int nn ...)
+template<class T> void compact_shape<T>::assign_nodes(const unsigned int nn ...)
 {
 	// get the nodes
 	this->node_.resize(nn);
@@ -99,47 +105,58 @@ compact_shape<T>::assign_nodes(const unsigned int nn ...)
 		if ( (this->node_[i])->size() != (this->node_[(i+1)%nn])->size() ||
 			v_eq(this->node_[i], this->node_[(i+1)%nn]) )
 		{
-			throw; return;
+			throw;
+            return;
 		}
 	}
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- operator[] ---------- */
-template<class T> inline std::valarray<T>
-compact_shape<T>::operator[](const unsigned short& n) const
+template<class T> inline std::valarray<T> compact_shape<T>::operator[](const unsigned short& n) const
 {
 	return *(this->node_[n]);
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- p ---------- */
-template<class T> inline const std::valarray<T>*
-compact_shape<T>::p(const unsigned short& n) const
+template<class T> inline const std::valarray<T>* compact_shape<T>::p(const unsigned short& n) const
 {
 	return this->node_[n];
 }
-/* ----------------------- */
+
+
+
+
 
 /* ---------- dim ---------- */
-template<class T> inline unsigned short
-compact_shape<T>::dim() const
+template<class T> inline unsigned short compact_shape<T>::dim() const
 {
 	return (this->node_[0])->size();
 }
-/* ------------------------- */
+
+
+
+
 
 /* ---------- size ---------- */
-template<class T> inline unsigned short
-compact_shape<T>::size() const
+template<class T> inline unsigned short compact_shape<T>::size() const
 {
 	return this->node_.size();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- print ---------- */
-template<class T> std::string
-compact_shape<T>::print() const
+template<class T> std::string compact_shape<T>::print() const
 {
 	std::ostringstream tmp;
 	tmp << "{ ";
@@ -163,25 +180,29 @@ compact_shape<T>::print() const
 	tmp << " }";
 	return tmp.str();
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- measure ---------- */
-template<class T> inline T
-compact_shape<T>::measure() const
+template<class T> inline T compact_shape<T>::measure() const
 {
 	//return this->measure_;
 	return this->make_measure();
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- adjacent ---------- */
-template<class T> size_t
-compact_shape<T>::adjacent(const compact_shape<T>& s, const bool& quick) const
+template<class T> std::size_t compact_shape<T>::adjacent(const compact_shape<T>& s, const bool& quick) const
 {
-	size_t counter = 0;
-	for (size_t i=0; i<this->node_.size(); i++)
+    std::size_t counter = 0;
+	for (std::size_t i=0; i<this->node_.size(); i++)
 	{
-		for (size_t j=0; j<s.size(); j++)
+		for (std::size_t j=0; j<s.size(); j++)
 		{
 			if ( this->node_[i] == s.p(j) )
 			{
@@ -195,7 +216,9 @@ compact_shape<T>::adjacent(const compact_shape<T>& s, const bool& quick) const
 	}
 	return counter;
 }
-/* ------------------------------ */
+
+
+
 
 
 #endif /* _SHAPE_ */

@@ -1,8 +1,9 @@
-/*
+/**
  A programme to convert a PNG tomographic file into a Plot3D file
  
  Rado Faletic
  7th December 2004
+ 22nd April 2022
  */
 
 /*
@@ -16,18 +17,16 @@
 #include "plot3d.h"
 #include "tomography.h"
 
-typedef double real;
-
 int main(int argc, char* argv[])
 {
 	std::string ifilename = "input.png";
 	std::string ofilename = "";
-	real xw = real(0);
+	double xw = double(0);
 	bool xwr = false;
-	real yw = real(0);
+    double yw = double(0);
 	bool ywr = false;
-	real l = real(1);
-	real gd = real(1);
+    double l = double(1);
+    double gd = double(1);
 	
 	// read command-line switches
 	if ( argc == 1 )
@@ -96,13 +95,13 @@ int main(int argc, char* argv[])
 	}
 	
 	// search for PNG files
-	size_t Nrows = 0;
-	size_t Ncols = 0;
-	std::valarray<real> data;
+	std::size_t Nrows = 0;
+    std::size_t Ncols = 0;
+	std::valarray<double> data;
 	std::valarray<bool> blanks;
 	Angle::axes raxis = Angle::X;
-	std::valarray<real> angles;
-	real scale = 1;
+	std::valarray<double> angles;
+    double scale = 1;
 	bool realdata = true;
 	std::cout << "reading " << ifilename << std::endl;
 	Tomography::pngread(ifilename, Nrows, Ncols, data, blanks, raxis, angles, scale, realdata);
@@ -112,26 +111,26 @@ int main(int argc, char* argv[])
 		raxis = Angle::Z;
 	}
 	
-	if ( l != real(1) || gd != real(1) )
+	if ( l != double(1) || gd != double(1) )
 	{
 		data *= l / gd;
 	}
 	
 	// make the grid
-	size_t Nx = 1;
-	size_t Ny = 1;
-	size_t Nz = 1;
+    std::size_t Nx = 1;
+    std::size_t Ny = 1;
+    std::size_t Nz = 1;
 	
 	switch(raxis)
 	{
 		case Angle::X: case Angle::YZ:
-			Nx = data.size()/(Nrows*Ncols);
+			Nx = data.size() / (Nrows*Ncols);
 			Ny = Nrows;
 			Nz = Ncols;
 			break;
 		case Angle::Y: case Angle::ZX:
 			Nx = Ncols;
-			Ny = data.size()/(Nrows*Ncols);
+			Ny = data.size() / (Nrows*Ncols);
 			Nz = Nrows;
 			break;
 		case Angle::Z: case Angle::XY:
@@ -139,13 +138,15 @@ int main(int argc, char* argv[])
 			Ny = Nrows;
 			Nz = 1;
 			break;
+        default:
+            break;
 	}
 	
-	std::valarray<real> X(scale, Nx*Ny*Nz);
-	std::valarray<real> Y(scale, Nx*Ny*Nz);
-	std::valarray<real> Z(scale, Nx*Ny*Nz);
+	std::valarray<double> X(scale, Nx*Ny*Nz);
+	std::valarray<double> Y(scale, Nx*Ny*Nz);
+	std::valarray<double> Z(scale, Nx*Ny*Nz);
 	std::valarray<bool> B(true, Nx*Ny*Nz);
-	std::valarray<real> D(real(0), Nx*Ny*Nz);
+	std::valarray<double> D(double(0), Nx*Ny*Nz);
 	if ( xwr )
 	{
 		X = ( Nx <= 1 ) ? 1 : xw / ( Nx - 1);
@@ -158,13 +159,13 @@ int main(int argc, char* argv[])
 		Z = ( Nz <= 1 ) ? 1 : yw / ( Nz - 1 );
 		if ( !xwr ) X = Y[0];
 	}
-	for (size_t k=0; k<Nz; k++)
+	for (std::size_t k=0; k<Nz; k++)
 	{
-		for (size_t j=0; j<Ny; j++)
+		for (std::size_t j=0; j<Ny; j++)
 		{
-			for (size_t i=0; i<Nx; i++)
+			for (std::size_t i=0; i<Nx; i++)
 			{
-				size_t pos = k*(Ny*Nx) + j*Nx + i;
+                std::size_t pos = k*(Ny*Nx) + j*Nx + i;
 				X[pos] *= i;
 				Y[pos] *= j;
 				Z[pos] *= k;
@@ -180,11 +181,13 @@ int main(int argc, char* argv[])
 					case Angle::Z: case Angle::XY:
 						D[pos] = data[j*Ncols+i];
 						break;
+                    default:
+                        break;
 				}
 			}
 		}
 	}
-	std::valarray<real> O(real(0), Nx*Ny*Nz);
+	std::valarray<double> O(double(0), Nx*Ny*Nz);
 	
 	message("saving '"+ofilename+"'");
 	Plot3D::write(X, Y, Z, B, Nx, Ny, Nz, ofilename+".PBG", Binary);

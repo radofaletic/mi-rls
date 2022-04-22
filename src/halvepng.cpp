@@ -1,8 +1,9 @@
-/*
+/**
  A programme to perform a linear tomographic inversion on any greyscale PNG file
  
  Rado Faletic
  13th July 2004
+ 22nd April 2022
  */
 
 /*
@@ -15,10 +16,9 @@
 #include <string>
 #include <valarray>
 #include <vector>
+
 #include "angles.h"
 #include "tomography.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
@@ -71,39 +71,39 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	size_t oNrows, oNcols;
-	std::valarray<real> opngdata;
+	std::size_t oNrows, oNcols;
+	std::valarray<double> opngdata;
 	std::valarray<bool> oblanks;
 	Angle::axes axis;
-	std::valarray<real> angles;
-	real scale;
+	std::valarray<double> angles;
+    double scale;
 	bool realdata;
 	Tomography::pngread(ifilename, oNrows, oNcols, opngdata, oblanks, axis, angles, scale, realdata);
 	if ( !angles.size() )
 	{
-		angles.resize(1, real(0));
+		angles.resize(1, double(0));
 	}
-	real dmin = opngdata.min();
+    double dmin = opngdata.min();
 	
-	size_t Nrows = ( oNrows%2 ) ? ( oNrows / 2 ) + 1 : oNrows / 2;
-	size_t Ncols = ( oNcols%2 ) ? ( oNcols / 2 ) + 1 : oNcols / 2;
-	std::valarray<real> pngdata(angles.size()*Nrows*Ncols);
+    std::size_t Nrows = ( oNrows%2 ) ? ( oNrows / 2 ) + 1 : oNrows / 2;
+    std::size_t Ncols = ( oNcols%2 ) ? ( oNcols / 2 ) + 1 : oNcols / 2;
+	std::valarray<double> pngdata(angles.size()*Nrows*Ncols);
 	std::valarray<bool> blanks(angles.size()*Nrows*Ncols);
 	
 	std::valarray<bool> blank(4);
-	std::valarray<real> value(4);
-	for (size_t angle=0; angle<angles.size(); angle++)
+	std::valarray<double> value(4);
+	for (std::size_t angle=0; angle<angles.size(); angle++)
 	{
-		size_t oz = angle * oNrows * oNcols;
-		size_t z = angle * Nrows * Ncols;
-		for (size_t j=0; j<Nrows; j++)
+        std::size_t oz = angle * oNrows * oNcols;
+        std::size_t z = angle * Nrows * Ncols;
+		for (std::size_t j=0; j<Nrows; j++)
 		{
-			size_t oj1 = 2*j;
-			size_t oj2 = ( oj1 == oNrows - 1 ) ? oj1 : oj1 + 1;
-			for (size_t i=0; i<Ncols; i++)
+            std::size_t oj1 = 2*j;
+            std::size_t oj2 = ( oj1 == oNrows - 1 ) ? oj1 : oj1 + 1;
+			for (std::size_t i=0; i<Ncols; i++)
 			{
-				size_t oi1 = 2*i;
-				size_t oi2 = ( oi1 == oNcols - 1 ) ? oi1 : oi1 + 1;
+                std::size_t oi1 = 2*i;
+                std::size_t oi2 = ( oi1 == oNcols - 1 ) ? oi1 : oi1 + 1;
 				blank[0] = oblanks[oz+oj1*oNcols+oi1];
 				blank[1] = oblanks[oz+oj1*oNcols+oi2];
 				blank[2] = oblanks[oz+oj2*oNcols+oi1];
@@ -113,7 +113,7 @@ int main(int argc, char* argv[])
 				value[2] = opngdata[oz+oj2*oNcols+oi1];
 				value[3] = opngdata[oz+oj2*oNcols+oi2];
 				unsigned short counter = 0;
-				for (size_t b=0; b<4; b++)
+				for (std::size_t b=0; b<4; b++)
 				{
 					if ( blank[b] )
 					{
@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
 	}
 	scale *= 2;
 	bool tpcy = false;
-	for (size_t i=0; i<blanks.size(); i++)
+	for (std::size_t i=0; i<blanks.size(); i++)
 	{
 		if ( !blanks[i] )
 		{
@@ -191,7 +191,7 @@ int main(int argc, char* argv[])
 			break;
 		}
 	}
-	if ( angles.size() == 1 && angles[0] == real(0) )
+	if ( angles.size() == 1 && angles[0] == double(0) )
 	{
 		angles.resize(0);
 	}

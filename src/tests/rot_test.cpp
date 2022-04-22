@@ -1,4 +1,4 @@
-/*
+/**
  for testing rotation
  */
 
@@ -43,40 +43,40 @@ int main(int argc, char* argv[])
 	{
 		if ( std::string(argv[1]) == std::string("x") )
 		{
-			message("creating initial point ("+ntos(length)+",0,0)...");
+			message("creating initial point ("+std::to_string(length)+",0,0)...");
 			point[0] = length;
 		}
 		else if ( std::string(argv[1]) == std::string("y") )
 		{
-			message("creating initial point (0,"+ntos(length)+",0)...");
+			message("creating initial point (0,"+std::to_string(length)+",0)...");
 			point[1] = length;
 		}
 		else if ( std::string(argv[1]) == std::string("z") )
 		{
-			message("creating initial point (0,0,"+ntos(length)+")...");
+			message("creating initial point (0,0,"+std::to_string(length)+")...");
 			point[2] = length;
 		}
 		else if ( std::string(argv[1]) == std::string("xy") )
 		{
-			message("creating initial point ("+ntos(length)+","+ntos(length)+",0)...");
+			message("creating initial point ("+std::to_string(length)+","+std::to_string(length)+",0)...");
 			point[0] = length;
 			point[1] = length;
 		}
 		else if ( std::string(argv[1]) == std::string("yz") )
 		{
-			message("creating initial point (0,"+ntos(length)+","+ntos(length)+")...");
+			message("creating initial point (0,"+std::to_string(length)+","+std::to_string(length)+")...");
 			point[1] = length;
 			point[2] = length;
 		}
 		else if ( std::string(argv[1]) == std::string("zx") )
 		{
-			message("creating initial point ("+ntos(length)+",0,"+ntos(length)+")...");
+			message("creating initial point ("+std::to_string(length)+",0,"+std::to_string(length)+")...");
 			point[2] = length;
 			point[0] = length;
 		}
 		else if ( std::string(argv[1]) == std::string("xyz") )
 		{
-			message("creating initial point ("+ntos(length)+","+ntos(length)+","+ntos(length)+")...");
+			message("creating initial point ("+std::to_string(length)+","+std::to_string(length)+","+std::to_string(length)+")...");
 			point[0] = length;
 			point[1] = length;
 			point[2] = length;
@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		message("creating initial point ("+ntos(length)+",0,0)...");
+		message("creating initial point ("+std::to_string(length)+",0,0)...");
 		point[0] = length;
 	}
 	message(tab+vtos(point));
@@ -110,7 +110,7 @@ int main(int argc, char* argv[])
 	message(trot.print());
 	Rotation<float> rot(3);
 	rot.set(angle);
-	message(ctos(typeid(rot).name())+"\n"+rot.print());
+	message(std::string(typeid(rot).name()) + "\n" + rot.print());
 	
 	//
 	// rotate the initial point +90degrees on the xy-plane
@@ -118,9 +118,9 @@ int main(int argc, char* argv[])
 	std::valarray<float> tnewvec(3);
 	tnewvec[0] = cos(angle);
 	tnewvec[1] = sin(angle);
-	message("rotating initial point +z "+ntos(angle)+"...\t"+vtos(tnewvec));
+	message("rotating initial point +z " + std::to_string(angle) + "...\t" + vtos(tnewvec));
 	std::valarray<float> newvec = rot(point);
-	message(tab+vtos(newvec));
+	message(tab + vtos(newvec));
 	
 	//
 	// rotate the initial point +90degrees on the zx-plane
@@ -128,19 +128,19 @@ int main(int argc, char* argv[])
 	tnewvec[0] = cos(angle);
 	tnewvec[1] = float(0);
 	tnewvec[2] = -sin(angle);
-	message("rotating initial point +y "+ntos(angle)+"...\t"+vtos(tnewvec));
-	rot.reset(angle,Angle::Y);
+	message("rotating initial point +y " + std::to_string(angle) + "...\t" + vtos(tnewvec));
+	rot.reset(angle, Angle::Y);
 	newvec = rot(point);
-	message(tab+vtos(newvec));
+	message(tab + vtos(newvec));
 	
 	//
 	// rotate the initial point +90degrees on the yz-plane
 	//
 	tnewvec = point;
-	message("rotating initial point +x "+ntos(angle)+"...\t"+vtos(tnewvec));
-	rot.reset(angle,Angle::X);
+	message("rotating initial point +x " + std::to_string(angle) + "...\t" + vtos(tnewvec));
+	rot.reset(angle, Angle::X);
 	newvec = rot(point);
-	message(tab+vtos(newvec));
+	message(tab + vtos(newvec));
 	
 	//
 	// shifted origin
@@ -160,7 +160,7 @@ int main(int argc, char* argv[])
 	tnewvec[0] = float(1)+sin(angle);
 	tnewvec[1] = float(1)+sin(angle);
 	tnewvec[2] = float(1);
-	message("rotating initial point +z "+ntos(angle)+"...\t"+vtos(tnewvec));
+	message("rotating initial point +z "+std::to_string(angle)+"...\t"+vtos(tnewvec));
 	rot.reset(angle);
 	newvec = rot(point);
 	message(tab+vtos(newvec));
@@ -173,7 +173,7 @@ int main(int argc, char* argv[])
 	std::cout << std::endl << std::endl
 	<< "ROTATE A SERIES OF POINTS" << std::endl
 	<< "initial series of " << at.size() << ":" << std::endl;
-	for (size_t i=0; i<at.size(); i++)
+	for (std::size_t i=0; i<at.size(); i++)
 	{
 		at[i].resize(2);
 		at[i][0] = (long double)(i) - ((long double)(at.size()-1)/2.0);
@@ -181,7 +181,7 @@ int main(int argc, char* argv[])
 		std::cout << at[i][0] << "," << at[i][1] << std::endl;
 	}
 	std::cout << "series rotated by " << atr << " degrees:" << std::endl;
-	for (size_t i=0; i<at.size(); i++)
+	for (std::size_t i=0; i<at.size(); i++)
 	{
 		at[i] = atrot.O(at[i]);
 		std::cout << at[i][0] << "," << at[i][1] << std::endl;

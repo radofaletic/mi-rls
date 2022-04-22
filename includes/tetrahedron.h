@@ -1,4 +1,4 @@
-/*
+/**
  tetrahedron
  
  A collection of C++ routines for dealing with generic tetrahedrons.
@@ -11,34 +11,44 @@
  
  Rado.Faletic@anu.edu.au
  21st June 2004
+ 22nd April 2022
  */
+
+
+
 
 
 #ifndef _TETRAHEDRON_
 #define _TETRAHEDRON_
 
 
+
+
+
 /* ---------- standard header files ---------- */
 #include <algorithm>
 #include <valarray>
 #include <vector>
+
+
+
+
+
 /* ------- user header files -------- */
 #include "extra_math.h"
 #include "line.h"
 #include "plane.h"
 #include "shape.h"
 #include "triangle.h"
-/* ---------------------------------- */
 
 
-/* --------------------------------------- */
+
+
+
 /* ---------- class declaration ---------- */
-/* --------------------------------------- */
-
 
 // `tetrahedron' class
-template<class T>
-class tetrahedron : public compact_shape<T>
+template<class T> class tetrahedron : public compact_shape<T>
 {
 private:
 	triangle<T> face0_;
@@ -58,25 +68,30 @@ public:
 };
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- init ---------- */
-template<class T> void
-tetrahedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
+template<class T> void tetrahedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
 {
 	if ( pt1->size() < 3 )
 	{
-		throw; return;
+		throw;
+        return;
 	}
 	
 	// just make sure that the vertices are not coplanar
 	plane<T> faceplane(pt1, pt2, pt3);
 	if ( faceplane.contains_p(pt4) )
 	{
-		throw; return;
+		throw;
+        return;
 	}
 	
 	// allocate tetrahedron nodes
@@ -90,19 +105,23 @@ tetrahedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, c
 	// volume
 	//this->measure_ = this->make_measure();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- tetrahedron ---------- */
-template<class T> inline
-tetrahedron<T>::tetrahedron(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
+template<class T> inline tetrahedron<T>::tetrahedron(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
 {
 	this->init(pt1, pt2, pt3, pt4);
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- make_measure ---------- */
-template<class T> inline T
-tetrahedron<T>::make_measure() const
+template<class T> inline T tetrahedron<T>::make_measure() const
 {
 	T m = T(0);
 	// take the determinant of the three
@@ -127,19 +146,23 @@ tetrahedron<T>::make_measure() const
 	* ( ((*this)[3])[2] - ((*this)[0])[2] );
 	return m / T(6); // and divide by 6
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- scale ---------- */
-template<class T> inline T
-tetrahedron<T>::scale() const
+template<class T> inline T tetrahedron<T>::scale() const
 {
 	return ( this->face0_.scale() + this->face1_.scale() + this->face2_.scale() + this->face3_.scale() ) / T(4);
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- distance_p ---------- */
-template<class T> inline T
-tetrahedron<T>::distance_p(const std::valarray<T>* pt) const
+template<class T> inline T tetrahedron<T>::distance_p(const std::valarray<T>* pt) const
 {
 	if ( this->contains_p(pt) )
 	{
@@ -151,15 +174,18 @@ tetrahedron<T>::distance_p(const std::valarray<T>* pt) const
 	dist = std::min(dist, this->face3_.distance_p(pt));
 	return dist;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- contains_p ---------- */
-template<class T> bool
-tetrahedron<T>::contains_p(const std::valarray<T>* pt) const
+template<class T> bool tetrahedron<T>::contains_p(const std::valarray<T>* pt) const
 {
 	if ( this->dim() != pt->size() )
 	{
-		throw; return false;
+		throw;
+        return false;
 	}
 	
 	// see if the point lies inside the tetrahedron
@@ -195,18 +221,21 @@ tetrahedron<T>::contains_p(const std::valarray<T>* pt) const
 	}
 	return true;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- intersect ---------- */
-template<class T> T
-tetrahedron<T>::intersect(const line<T>& l, std::valarray<T>& intercepts, bool& on_edge) const
-// 'on_edge' refers to whether or not l lies along any of the triangular faces of the tetrahedron
+/// 'on_edge' refers to whether or not l lies along any of the triangular faces of the tetrahedron
+template<class T> T tetrahedron<T>::intersect(const line<T>& l, std::valarray<T>& intercepts, bool& on_edge) const
 {
 	intercepts.resize(0);
 	on_edge = false;
 	if ( this->dim() != l.dim() )
 	{
-		throw; return T(0);
+		throw;
+        return T(0);
 	}
 	
 	std::vector< std::valarray<T> > itemp;
@@ -236,11 +265,13 @@ tetrahedron<T>::intersect(const line<T>& l, std::valarray<T>& intercepts, bool& 
 	}
 	return maximise_distance(itemp);
 }
-/* ------------------------------- */
+
+
+
+
 
 /* ---------- face ---------- */
-template<class T> inline const compact_shape<T>*
-tetrahedron<T>::face(const unsigned short& fn) const
+template<class T> inline const compact_shape<T>* tetrahedron<T>::face(const unsigned short& fn) const
 {
 	switch(fn)
 	{
@@ -259,7 +290,9 @@ tetrahedron<T>::face(const unsigned short& fn) const
 	}
 	return 0;
 }
-/* -------------------------- */
+
+
+
 
 
 #endif /* _TETRAHEDRON_ */

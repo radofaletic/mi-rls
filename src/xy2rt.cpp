@@ -1,8 +1,9 @@
-/*
+/**
  A programme to convert a Real-Imaginary image from x-y to r-theta
  
  Rado Faletic
  23rd October 2004
+ 22nd April 2022
  */
 
 /*
@@ -12,12 +13,11 @@
 #include <complex>
 #include <string>
 #include <valarray>
+
 #include "angles.h"
 #include "argv.h"
 #include "front-end.h"
 #include "tomography.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
@@ -52,7 +52,8 @@ int main(int argc, char* argv[])
 		else
 		{
 			message("Unrecognised option '"+fswitch[i].var()+"'.\nUse the --help option to learn more.");
-			throw; return 1;
+			throw;
+            return 1;
 		}
 	}
 	if ( ipngfilename.substr(ipngfilename.size()-4,4) != ".png" && ipngfilename.substr(ipngfilename.size()-4,4) != ".PNG" )
@@ -66,11 +67,11 @@ int main(int argc, char* argv[])
 	
 	// read PNG image file
 	message("reading '"+ipngfilename+"'");
-	size_t Nrows, Ncols;
-	std::valarray<real> data;
+    std::size_t Nrows, Ncols;
+	std::valarray<double> data;
 	Angle::axes sino_axis;
-	std::valarray<real> angles;
-	real scale;
+	std::valarray<double> angles;
+    double scale;
 	bool realdata;
 	std::valarray<bool> blanks;
 	Tomography::pngread(ipngfilename, Nrows, Ncols, data, blanks, sino_axis, angles, scale, realdata);
@@ -78,16 +79,17 @@ int main(int argc, char* argv[])
 	if ( 2*Nrows*Ncols != data.size() )
 	{
 		message("'"+ipngfilename+"' is not a 2-image file");
-		throw; return 1;
+		throw;
+        return 1;
 	}
 	
-	real rmin = real(0);
-	real rmax = real(0);
-	real tmin = real(0);
-	real tmax = real(0);
-	for (size_t i=0; i<Nrows*Ncols; i++)
+    double rmin = double(0);
+    double rmax = double(0);
+    double tmin = double(0);
+    double tmax = double(0);
+	for (std::size_t i=0; i<Nrows*Ncols; i++)
 	{
-		std::complex<real> d(data[i],data[Nrows*Ncols+i]);
+		std::complex<double> d(data[i],data[Nrows*Ncols+i]);
 		data[i] = std::abs(d);
 		data[Nrows*Ncols+i] = std::arg(d);
 		rmin = ( !i ) ? data[i] : std::min(rmin, data[i]);
@@ -95,9 +97,9 @@ int main(int argc, char* argv[])
 		tmin = ( !i ) ? data[i] : std::min(tmin, data[Nrows*Ncols+i]);
 		tmax = ( !i ) ? data[i] : std::max(tmax, data[Nrows*Ncols+i]);
 	}
-	real m = ( rmax - rmin ) / ( tmax - tmin );
-	real c = rmax - m * tmax;
-	for (size_t i=0; i<Nrows*Ncols; i++)
+    double m = ( rmax - rmin ) / ( tmax - tmin );
+    double c = rmax - m * tmax;
+	for (std::size_t i=0; i<Nrows*Ncols; i++)
 	{
 		//data[i] = tmin;
 		//data[Nrows*Ncols+i] = rmin;

@@ -1,4 +1,4 @@
-/*
+/**
  fortran_io
  
  Fortran i/o routines written in C++
@@ -11,11 +11,18 @@
  
  Rado.Faletic@anu.edu.au
  20th June 2004
+ 17 April 2022
  */
+
+
+
 
 
 #ifndef _FORTRAN_IO_
 #define _FORTRAN_IO_
+
+
+
 
 
 /* ---------- standard header files ---------- */
@@ -25,16 +32,20 @@
 #include <typeinfo>
 #include <valarray>
 #include <vector>
+
+
+
+
+
 /* ---------- user header files ---------- */
 #include "file.h"
 #include "front-end.h"
-/* ---------------------------------- */
 
 
-/* ------------------------------------------- */
+
+
+
 /* ---------- function declarations ---------- */
-/* ------------------------------------------- */
-
 
 namespace Fortran
 {
@@ -90,8 +101,8 @@ template<class T> void iread_vector(std::ifstream&, T*,  T*, const bool& = false
 
 template<class T> void iwrite_vector(std::ofstream&, T*, T*, const bool& = false, const dataformat& = Formatted);
 
-template<class T> void iread_vector(std::ifstream&, const size_t&, std::valarray<T>&, bool&, const dataformat& = Formatted);
-template<class T> void iread_vector(std::ifstream&, const size_t&, std::vector<T>&, bool&, const dataformat& = Formatted);
+template<class T> void iread_vector(std::ifstream&, const std::size_t&, std::valarray<T>&, bool&, const dataformat& = Formatted);
+template<class T> void iread_vector(std::ifstream&, const std::size_t&, std::vector<T>&, bool&, const dataformat& = Formatted);
 
 template<class T> void iwrite_vector(std::ofstream&, const std::valarray<T>&, const bool& = false, const dataformat& = Formatted);
 
@@ -113,8 +124,8 @@ template<class T> void fread_vector(std::ifstream&, T*, T*, const bool& = false,
 
 template<class T> void fwrite_vector(std::ofstream&, T*, T*, const bool& = false, const dataformat& = Formatted, const dataprecision& = Single);
 
-template<class T> void fread_vector(std::ifstream&, const size_t&, std::valarray<T>&, bool&, const dataformat&, dataprecision&);
-template<class T> void fread_vector(std::ifstream&, const size_t&, std::vector<T>&, bool&, const dataformat&, dataprecision&);
+template<class T> void fread_vector(std::ifstream&, const std::size_t&, std::valarray<T>&, bool&, const dataformat&, dataprecision&);
+template<class T> void fread_vector(std::ifstream&, const std::size_t&, std::vector<T>&, bool&, const dataformat&, dataprecision&);
 
 template<class T> void fwrite_vector(std::ofstream&, const std::valarray<T>&, const bool& = false, const dataformat& = Formatted, const dataprecision& = Single);
 
@@ -124,16 +135,18 @@ template<class T> void fdump_vector(const std::string&, const std::valarray<T>&,
 }
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- integer_type ---------- */
-/* what type of integer is 4 bytes
- in size?                           */
-Fortran::io_type
-Fortran::integer_type()
+/// what type of integer is 4 bytes in size?
+Fortran::io_type Fortran::integer_type()
 {
 	if ( sizeof(int) == 4 )
 	{
@@ -147,22 +160,22 @@ Fortran::integer_type()
 	{
 		return io_long;
 	}
-	else if ( sizeof(size_t) == 4 )
+	else if ( sizeof(std::size_t) == 4 )
 	{
 		return io_size_t;
 	}
 	return io_null;
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- real_type ---------- */
-/* what type of float is 4 bytes
- (or 8 bytes for double
- precision) in size?             */
-Fortran::io_type
-Fortran::real_type(const dataprecision& precision)
+/// what type of float is 4 bytes (or 8 bytes for double precision) in size?
+Fortran::io_type Fortran::real_type(const dataprecision& precision)
 {
-	unsigned int fsize = ( precision == Double ) ? 8 : 4;
+    const std::size_t fsize = ( precision == Double ) ? 8 : 4;
 	if ( sizeof(float) == fsize )
 	{
 		return io_float;
@@ -177,12 +190,14 @@ Fortran::real_type(const dataprecision& precision)
 	}
 	return io_null;
 }
-/* ------------------------------- */
+
+
+
+
 
 /* ---------- is_integer ---------- */
-/* is `value' an integer?           */
-template<class T> bool
-Fortran::is_integer(const T& value)
+/// is `value' an integer?
+template<class T> bool Fortran::is_integer(const T& value)
 {
 	if ( typeid(short) == typeid(T) ||
 		typeid(int) == typeid(T) ||
@@ -190,19 +205,21 @@ Fortran::is_integer(const T& value)
 		typeid(unsigned short) == typeid(T) ||
 		typeid(unsigned int) == typeid(T) ||
 		typeid(unsigned long) == typeid(T) ||
-		typeid(size_t) == typeid(T) ||
+		typeid(std::size_t) == typeid(T) ||
 		typeid(std::streamsize) == typeid(T) )
 	{
 		return true;
 	}
 	return false;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- is_real ---------- */
-/* is `value' a float?           */
-template<class T> bool
-Fortran::is_real(const T& value)
+/// is `value' a float?
+template<class T> bool Fortran::is_real(const T& value)
 {
 	if ( typeid(float) == typeid(T) ||
 		typeid(double) == typeid(T) ||
@@ -212,17 +229,17 @@ Fortran::is_real(const T& value)
 	}
 	return false;
 }
-/* ------------------------------ */
+
+
+
+
 
 /* ---------- read_byte_info ---------- */
-/* read 4 bytes of information in
- binary, generally used for byte
- information about a block of data    */
-template<class T> void
-Fortran::read_byte_info(std::ifstream& file,
-						T& value,
-						const bool& byte_swapping,
-						const dataformat& format)
+/// read 4 bytes of information in binary, generally used for byte information about a block of data
+template<class T> void Fortran::read_byte_info(std::ifstream& file,
+                                               T& value,
+                                               const bool& byte_swapping,
+                                               const dataformat& format)
 {
 	value = T(0);
 	if ( format != Unformatted )
@@ -232,7 +249,8 @@ Fortran::read_byte_info(std::ifstream& file,
 	else if ( !file )
 	{
 		debug("Fortran::read_byte_info", "no file to read from");
-		throw; return;
+		throw;
+        return;
 	}
 	
 	short stemp;
@@ -266,19 +284,21 @@ Fortran::read_byte_info(std::ifstream& file,
 			}
 			value = ltemp;
 			break;
+        default:
+            break;
 	}
 }
-/* ------------------------------------ */
+
+
+
+
 
 /* ---------- write_byte_info ---------- */
-/* write 4 bytes of information in
- binary, generally used for byte
- information about a block of data     */
-template<class T> void
-Fortran::write_byte_info(std::ofstream& file,
-						 const T& value,
-						 const bool& byte_swapping,
-						 const dataformat& format)
+/// write 4 bytes of information in binary, generally used for byte information about a block of data
+template<class T> void Fortran::write_byte_info(std::ofstream& file,
+                                                const T& value,
+                                                const bool& byte_swapping,
+                                                const dataformat& format)
 {
 	if ( format != Unformatted )
 	{
@@ -286,8 +306,9 @@ Fortran::write_byte_info(std::ofstream& file,
 	}
 	else if ( !file )
 	{
-		debug("Fortran::write_byte_info","no file to write to");
-		throw; return;
+		debug("Fortran::write_byte_info", "no file to write to");
+		throw;
+        return;
 	}
 	
 	short stemp;
@@ -320,24 +341,29 @@ Fortran::write_byte_info(std::ofstream& file,
 			}
 			file.write((char*)& ltemp, 4);
 			break;
+        default:
+            break;
 	}
 	
 }
-/* ------------------------------------- */
+
+
+
+
 
 /* ---------- iread_item ---------- */
-/* read a single integer value      */
-template<class T> void
-Fortran::iread_item(std::ifstream& file,
-					T& value,
-					const bool& byte_swapping,
-					const dataformat& format)
+/// read a single integer value
+template<class T> void Fortran::iread_item(std::ifstream& file,
+                                           T& value,
+                                           const bool& byte_swapping,
+                                           const dataformat& format)
 {
 	value = T(0);
 	if ( !file )
 	{
-		debug("Fortran::iread_item","no file to read from");
-		throw; return;
+		debug("Fortran::iread_item", "no file to read from");
+		throw;
+        return;
 	}
 	switch(format)
 	{
@@ -347,23 +373,28 @@ Fortran::iread_item(std::ifstream& file,
 		case Formatted:
 			file >> value;
 			break;
+        default:
+            break;
 	}
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- bread_item ---------- */
-/* read a bool value                */
-void
-Fortran::bread_item(std::ifstream& file,
-					bool& value,
-					const bool& byte_swapping,
-					const dataformat& format)
+/// read a bool value
+void Fortran::bread_item(std::ifstream& file,
+                         bool& value,
+                         const bool& byte_swapping,
+                         const dataformat& format)
 {
 	value = false;
 	if ( !file )
 	{
-		debug("Fortran::bread_item","no file to read from");
-		throw; return;
+		debug("Fortran::bread_item", "no file to read from");
+		throw;
+        return;
 	}
 	short ivalue = 0;
 	switch(format)
@@ -374,26 +405,31 @@ Fortran::bread_item(std::ifstream& file,
 		case Formatted:
 			file >> ivalue;
 			break;
+        default:
+            break;
 	}
 	if ( ivalue != 0 )
 	{
 		value = true;
 	}
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- iwrite_item ---------- */
-/* write a single integer value      */
-template<class T> void
-Fortran::iwrite_item(std::ofstream& file,
-					 const T& value,
-					 const bool& byte_swapping,
-					 const dataformat& format)
+/// write a single integer value
+template<class T> void Fortran::iwrite_item(std::ofstream& file,
+                                            const T& value,
+                                            const bool& byte_swapping,
+                                            const dataformat& format)
 {
 	if ( !file )
 	{
-		debug("Fortran::iwrite_item","no file to write to");
-		throw; return;
+		debug("Fortran::iwrite_item", "no file to write to");
+		throw;
+        return;
 	}
 	switch(format)
 	{
@@ -403,22 +439,27 @@ Fortran::iwrite_item(std::ofstream& file,
 		case Formatted:
 			file << value << " ";
 			break;
+        default:
+            break;
 	}
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- bwrite_item ---------- */
-/* write a bool value                */
-void
-Fortran::bwrite_item(std::ofstream& file,
-					 const bool& value,
-					 const bool& byte_swapping,
-					 const dataformat& format)
+/// write a bool value
+void Fortran::bwrite_item(std::ofstream& file,
+                          const bool& value,
+                          const bool& byte_swapping,
+                          const dataformat& format)
 {
 	if ( !file )
 	{
-		debug("Fortran::bwrite_item","no file to write to");
-		throw; return;
+		debug("Fortran::bwrite_item", "no file to write to");
+		throw;
+        return;
 	}
 	short ivalue = ( value ) ? 1 : 0;
 	switch(format)
@@ -429,31 +470,37 @@ Fortran::bwrite_item(std::ofstream& file,
 		case Formatted:
 			file << ivalue << " ";
 			break;
+        default:
+            break;
 	}
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- iread_blank ---------- */
-/* read an integer, but do not record
- the value                         */
+/// read an integer, but do not record the value
 void Fortran::iread_blank(std::ifstream& file,
 						  const dataformat& format)
 {
 	if ( !file )
 	{
-		debug("Fortran::iread_blank","no file to read from");
-		throw; return;
+		debug("Fortran::iread_blank", "no file to read from");
+		throw;
+        return;
 	}
 	short tmp;
 	Fortran::iread_item(file, tmp, false, format);
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- iread_line ---------- */
-/* read a line than only contains a
- single integer                   */
-template<class T> void
-Fortran::iread_line(std::ifstream& file, T& value, bool& byte_swapping, const dataformat& format)
+/// read a line than only contains a single integer
+template<class T> void Fortran::iread_line(std::ifstream& file, T& value, bool& byte_swapping, const dataformat& format)
 {
 	value = T(0);
 	
@@ -473,21 +520,23 @@ Fortran::iread_line(std::ifstream& file, T& value, bool& byte_swapping, const da
 		byte_swapping = !byte_swapping;
 	}
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- iwrite_line ---------- */
-/* write a line that only contains a
- single integer                    */
-template<class T> void
-Fortran::iwrite_line(std::ofstream& file,
-					 const T& value,
-					 const bool& byte_swapping,
-					 const dataformat& format)
+/// write a line that only contains a single integer
+template<class T> void Fortran::iwrite_line(std::ofstream& file,
+                                            const T& value,
+                                            const bool& byte_swapping,
+                                            const dataformat& format)
 {
 	if ( !file )
 	{
-		debug("Fortran::iwrite_line","no file to write to");
-		throw; return;
+		debug("Fortran::iwrite_line", "no file to write to");
+		throw;
+        return;
 	}
 	Fortran::write_byte_info(file, 4, byte_swapping, format);
 	Fortran::iwrite_item(file, value, byte_swapping, format);
@@ -497,21 +546,24 @@ Fortran::iwrite_line(std::ofstream& file,
 		file << std::endl;
 	}
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- iread_vector ---------- */
-/* read an integer vector             */
-template<class T> void
-Fortran::iread_vector(std::ifstream& file,
-					  T* in,
-					  T* out,
-					  const bool& byte_swapping,
-					  const dataformat& format)
+/// read an integer vector
+template<class T> void Fortran::iread_vector(std::ifstream& file,
+                                             T* in,
+                                             T* out,
+                                             const bool& byte_swapping,
+                                             const dataformat& format)
 {
 	if ( !file )
 	{
-		debug("Fortran::iread_vector","no file to read from");
-		throw; return;
+		debug("Fortran::iread_vector", "no file to read from");
+		throw;
+        return;
 	}
 	while ( in != out )
 	{
@@ -520,21 +572,24 @@ Fortran::iread_vector(std::ifstream& file,
 		*in++ = tmp;
 	}
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- iwrite_vector ---------- */
-/* write an integer vector             */
-template<class T> void
-Fortran::iwrite_vector(std::ofstream& file,
-					   T* in,
-					   T* out,
-					   const bool& byte_swapping,
-					   const dataformat& format)
+/// write an integer vector
+template<class T> void Fortran::iwrite_vector(std::ofstream& file,
+                                              T* in,
+                                              T* out,
+                                              const bool& byte_swapping,
+                                              const dataformat& format)
 {
 	if ( !file )
 	{
-		debug("Fortran::iwrite_vector","no file to write to");
-		throw; return;
+		debug("Fortran::iwrite_vector", "no file to write to");
+		throw;
+        return;
 	}
 	while ( in != out )
 	{
@@ -542,17 +597,18 @@ Fortran::iwrite_vector(std::ofstream& file,
 		Fortran::iwrite_item(file, tmp, byte_swapping, format);
 	}
 }
-/* ----------------------------------- */
+
+
+
+
 
 /* ---------- iread_vector ---------- */
-/* automatically read an integer
- vector from an entire line         */
-template<class T> void
-Fortran::iread_vector(std::ifstream& file,
-					  const size_t& vec_size,
-					  std::valarray<T>& vec,
-					  bool& byte_swapping,
-					  const dataformat& format)
+/// automatically read an integer vector from an entire line
+template<class T> void Fortran::iread_vector(std::ifstream& file,
+                                             const std::size_t& vec_size,
+                                             std::valarray<T>& vec,
+                                             bool& byte_swapping,
+                                             const dataformat& format)
 {
 	vec.resize(0);
 	if ( !vec_size )
@@ -561,26 +617,27 @@ Fortran::iread_vector(std::ifstream& file,
 	}
 	else if ( !file )
 	{
-		debug("Fortran::iread_vector","no file to read from");
-		throw; return;
+		debug("Fortran::iread_vector", "no file to read from");
+		throw;
+        return;
 	}
 	
-	size_t isize;
+    std::size_t isize;
 	Fortran::read_byte_info(file, isize, byte_swapping, format);
-	if ( format == Unformatted && isize != 4*vec_size )
+	if ( format == Unformatted && isize != 4 * vec_size )
 	{
-		isize = 4*vec_size;
+		isize = 4 * vec_size;
 		byte_swapping = !byte_swapping;
 	}
 	
 	vec.resize(vec_size);
 	
-	for (size_t i=0; i<vec.size(); i++)
+	for (std::size_t i=0; i<vec.size(); i++)
 	{
 		Fortran::iread_item(file, vec[i], byte_swapping, format);
 	}
 	
-	size_t tsize;
+    std::size_t tsize;
 	Fortran::read_byte_info(file, tsize, byte_swapping, format);
 	if ( tsize != isize )
 	{
@@ -588,57 +645,60 @@ Fortran::iread_vector(std::ifstream& file,
 		byte_swapping = !byte_swapping;
 	}
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- iread_vector ---------- */
-template<class T> void
-Fortran::iread_vector(std::ifstream& file,
-					  const size_t& vec_size,
-					  std::vector<T>& vec,
-					  bool& byte_swapping,
-					  const dataformat& format)
+template<class T> void Fortran::iread_vector(std::ifstream& file,
+                                             const std::size_t& vec_size,
+                                             std::vector<T>& vec,
+                                             bool& byte_swapping,
+                                             const dataformat& format)
 {
 	std::valarray<T> rvec;
 	Fortran::iread_vector(file, vec_size, rvec, byte_swapping, format);
 	vec.resize(rvec.size());
 	std::copy(&rvec[0], &rvec[rvec.size()], vec.begin());
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- iwrite_vector ---------- */
-/* automatically write an integer
- vector to an entire line            */
-template<class T> void
-Fortran::iwrite_vector(std::ofstream& file,
-					   const std::valarray<T>& vec,
-					   const bool& byte_swapping,
-					   const dataformat& format)
+/// automatically write an integer vector to an entire line
+template<class T> void Fortran::iwrite_vector(std::ofstream& file,
+                                              const std::valarray<T>& vec,
+                                              const bool& byte_swapping,
+                                              const dataformat& format)
 {
 	if ( !file || !vec.size() )
 	{
-		debug("Fortran::iwrite_vector","no file to write to");
-		throw; return;
+		debug("Fortran::iwrite_vector", "no file to write to");
+		throw;
+        return;
 	}
-	Fortran::write_byte_info(file, vec.size()*4, byte_swapping, format);
-	for (size_t i=0; i<vec.size(); i++)
+	Fortran::write_byte_info(file, vec.size() * 4, byte_swapping, format);
+	for (std::size_t i=0; i<vec.size(); i++)
 	{
 		Fortran::iwrite_item(file, vec[i], byte_swapping, format);
 	}
-	Fortran::write_byte_info(file, vec.size()*4, byte_swapping, format);
+	Fortran::write_byte_info(file, vec.size() * 4, byte_swapping, format);
 	if ( format == Formatted )
 	{
 		file << std::endl;
 	}
 }
-/* ----------------------------------- */
+
+
+
+
 
 /* ---------- peek ---------- */
-/* take a look at the next
- value, and compare it with
- `value', then put back the
- gotten characters          */
-template<class T> void
-Fortran::peek(std::ifstream& file, T& value, const bool& byte_swapping, const dataformat& format)
+/// take a look at the next value, and compare it with `value', then put back the gotten characters
+template<class T> void Fortran::peek(std::ifstream& file, T& value, const bool& byte_swapping, const dataformat& format)
 {
 	value = T(0);
 	if ( format != Unformatted )
@@ -647,8 +707,9 @@ Fortran::peek(std::ifstream& file, T& value, const bool& byte_swapping, const da
 	}
 	else if ( !file )
 	{
-		debug("Fortran::peek","no file to read from");
-		throw; return;
+		debug("Fortran::peek", "no file to read from");
+		throw;
+        return;
 	}
 	Fortran::iread_item(file, value, byte_swapping, format);
 	file.unget();
@@ -656,14 +717,14 @@ Fortran::peek(std::ifstream& file, T& value, const bool& byte_swapping, const da
 	file.unget();
 	file.unget();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- fcheckset ---------- */
-/* check that you have set the
- correct endieness and float
- precision for reading your file */
-template<class T> bool
-Fortran::fcheckset(std::ifstream& file, const T& value, bool& byte_swapping, const dataformat& format, dataprecision& precision)
+/// check that you have set the correct endieness and float precision for reading your file
+template<class T> bool Fortran::fcheckset(std::ifstream& file, const T& value, bool& byte_swapping, const dataformat& format, dataprecision& precision)
 {
 	if ( format == Formatted )
 	{
@@ -671,8 +732,9 @@ Fortran::fcheckset(std::ifstream& file, const T& value, bool& byte_swapping, con
 	}
 	else if ( !file )
 	{
-		debug("Fortran::fcheckset","no file to read from");
-		throw; return false;
+		debug("Fortran::fcheckset", "no file to read from");
+		throw;
+        return false;
 	}
 	T temp;
 	
@@ -710,22 +772,25 @@ Fortran::fcheckset(std::ifstream& file, const T& value, bool& byte_swapping, con
 	}
 	return true;
 }
-/* ------------------------------- */
+
+
+
+
 
 /* ---------- fread_item ---------- */
-/* read a float                     */
-template<class T> void
-Fortran::fread_item(std::ifstream& file,
-					T& value,
-					const bool& byte_swapping,
-					const dataformat& format,
-					const dataprecision& precision)
+/// read a float
+template<class T> void Fortran::fread_item(std::ifstream& file,
+                                           T& value,
+                                           const bool& byte_swapping,
+                                           const dataformat& format,
+                                           const dataprecision& precision)
 {
 	value = T(0);
 	if ( !file )
 	{
-		debug("Fortran::fread_item","no file to read from");
-		throw; return;
+		debug("Fortran::fread_item", "no file to read from");
+		throw;
+        return;
 	}
 	std::streamsize fsize = ( precision == Double ) ? 8 : 4;
 	
@@ -762,28 +827,35 @@ Fortran::fread_item(std::ifstream& file,
 					}
 					value = ltemp;
 					break;
+                default:
+                    break;
 			}
 			break;
 		case Formatted:
 			file >> value;
 			break;
+        default:
+            break;
 	}
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- fwrite_item ---------- */
-/* write a float                     */
-template<class T> void
-Fortran::fwrite_item(std::ofstream& file,
-					 const T& value,
-					 const bool& byte_swapping,
-					 const dataformat& format,
-					 const dataprecision& precision)
+/// write a float
+template<class T> void Fortran::fwrite_item(std::ofstream& file,
+                                            const T& value,
+                                            const bool& byte_swapping,
+                                            const dataformat& format,
+                                            const dataprecision& precision)
 {
 	if ( !file )
 	{
-		debug("Fortran::fwrite_item","no file to write to");
-		throw; return;
+		debug("Fortran::fwrite_item", "no file to write to");
+		throw;
+        return;
 	}
 	std::streamsize fsize = ( precision == Double ) ? 8 : 4;
 	
@@ -820,6 +892,8 @@ Fortran::fwrite_item(std::ofstream& file,
 					}
 					file.write((char*)& ltemp, fsize);
 					break;
+                default:
+                    break;
 			}
 			break;
 		case Formatted:
@@ -834,50 +908,56 @@ Fortran::fwrite_item(std::ofstream& file,
 			}
 			file << value << ' ';
 			break;
+        default:
+            break;
 	}
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- fread_blank ---------- */
-/* read a float, but do not store the
- value                             */
-void
-Fortran::fread_blank(std::ifstream& file,
-					 const dataformat& format,
-					 const dataprecision& precision)
+/// read a float, but do not store the value
+void Fortran::fread_blank(std::ifstream& file,
+                          const dataformat& format,
+                          const dataprecision& precision)
 {
 	if ( !file )
 	{
-		debug("Fortran::fread_blank","no file to read from");
-		throw; return;
+		debug("Fortran::fread_blank", "no file to read from");
+		throw;
+        return;
 	}
 	float tmp;
 	fread_item(file, tmp, false, format, precision);
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- fread_line ---------- */
-/* read an entire line, that
- consists of a single float       */
-template<class T> void
-Fortran::fread_line(std::ifstream& file,
-					T& value,
-					bool& byte_swapping,
-					const dataformat& format,
-					dataprecision& precision)
+/// read an entire line, that consists of a single float
+template<class T> void Fortran::fread_line(std::ifstream& file,
+                                           T& value,
+                                           bool& byte_swapping,
+                                           const dataformat& format,
+                                           dataprecision& precision)
 {
 	value = T(0);
 	if ( !file )
 	{
-		debug("Fortran::fread_line","no file to read from");
-		throw; return;
+		debug("Fortran::fread_line", "no file to read from");
+		throw;
+        return;
 	}
 	
 	// check that the file attributes work
 	std::streamsize fsize = ( precision == Double ) ? 8 : 4;
 	if ( !Fortran::fcheckset(file, fsize, byte_swapping, format, precision) )
 	{
-		debug("Fortran::fread_line","bad checkset");
+		debug("Fortran::fread_line", "bad checkset");
 		throw; return;
 	}
 	fsize = ( precision == Double ) ? 8 : 4;
@@ -896,22 +976,24 @@ Fortran::fread_line(std::ifstream& file,
 		value = T(0);
 	}
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- fwrite_line ---------- */
-/* write an entire line, that
- consists of a single float        */
-template<class T> void
-Fortran::fwrite_line(std::ofstream& file,
-					 const T& value,
-					 const bool& byte_swapping,
-					 const dataformat& format,
-					 const dataprecision& precision)
+/// write an entire line, that consists of a single float
+template<class T> void Fortran::fwrite_line(std::ofstream& file,
+                                            const T& value,
+                                            const bool& byte_swapping,
+                                            const dataformat& format,
+                                            const dataprecision& precision)
 {
 	if ( !file )
 	{
-		debug("Fortran::fwrite_line","no file to write to");
-		throw; return;
+		debug("Fortran::fwrite_line", "no file to write to");
+		throw;
+        return;
 	}
 	std::streamsize fsize = ( precision == Double ) ? 8 : 4;
 	
@@ -923,22 +1005,25 @@ Fortran::fwrite_line(std::ofstream& file,
 		file << std::endl;
 	}
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- fread_vector ---------- */
 /* read a float vector                */
-template<class T> void
-Fortran::fread_vector(std::ifstream& file,
-					  T* in,
-					  T* out,
-					  const bool& byte_swapping ,
-					  const dataformat& format,
-					  const dataprecision& precision)
+template<class T> void Fortran::fread_vector(std::ifstream& file,
+                                             T* in,
+                                             T* out,
+                                             const bool& byte_swapping ,
+                                             const dataformat& format,
+                                             const dataprecision& precision)
 {
 	if ( !file )
 	{
-		debug("Fortran::fread_vector","no file to read from");
-		throw; return;
+		debug("Fortran::fread_vector", "no file to read from");
+		throw;
+        return;
 	}
 	while ( in != out )
 	{
@@ -947,22 +1032,25 @@ Fortran::fread_vector(std::ifstream& file,
 		*in++ = tmp;
 	}
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- fwrite_vector ---------- */
-/* write a float vector                */
-template<class T> void
-Fortran::fwrite_vector(std::ofstream& file,
-					   T* in,
-					   T* out,
-					   const bool& byte_swapping,
-					   const dataformat& format,
-					   const dataprecision& precision)
+/// write a float vector
+template<class T> void Fortran::fwrite_vector(std::ofstream& file,
+                                              T* in,
+                                              T* out,
+                                              const bool& byte_swapping,
+                                              const dataformat& format,
+                                              const dataprecision& precision)
 {
 	if ( !file )
 	{
-		debug("Fortran::iwrite_vector","no file to write to");
-		throw; return;
+		debug("Fortran::iwrite_vector", "no file to write to");
+		throw;
+        return;
 	}
 	while ( in != out )
 	{
@@ -970,18 +1058,19 @@ Fortran::fwrite_vector(std::ofstream& file,
 		Fortran::fwrite_item(file, tmp, byte_swapping, format, precision);
 	}
 }
-/* ----------------------------------- */
+
+
+
+
 
 /* ---------- fread_vector ---------- */
-/* automatically read a float vector
- from a single line                 */
-template<class T> void
-Fortran::fread_vector(std::ifstream& file,
-					  const size_t& vec_size,
-					  std::valarray<T>& vec,
-					  bool& byte_swapping,
-					  const dataformat& format,
-					  dataprecision& precision)
+/// automatically read a float vector from a single line
+template<class T> void Fortran::fread_vector(std::ifstream& file,
+                                             const std::size_t& vec_size,
+                                             std::valarray<T>& vec,
+                                             bool& byte_swapping,
+                                             const dataformat& format,
+                                             dataprecision& precision)
 {
 	vec.resize(0);
 	if ( !vec_size )
@@ -990,15 +1079,16 @@ Fortran::fread_vector(std::ifstream& file,
 	}
 	else if ( !file )
 	{
-		debug("Fortran::fread_vector","no file to read from");
-		throw; return;
+		debug("Fortran::fread_vector", "no file to read from");
+		throw;
+        return;
 	}
 	
-	size_t fsize = ( precision == Double ) ? 8 : 4;
+    std::size_t fsize = ( precision == Double ) ? 8 : 4;
 	fsize *= vec_size;
 	if ( !Fortran::fcheckset(file, fsize, byte_swapping, format, precision) )
 	{
-		debug("Fortran::fread_vector","bad checkset");
+		debug("Fortran::fread_vector", "bad checkset");
 		throw; return;
 	}
 	
@@ -1006,45 +1096,48 @@ Fortran::fread_vector(std::ifstream& file,
 	
 	vec.resize(vec_size);
 	
-	for (size_t i=0; i<vec.size(); i++)
+	for (std::size_t i=0; i<vec.size(); i++)
 	{
 		Fortran::fread_item(file, vec[i], byte_swapping, format, precision);
 	}
 	
-	size_t tsize;
+    std::size_t tsize;
 	Fortran::read_byte_info(file, tsize, byte_swapping, format);
 	if ( tsize != fsize )
 	{
 		vec.resize(0);
 	}
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- fread_vector ---------- */
-template<class T> void
-Fortran::fread_vector(std::ifstream& file,
-					  const size_t& vec_size,
-					  std::vector<T>& vec,
-					  bool& byte_swapping,
-					  const dataformat& format,
-					  dataprecision& precision)
+template<class T> void Fortran::fread_vector(std::ifstream& file,
+                                             const std::size_t& vec_size,
+                                             std::vector<T>& vec,
+                                             bool& byte_swapping,
+                                             const dataformat& format,
+                                             dataprecision& precision)
 {
 	std::valarray<T> rvec;
 	Fortran::fread_vector(file, vec_size, rvec, byte_swapping, format, precision);
 	vec.resize(rvec.size());
 	std::copy(&rvec[0], &rvec[rvec.size()], vec.begin());
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- fwrite_vector ---------- */
-/* automatically write a float vector
- to an entire line                   */
-template<class T> void
-Fortran::fwrite_vector(std::ofstream& file,
-					   const std::valarray<T>& vec,
-					   const bool& byte_swapping,
-					   const dataformat& format,
-					   const dataprecision& precision)
+/// automatically write a float vector to an entire line
+template<class T> void Fortran::fwrite_vector(std::ofstream& file,
+                                              const std::valarray<T>& vec,
+                                              const bool& byte_swapping,
+                                              const dataformat& format,
+                                              const dataprecision& precision)
 {
 	if ( !vec.size() )
 	{
@@ -1052,13 +1145,14 @@ Fortran::fwrite_vector(std::ofstream& file,
 	}
 	else if ( !file )
 	{
-		debug("Fortran::fwrite_vector","no file to write to");
-		throw; return;
+		debug("Fortran::fwrite_vector", "no file to write to");
+		throw;
+        return;
 	}
-	size_t fsize = ( precision == Double ) ? 8 : 4;
+    std::size_t fsize = ( precision == Double ) ? 8 : 4;
 	fsize *= vec.size();
 	Fortran::write_byte_info(file, fsize, byte_swapping, format);
-	for (size_t i=0; i<vec.size(); i++)
+	for (std::size_t i=0; i<vec.size(); i++)
 	{
 		Fortran::fwrite_item(file, vec[i], byte_swapping, format, precision);
 	}
@@ -1068,16 +1162,17 @@ Fortran::fwrite_vector(std::ofstream& file,
 		file << std::endl;
 	}
 }
-/* ----------------------------------- */
+
+
+
+
 
 /* ---------- fretrieve_vector ---------- */
-/* read a file that contains only a single
- float vector                           */
-template<class T> void
-Fortran::fretrieve_vector(const std::string& filename,
-						  std::valarray<T>& vec,
-						  bool& byte_swapping,
-						  const dataformat& format)
+/// read a file that contains only a single float vector
+template<class T> void Fortran::fretrieve_vector(const std::string& filename,
+                                                 std::valarray<T>& vec,
+                                                 bool& byte_swapping,
+                                                 const dataformat& format)
 {
 	std::ifstream file;
 	switch(format)
@@ -1090,33 +1185,35 @@ Fortran::fretrieve_vector(const std::string& filename,
 			break;
 	}
 	
-	size_t vec_size;
+    std::size_t vec_size;
 	Fortran::iread_line(file, vec_size, byte_swapping, format);
 	vec.resize(vec_size);
 	
 	dataprecision precision = Single;
-	size_t fsize = 4;
+    std::size_t fsize = 4;
 	if ( !Fortran::fcheckset(file, vec_size*fsize, byte_swapping, format, precision) )
 	{
-		debug("Fortran::fretrieve_vector","bad checkset");
+		debug("Fortran::fretrieve_vector", "bad checkset");
 		vec.resize(0);
-		throw; return;
+		throw;
+        return;
 	}
 	fsize = ( precision == Double ) ? 8 : 4;
 	Fortran::fread_vector(file, vec_size, vec, byte_swapping, format, precision);
 	
 	file.close();
 }
-/* -------------------------------------- */
+
+
+
+
 
 /* ---------- fdump_vector ---------- */
-/* write a file that consists of a
- single float vector                */
-template<class T> void
-Fortran::fdump_vector(const std::string& filename,
-					  const std::valarray<T>& vec,
-					  const bool& byte_swapping,
-					  const dataformat& format)
+/// write a file that consists of a single float vector
+template<class T> void Fortran::fdump_vector(const std::string& filename,
+                                             const std::valarray<T>& vec,
+                                             const bool& byte_swapping,
+                                             const dataformat& format)
 {
 	
 	std::ofstream file;
@@ -1140,7 +1237,9 @@ Fortran::fdump_vector(const std::string& filename,
 	
 	file.close();
 }
-/* ---------------------------------- */
+
+
+
 
 
 #endif /* _FORTRAN_IO_ */

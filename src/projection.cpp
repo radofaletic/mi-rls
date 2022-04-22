@@ -1,8 +1,9 @@
-/*
+/**
  A programme to create projections through any single domain Plot3D file
  
  Rado Faletic
  11th August 2004
+ 22nd April 2022
  */
 
 /*
@@ -22,16 +23,14 @@
 #include "sparse_matrix.h"
 #include "tomography.h"
 
-typedef double real;
-
 int main(int argc, char* argv[])
 {
 	std::string ip3dgfilename = "input.PBG";
 	std::string ip3dqfilename = "input.PBS";
 	short ip3dqi = 1;
 	std::string output = "output.png";
-	size_t resolution = 0;
-	size_t nangles = 12;
+	std::size_t resolution = 0;
+    std::size_t nangles = 12;
 	Angle::axes rot_axis = Angle::X;
 	std::string stretch = "middle";
 	
@@ -42,16 +41,16 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
 			message("\nby Rado Faletic 2004\n");
 			message("below is a list of flags:\n");
-			message("--input=<inputfile>\n\tthe Plot3D file ("+ip3dgfilename+","+ip3dqfilename+","+ntos(ip3dqi)+")");
+			message("--input=<inputfile>\n\tthe Plot3D file ("+ip3dgfilename+","+ip3dqfilename+","+std::to_string(ip3dqi)+")");
 			message("--output=<outputfile>\n\tthe output PNG file ("+output+")");
-			message("--resolution=<res>\n\tresolution of the projection plane ("+ntos(resolution)+")");
-			message("--angles=<nangles>\n\tthe number of angles, or projections ("+ntos(nangles)+")");
+			message("--resolution=<res>\n\tresolution of the projection plane ("+std::to_string(resolution)+")");
+			message("--angles=<nangles>\n\tthe number of angles, or projections ("+std::to_string(nangles)+")");
 			message("--axis=<axis>\n\taxis of rotation (X)");
 			message("--stretch=inner/middle/outer\n\taxis of rotation ("+stretch+")");
 			return 1;
@@ -76,7 +75,8 @@ int main(int argc, char* argv[])
 					if ( ip3dqi < 1 || 5 < ip3dqi )
 					{
 						message("\"input_i\" must be between 1 and 5.\nUse the --help option to learn more.");
-						throw; return 1;
+						throw;
+                        return 1;
 					}
 				}
 				else
@@ -106,7 +106,8 @@ int main(int argc, char* argv[])
 			if ( !nangles )
 			{
 				message("\"angles\" must be non-zero.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("axis") )
@@ -126,7 +127,8 @@ int main(int argc, char* argv[])
 			else
 			{
 				message("\"axis\" must be one of X or Y.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("stretch") )
@@ -136,7 +138,8 @@ int main(int argc, char* argv[])
 		else
 		{
 			message("Unrecognised option '"+fswitch[i].var()+"'.\nUse the --help option to learn more.");
-			throw; return 1;
+			throw;
+            return 1;
 		}
 	}
 	
@@ -157,34 +160,34 @@ int main(int argc, char* argv[])
 	mygrid.gridfile() = ip3dgfilename;
 	mygrid.datafile() = ip3dqfilename;
 	mygrid.qdata() = ip3dqi;
-	grid<real> the_grid(mygrid);
+	grid<double> the_grid(mygrid);
 	the_grid.read_data(mygrid);
 	the_grid.give_dataname(output.substr(0,output.size()-4));
 	
-	std::valarray<real> angles(real(0), nangles);
-	for (size_t i=0; i<angles.size(); i++)
+	std::valarray<double> angles(double(0), nangles);
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
-		angles[i] = ((real)(180*i))/((real)(nangles));
+		angles[i] = ((double)(180*i))/((double)(nangles));
 	}
 	
 	// write grid to PNG
 	message("writing the grid to PNG");
-	std::valarray<real> x = the_grid.get_adata();
-	std::valarray<real> xo(real(0), x.size());
-	size_t Nx = the_grid.nex();
-	size_t Ny = the_grid.ney();
-	size_t Nz = the_grid.nez();
+	std::valarray<double> x = the_grid.get_adata();
+	std::valarray<double> xo(double(0), x.size());
+    std::size_t Nx = the_grid.nex();
+    std::size_t Ny = the_grid.ney();
+    std::size_t Nz = the_grid.nez();
 	Nx = ( Nx <= 1 ) ? 1 : Nx - 1;
 	Ny = ( Ny <= 1 ) ? 1 : Ny - 1;
 	Nz = ( Nz <= 1 ) ? 1 : Nz - 1;
-	size_t N1 = 0;
-	size_t N2 = 0;
+    std::size_t N1 = 0;
+    std::size_t N2 = 0;
 	switch(rot_axis)
 	{
 		case Angle::X: case Angle::YZ:
-			for (size_t k=0; k<Nx; k++)
+			for (std::size_t k=0; k<Nx; k++)
 			{
-				for (size_t j=0; j<Ny; j++)
+				for (std::size_t j=0; j<Ny; j++)
 				{
 					xo[std::slice(k*Ny*Nz+j*Nz, Nz, 1)] = x[std::slice(j*Nx+k, Nz, Nx*Ny)];
 				}
@@ -193,9 +196,9 @@ int main(int argc, char* argv[])
 			N2 = Nz;
 			break;
 		case Angle::Y: case Angle::ZX:
-			for (size_t k=0; k<Ny; k++)
+			for (std::size_t k=0; k<Ny; k++)
 			{
-				for (size_t j=0; j<Nz; j++)
+				for (std::size_t j=0; j<Nz; j++)
 				{
 					xo[std::slice(k*Nz*Nx+j*Nx, Nx, 1)] = x[std::slice(k*Nx+j*Nx*Ny, Nx, 1)];
 				}
@@ -203,6 +206,8 @@ int main(int argc, char* argv[])
 			N1 = Nz;
 			N2 = Nx;
 			break;
+        default:
+            break;
 	}
 	x.resize(0);
 	Tomography::pngwrite(ip3dgfilename.substr(0,ip3dgfilename.size()-4)+".png", N1, N2, xo, rot_axis, angles, the_grid.scale(), true, false);
@@ -210,8 +215,8 @@ int main(int argc, char* argv[])
 	
 	// generate projection lines
 	message("setting up rays");
-	real scale_d = the_grid.scale();
-	size_t restmp = std::max(N1, N2);
+    double scale_d = the_grid.scale();
+    std::size_t restmp = std::max(N1, N2);
 	if ( stretch == "inner" )
 	{
 		restmp = std::min(N1, N2);
@@ -222,7 +227,7 @@ int main(int argc, char* argv[])
 	}
 	else if ( stretch == "outer" )
 	{
-		restmp = size_t(std::sqrt(real(N1*N1+N2*N2))+0.5);
+		restmp = std::size_t(std::sqrt(double(N1*N1+N2*N2))+0.5);
 	}
 	if ( !resolution )
 	{
@@ -230,41 +235,41 @@ int main(int argc, char* argv[])
 	}
 	else
 	{
-		scale_d *= real(restmp) / resolution;
+		scale_d *= double(restmp) / resolution;
 	}
-	std::vector< std::valarray<real> > ipoints(0);
-	for (size_t j=0; j<resolution; j++)
+	std::vector< std::valarray<double> > ipoints(0);
+	for (std::size_t j=0; j<resolution; j++)
 	{
-		for (size_t i=0; i<resolution; i++)
+		for (std::size_t i=0; i<resolution; i++)
 		{
-			std::valarray<real> inode = the_grid.center();
-			inode[0] += ( real(i) - real(resolution-1) / 2 ) * scale_d;
-			inode[1] += ( real(j) - real(resolution-1) / 2 ) * scale_d;
+			std::valarray<double> inode = the_grid.center();
+			inode[0] += ( double(i) - double(resolution-1) / 2 ) * scale_d;
+			inode[1] += ( double(j) - double(resolution-1) / 2 ) * scale_d;
 			ipoints.push_back(inode);
 		}
 	}
-	Rotation<real> rot(3);
+	Rotation<double> rot(3);
 	rot.set_origin(the_grid.center());
-	std::valarray<real> islope(3);
+	std::valarray<double> islope(3);
 	islope[0] = 0;
 	islope[1] = 0;
 	islope[2] = 1;
-	std::vector< line<real> > rays(0);
-	for (size_t i=0; i<angles.size(); i++)
+	std::vector< line<double> > rays(0);
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
 		rot.reset(angles[i], rot_axis);
-		std::valarray<real> slope = rot.O(islope);
-		for (size_t j=0; j<ipoints.size(); j++)
+		std::valarray<double> slope = rot.O(islope);
+		for (std::size_t j=0; j<ipoints.size(); j++)
 		{
-			line<real> tline(slope, rot(ipoints[j]));
+			line<double> tline(slope, rot(ipoints[j]));
 			rays.push_back(tline);
 		}
 	}
 	
 	// project rays
-	message("projecting "+ntos(rays.size())+" rays");
-	SparseMatrix<real> A(0,the_grid.ncells());
-	std::valarray<real> b;
+	message("projecting "+std::to_string(rays.size())+" rays");
+	SparseMatrix<double> A(0,the_grid.ncells());
+	std::valarray<double> b;
 	std::valarray<bool> blanks(true, rays.size());
 	Tomography::projection(the_grid, rays, blanks, b, A, walkfast, true, false, false);
 	
@@ -275,7 +280,7 @@ int main(int argc, char* argv[])
 	
 	// save projections
 	message("saving '"+output+"'");
-	std::valarray<real> otb(real(0), blanks.size());
+	std::valarray<double> otb(double(0), blanks.size());
 	otb[blanks] = b;
 	Tomography::pngwrite(output, resolution, resolution, otb, rot_axis, angles, scale_d, true, true);
 	

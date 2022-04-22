@@ -1,4 +1,4 @@
-/*
+/**
  for testing sparse matrix routines
  */
 
@@ -32,7 +32,7 @@ int main(int argc, char* argv[])
 	message("\n     ----- ----- -----     \n");
 	
 	SparseMatrix<float> A(3,4);
-	message("matrix size = "+ntos(A.row_dim())+"x"+ntos(A.col_dim()));
+	message("matrix size = "+std::to_string(A.row_dim())+"x"+std::to_string(A.col_dim()));
 	message(indent(A.print()));
 	Matrix<float> M(3,4,float(1));
 	message("should be\n"+indent(M.print()));
@@ -41,7 +41,7 @@ int main(int argc, char* argv[])
 	message("\n     ----- ----- -----     \n");
 	
 	A.clear();
-	message("matrix size = "+ntos(A.row_dim())+"x"+ntos(A.col_dim()));
+	message("matrix size = "+std::to_string(A.row_dim())+"x"+std::to_string(A.col_dim()));
 	message(indent(A.print()));
 	Matrix<float> Z;
 	message("should be\n"+indent(Z.print()));
@@ -49,20 +49,20 @@ int main(int argc, char* argv[])
 	message("\n     ----- ----- -----     \n");
 	
 	A.read("mtest_output_3x3.matrix",Unformatted);
-	message("matrix size = "+ntos(A.row_dim())+"x"+ntos(A.col_dim()));
+	message("matrix size = "+std::to_string(A.row_dim())+"x"+std::to_string(A.col_dim()));
 	message(indent(A.print()));
-	M.init(3,4,float(1));
+	M.init(3, 4, float(1));
 	message("should be\n"+indent(M.print()));
 	
 	message("\n     ----- ----- -----     \n");
 	
-	std::valarray<size_t> el(3);
+	std::valarray<std::size_t> el(3);
 	el[0] = 5; el[1] = 6; el[2] = 8;
 	std::valarray<float> da(3);
 	da[0] = 6.6667; da[1] = 5.5; da[2] = Angle::pi;
 	
 	A.AddRow(el,da);
-	message("matrix size = "+ntos(A.row_dim())+"x"+ntos(A.col_dim()));
+	message("matrix size = "+std::to_string(A.row_dim())+"x"+std::to_string(A.col_dim()));
 	message(indent(A.print()));
 	M.init(4,9,float(0));
 	M(0,0) = M(1,1) = M(2,2) = float(1);
@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
 	message("\n     ----- ----- -----     \n");
 	
 	A.clear();
-	message("matrix size = "+ntos(A.row_dim())+"x"+ntos(A.col_dim()));
+	message("matrix size = "+std::to_string(A.row_dim())+"x"+std::to_string(A.col_dim()));
 	message(indent(A.print()));
 	message("should be\n"+indent(Z.print()));
 	
@@ -98,7 +98,7 @@ int main(int argc, char* argv[])
 	A.AddRow(el,da);
 	M(2,1) = da[0];
 	M(2,2) = da[1];
-	message("matrix size = "+ntos(A.row_dim())+"x"+ntos(A.col_dim()));
+	message("matrix size = "+std::to_string(A.row_dim())+"x"+std::to_string(A.col_dim()));
 	message(indent(A.print()));
 	message("should be\n"+indent(M.print()));
 	A.write("mtest_output_3x3solve.matrix",Unformatted);
@@ -106,14 +106,14 @@ int main(int argc, char* argv[])
 	message("\n     ----- ----- -----     \n");
 	
 	A.clear();
-	message("matrix size = "+ntos(A.row_dim())+"x"+ntos(A.col_dim()));
+	message("matrix size = "+std::to_string(A.row_dim())+"x"+std::to_string(A.col_dim()));
 	message(indent(A.print()));
 	message("should be\n"+indent(Z.print()));
 	
 	message("\n     ----- ----- -----     \n");
 	
 	A.read("mtest_output_3x3solve.matrix",Unformatted);
-	message("matrix size = "+ntos(A.row_dim())+"x"+ntos(A.col_dim()));
+	message("matrix size = "+std::to_string(A.row_dim())+"x"+std::to_string(A.col_dim()));
 	message(indent(A.print()));
 	message("should be\n"+indent(M.print()));
 	

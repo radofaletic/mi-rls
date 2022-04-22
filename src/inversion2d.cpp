@@ -1,8 +1,9 @@
-/*
+/**
  A programme to perform a tomographic inversion of any greyscale PNG file
  
  Rado Faletic
  10th March 2005
+ 22nd April 2022
  */
 
 /*
@@ -32,14 +33,14 @@ int main(int argc, char* argv[])
 	std::string ipngfilename = "input.png";
 	std::string opngfilename = "output.png";
 	std::string matrixfile = "";
-	size_t my_ires = 0;
+	std::size_t my_ires = 0;
 	interpolation_method iterp = BILINEAR;
 	bool write_intermediates = false;
 	bool fft_on = true;
 	bool inv_on = true;
-	size_t iterations = 1000;
-	real damping = 0.0;
-	real smoothing = 1.0;
+    std::size_t iterations = 1000;
+    double damping = 0.0;
+    double smoothing = 1.0;
 	std::string stretch = "outer";
 	
 	std::vector<args> fswitch = get_args(argc, argv);
@@ -49,7 +50,7 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
@@ -58,13 +59,13 @@ int main(int argc, char* argv[])
 			message("--input=<inputfile>\n\tthe input PNG sinogram file ("+ipngfilename+")");
 			message("--output=<outputfile>\n\tthe output PNG file ("+opngfilename+")");
 			message("--matrix=<matrixfile>\n\tread from this file ("+matrixfile+")");
-			message("--resolution=<res>\n\tthe resolution to use, by default is determined from input file ("+ntos(my_ires)+")");
+			message("--resolution=<res>\n\tthe resolution to use, by default is determined from input file ("+std::to_string(my_ires)+")");
 			message("--interpolation=bilinear/nn\n\tchoose the interpolation method (bilinear)");
 			message("--intermediates=on/off\n\twrite PNG files of intermediate steps (off)");
 			message("--method=fft/inv\n\twhich inversion method to use (fft & inv)");
-			message("--iterations=<iterations>\n\tnumber of interations to use for inv ("+ntos(iterations)+")");
-			message("--damping=<damping>\n\tmatrix damping value for inv ("+ntos(damping)+")");
-			message("--smoothing=<smoothing>\n\tmatrix smoothing value for inv ("+ntos(smoothing)+")");
+			message("--iterations=<iterations>\n\tnumber of interations to use for inv ("+std::to_string(iterations)+")");
+			message("--damping=<damping>\n\tmatrix damping value for inv ("+std::to_string(damping)+")");
+			message("--smoothing=<smoothing>\n\tmatrix smoothing value for inv ("+std::to_string(smoothing)+")");
 			message("--stretch=inner/middle/outer\n\tthe inversion domain to use ("+stretch+")");
 			return 1;
 		}
@@ -143,7 +144,8 @@ int main(int argc, char* argv[])
 		else
 		{
 			message("Unrecognised option '"+fswitch[i].var()+"'.\nUse the --help option to learn more.");
-			throw; return 1;
+			throw;
+            return 1;
 		}
 	}
 	if ( ipngfilename.substr(ipngfilename.size()-4,4) != ".png" && ipngfilename.substr(ipngfilename.size()-4,4) != ".PNG" )
@@ -157,53 +159,54 @@ int main(int argc, char* argv[])
 	
 	// read PNG image file
 	message("reading '"+ipngfilename+"'");
-	size_t Nrows, Ncols;
-	std::valarray<real> sinogram;
+    std::size_t Nrows, Ncols;
+	std::valarray<double> sinogram;
 	Angle::axes sino_axis;
-	std::valarray<real> angles;
-	real scale;
+	std::valarray<double> angles;
+    double scale;
 	bool realdata;
 	std::valarray<bool> blanks;
 	Tomography::pngread(ipngfilename, Nrows, Ncols, sinogram, blanks, sino_axis, angles, scale, realdata);
 	
-	size_t resolution = Ncols;
+    std::size_t resolution = Ncols;
 	if ( Nrows*Ncols != sinogram.size() )
 	{
 		message("'"+ipngfilename+"' seems to be a multi-image tomographic file, this software will only read a single-image file.");
-		throw; return 1;
+		throw;
+        return 1;
 	}
-	if ( !angles.size() != Nrows )
+	if ( !(angles.size() != Nrows) )
 	{
 		angles.resize(Nrows);
-		for (size_t i=0; i<angles.size(); i++)
+		for (std::size_t i=0; i<angles.size(); i++)
 		{
-			angles[i] = (real(180*i)) / (real(Nrows));
+			angles[i] = (double(180*i)) / (double(Nrows));
 		}
 	}
-	size_t nangles = angles.size();
+    std::size_t nangles = angles.size();
 	
 	if ( fft_on )
 	{
-		size_t ires = ( my_ires ) ? my_ires : resolution;
+        std::size_t ires = ( my_ires ) ? my_ires : resolution;
 		// perform 1D Fourier Transform on each tomogram
 		message("performing 1D FFT on tomograms");
 		fftw_complex* one_d_in = (fftw_complex*)fftw_malloc(resolution * sizeof(fftw_complex));
 		fftw_complex* one_d_out = (fftw_complex*)fftw_malloc(resolution * sizeof(fftw_complex));
 		fftw_plan p1 = fftw_plan_dft_1d(resolution, one_d_in, one_d_out, FFTW_FORWARD, FFTW_MEASURE);
-		std::valarray<real> fft_re(sinogram.size());
-		std::valarray<real> fft_im(sinogram.size());
-		size_t DC = ( !(resolution%2) ) ? (resolution-2)/2 : (resolution-1)/2;
-		real sres = std::sqrt(real(resolution));
-		for (size_t j=0; j<nangles; j++)
+		std::valarray<double> fft_re(sinogram.size());
+		std::valarray<double> fft_im(sinogram.size());
+        std::size_t DC = ( !(resolution%2) ) ? (resolution-2)/2 : (resolution-1)/2;
+        double sres = std::sqrt(double(resolution));
+		for (std::size_t j=0; j<nangles; j++)
 		{
-			for (size_t i=0; i<resolution; i++)
+			for (std::size_t i=0; i<resolution; i++)
 			{
 				// shift the data so that negative parts are tagged on the end, rather than the beginning
 				one_d_in[i][0] = sinogram[j*resolution+(i+DC)%resolution];
 				one_d_in[i][1] = 0;
 			}
 			fftw_execute(p1);
-			for (size_t i=0; i<resolution; i++)
+			for (std::size_t i=0; i<resolution; i++)
 			{
 				// be sure to shift the DFT output so that negative frequencies come before the DC (ready for 2D interpolation)
 				fft_re[j*resolution+i] = one_d_out[(i+(resolution-DC))%resolution][0];
@@ -219,7 +222,7 @@ int main(int argc, char* argv[])
 			std::string o1fft = opngfilename.substr(0,opngfilename.size()-4);
 			o1fft += "_2-fft_tomograms.png";
 			message("saving '"+o1fft+"'");
-			std::valarray<real> fout(fft_re.size()+fft_im.size());
+			std::valarray<double> fout(fft_re.size()+fft_im.size());
 			fout[std::slice(0,fft_re.size(),1)] = fft_re;
 			fout[std::slice(fft_re.size(),fft_im.size(),1)] = fft_im;
 			Tomography::pngwrite(o1fft, nangles, resolution, fout, sino_axis, angles, scale, false, true);
@@ -229,14 +232,14 @@ int main(int argc, char* argv[])
 		switch (iterp)
 		{
 			case NN:
-				message("natural neighbour interpolating in 2D Fourier space, "+ntos(ires*ires)+" points");
+				message("natural neighbour interpolating in 2D Fourier space, "+std::to_string(ires*ires)+" points");
 				message("real values");
 				nn_interpolate(fft_re, angles, ires, ires);
 				message("imaginary values");
 				nn_interpolate(fft_im, angles, ires, ires);
 				break;
 			case BILINEAR:
-				message("bilinear interpolating in 2D Fourier space, "+ntos(ires*ires)+" points");
+				message("bilinear interpolating in 2D Fourier space, "+std::to_string(ires*ires)+" points");
 				message("real values");
 				bilinear_interpolate(fft_re, angles, ires, ires);
 				message("imaginary values");
@@ -249,7 +252,7 @@ int main(int argc, char* argv[])
 			std::string o2fft = opngfilename.substr(0,opngfilename.size()-4);
 			o2fft += "_3-fft_2d.png";
 			message("saving '"+o2fft+"'");
-			std::valarray<real> fout(fft_re.size()+fft_im.size());
+			std::valarray<double> fout(fft_re.size()+fft_im.size());
 			fout[std::slice(0,fft_re.size(),1)] = fft_re;
 			fout[std::slice(fft_re.size(),fft_im.size(),1)] = fft_im;
 			Tomography::pngwrite(o2fft, ires, ires, fout, sino_axis, angles, scale, false, true);
@@ -261,9 +264,9 @@ int main(int argc, char* argv[])
 		fftw_complex* two_d_out = (fftw_complex*)fftw_malloc(ires * ires * sizeof(fftw_complex));
 		fftw_plan p2 = fftw_plan_dft_2d(ires, ires, two_d_in, two_d_out, FFTW_BACKWARD, FFTW_MEASURE);
 		DC = ( !(ires%2) ) ? (ires-2)/2 : (ires-1)/2;
-		for (size_t i=0; i<ires; i++) // NOTE: swap x-y format from Column-major to Row-major for FFTW
+		for (std::size_t i=0; i<ires; i++) // NOTE: swap x-y format from Column-major to Row-major for FFTW
 		{
-			for (size_t j=0; j<ires; j++)
+			for (std::size_t j=0; j<ires; j++)
 			{
 				// be sure to shift the x,y frequencies so that the negative frequencies are reversed
 				two_d_in[i*ires+j][0] = fft_re[((j+DC)%ires)*ires+(i+DC)%ires];
@@ -272,9 +275,9 @@ int main(int argc, char* argv[])
 		}
 		fftw_execute(p2);
 		DC = ires - DC;
-		for (size_t j=0; j<ires; j++) // NOTE: swap x-y format from Row-major back to Column-major
+		for (std::size_t j=0; j<ires; j++) // NOTE: swap x-y format from Row-major back to Column-major
 		{
-			for (size_t i=0; i<ires; i++)
+			for (std::size_t i=0; i<ires; i++)
 			{
 				// swap the x-y components so that negative frequencies come before DC
 				fft_re[j*ires+i] = two_d_out[((i+DC)%ires)*ires+(j+DC)%ires][0] / (ires*ires);
@@ -290,13 +293,13 @@ int main(int argc, char* argv[])
 			std::string orf = opngfilename.substr(0,opngfilename.size()-4);
 			orf += "_4-2dfft.png";
 			message("saving '"+orf+"'");
-			std::valarray<real> fout(fft_re.size()+fft_im.size());
+			std::valarray<double> fout(fft_re.size()+fft_im.size());
 			fout[std::slice(0,fft_re.size(),1)] = fft_re;
 			fout[std::slice(fft_re.size(),fft_im.size(),1)] = fft_im;
 			Tomography::pngwrite(orf, ires, ires, fout, sino_axis, angles, scale, false, true);
 		}
 		
-		std::valarray<real> sqrfft(ires*ires);
+		std::valarray<double> sqrfft(ires*ires);
 		sqrfft = std::sqrt(fft_re*fft_re + fft_im*fft_im);
 		fft_re.resize(0);
 		fft_im.resize(0);
@@ -309,13 +312,13 @@ int main(int argc, char* argv[])
 			Tomography::pngwrite(offtrn, ires, ires, sqrfft, sino_axis, angles, scale, false, false);
 		}
 		
-		size_t fres = size_t(real(ires)*std::sqrt(real(0.5))+real(0.5)); // "outer"
+        std::size_t fres = std::size_t(double(ires)*std::sqrt(double(0.5))+double(0.5)); // "outer"
 		if ( stretch == "inner" || stretch == "middle" )
 		{
 			fres = ires;
 		}
-		std::valarray<real> cfft(0.0, fres*fres);
-		for (size_t j=0; j<fres; j++)
+		std::valarray<double> cfft(0.0, fres*fres);
+		for (std::size_t j=0; j<fres; j++)
 		{
 			cfft[std::slice(j*fres,fres,1)] = sqrfft[std::slice(ires*((ires-fres)/2)+((ires-fres)/2)+j*ires,fres,1)];
 		}
@@ -330,7 +333,7 @@ int main(int argc, char* argv[])
 	
 	if ( inv_on )
 	{
-		size_t gres = ( my_ires ) ? my_ires : size_t(real(resolution)*std::sqrt(real(0.5))+real(0.5));
+        std::size_t gres = ( my_ires ) ? my_ires : std::size_t(double(resolution)*std::sqrt(double(0.5))+double(0.5));
 		if ( stretch == "inner" || stretch == "middle" )
 		{
 			gres = ( my_ires ) ? my_ires : resolution;
@@ -344,13 +347,13 @@ int main(int argc, char* argv[])
 		mygrid.g_nX() = gres;
 		mygrid.g_nY() = gres;
 		mygrid.g_nZ() = 0;
-		mygrid.g_scale() = ( my_ires ) ? scale * real(gres) / my_ires : scale;
-		grid<real> the_grid(mygrid);
+		mygrid.g_scale() = ( my_ires ) ? scale * double(gres) / my_ires : scale;
+		grid<double> the_grid(mygrid);
 		
 		the_grid.give_dataname(opngfilename.substr(0,opngfilename.size()-4));
 		
-		SparseMatrix<real> A(0,the_grid.ncells());
-		std::valarray<real> b(0);
+		SparseMatrix<double> A(0,the_grid.ncells());
+		std::valarray<double> b(0);
 		
 		if ( matrixfile.size() )
 		{
@@ -361,32 +364,32 @@ int main(int argc, char* argv[])
 		{
 			// generate projection lines
 			message("setting up projection rays");
-			std::vector< std::valarray<real> > ipoints(0);
-			for (size_t i=0; i<resolution; i++)
+			std::vector< std::valarray<double> > ipoints(0);
+			for (std::size_t i=0; i<resolution; i++)
 			{
-				std::valarray<real> tmp_p = the_grid.center();
-				tmp_p[0] += ( real(i) - real(resolution-1) / 2 ) * mygrid.g_scale();
+				std::valarray<double> tmp_p = the_grid.center();
+				tmp_p[0] += ( double(i) - double(resolution-1) / 2 ) * mygrid.g_scale();
 				ipoints.push_back(tmp_p);
 			}
-			Rotation<real> rot(2);
+			Rotation<double> rot(2);
 			rot.set_origin(the_grid.center());
-			std::valarray<real> islope(2);
+			std::valarray<double> islope(2);
 			islope[0] = 0;
 			islope[1] = 1;
-			std::vector< line<real> > rays(0);
-			for (size_t i=0; i<angles.size(); i++)
+			std::vector< line<double> > rays(0);
+			for (std::size_t i=0; i<angles.size(); i++)
 			{
 				rot.reset(angles[i], Angle::XY);
-				std::valarray<real> slope = rot.O(islope);
-				for (size_t j=0; j<ipoints.size(); j++)
+				std::valarray<double> slope = rot.O(islope);
+				for (std::size_t j=0; j<ipoints.size(); j++)
 				{
-					line<real> tline(slope, rot(ipoints[j]));
+					line<double> tline(slope, rot(ipoints[j]));
 					rays.push_back(tline);
 				}
 			}
 			
-			message("projecting "+ntos(rays.size())+" rays");
-			std::valarray<real> btmp;
+			message("projecting "+std::to_string(rays.size())+" rays");
+			std::valarray<double> btmp;
 			Tomography::projection(the_grid, rays, blanks, btmp, A, walkfast, true, true, true);
 			
 			if ( true ) // projections
@@ -394,7 +397,7 @@ int main(int argc, char* argv[])
 				std::string ma = opngfilename.substr(0,opngfilename.size()-4);
 				ma += "_projection.png";
 				message("saving '"+ma+"'");
-				std::valarray<real> otb(real(0), blanks.size());
+				std::valarray<double> otb(double(0), blanks.size());
 				otb[blanks] = btmp;
 				Tomography::pngwrite(ma, angles.size(), resolution, otb, sino_axis, angles, scale, true, false);
 			}
@@ -412,17 +415,17 @@ int main(int argc, char* argv[])
 		// add smoothing
 		if ( smoothing )
 		{
-			message("adding smoothing equations, with smoothing = "+ntos(smoothing));
+			message("adding smoothing equations, with smoothing = "+std::to_string(smoothing));
 			AddSmoothing(A, b, the_grid, smoothing);
 		}
 		message("clearing grid");
 		the_grid.clear();
 		
 		// doing matrix inversion
-		std::valarray<real> x(real(0), A.cols());
+		std::valarray<double> x(double(0), A.cols());
 		message("inverting matrix");
-		lsqr_input<real> linput(damping,0,0,0,iterations,true);
-		lsqr_output<real> Aoutput = LSQR(A, x, b, linput);
+		lsqr_input<double> linput(damping,0,0,0,iterations,true);
+		lsqr_output<double> Aoutput = LSQR(A, x, b, linput);
 		
 		// write output
 		std::string oinvn = opngfilename.substr(0,opngfilename.size()-4);

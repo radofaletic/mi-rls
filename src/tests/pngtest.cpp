@@ -1,4 +1,4 @@
-/*
+/**
  for testing Rado's png facilities
  */
 
@@ -23,9 +23,9 @@ int main(int argc, char* argv[])
 	std::vector< std::valarray<double> > tpoints;
 	std::valarray<double> angles(0);
 	std::vector< std::valarray<double> > data_1(15);
-	size_t Nrows = 193;
-	size_t Ncols = 278;
-	for (size_t i=0; i<data_1.size(); i++)
+    std::size_t Nrows = 193;
+    std::size_t Ncols = 278;
+	for (std::size_t i=0; i<data_1.size(); i++)
 	{
 		data_1[i].resize(Nrows*Ncols);
 	}
@@ -36,12 +36,12 @@ int main(int argc, char* argv[])
 			data_1[0][i*Ncols+j] = (i*i+j*j < 12500) ? 0 : std::sqrt(double(i*i + j*j - 12500)) + 1.0;
 		}
 	}
-	for (size_t i=1; i<data_1.size(); i++)
+	for (std::size_t i=1; i<data_1.size(); i++)
 	{
 		data_1[i] = data_1[0];
 	}
 	std::valarray<double> data_1x(data_1.size() * Nrows * Ncols);
-	for (size_t s=0; s<data_1.size(); s++) {
+	for (std::size_t s=0; s<data_1.size(); s++) {
 		for (int i=0; i<Nrows; i++) {
 			for (int j=0; j<Ncols; j++) {
 				data_1x[s * Nrows * Ncols + i * Ncols + j] = data_1[s][i * Ncols + j];
@@ -83,18 +83,18 @@ int main(int argc, char* argv[])
 	if ( success1 && success2 && success3 )
 	{
 		std::vector< std::valarray<double> > data_2(data_1.size());
-		for (size_t s=0; s<data_1.size(); s++) {
+		for (std::size_t s=0; s<data_1.size(); s++) {
 			data_2[s].resize(Nrows * Ncols);
-			for (size_t i=0; i<Nrows * Ncols; i++) {
+			for (std::size_t i=0; i<Nrows * Ncols; i++) {
 				data_2[s][i] = data_2x[s * Nrows * Ncols + i];
 			}
 		}
 		
-		size_t counter_ = 0;
+        std::size_t counter_ = 0;
 		std::cout << std::endl;
-		for (size_t i=0; i<data_1.size(); i++)
+		for (std::size_t i=0; i<data_1.size(); i++)
 		{
-			for (size_t j=0; j<data_1[0].size(); j++)
+			for (std::size_t j=0; j<data_1[0].size(); j++)
 			{
 				double pd = 100*std::abs(data_2[i][j]-data_1[i][j])/std::max(data_2[i][j],data_1[i][j]);
 				if ( pd > 1.0 )

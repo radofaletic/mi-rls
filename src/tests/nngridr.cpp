@@ -1,3 +1,4 @@
+
 #if DEBUG >= 5
 #ifndef USE_MESSAGES
 #define USE_MESSAGES
@@ -67,8 +68,8 @@ int main(int argc, char* argv[])
 	const std::string png_file = argcv + ".png";
 	std::valarray<double> png_angles(double(0), 1);
 	std::valarray<double> dataX(data.size() * data[0].size());
-	for (size_t s=0; s<data.size(); s++) {
-		for (size_t i=0; i<data[s].size(); i++) {
+	for (std::size_t s=0; s<data.size(); s++) {
+		for (std::size_t i=0; i<data[s].size(); i++) {
 			dataX[s * data[s].size()] = data[s][i];
 		}
 	}

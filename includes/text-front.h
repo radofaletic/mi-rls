@@ -1,4 +1,4 @@
-/*
+/**
  text-front
  
  a text based interface
@@ -11,11 +11,19 @@
  
  Rado.Faletic@anu.edu.au
  19th May 2004
+ 19th April 2022, updated to C++20
  */
+
+
+
 
 
 #ifndef _TEXT_FRONT_
 #define _TEXT_FRONT_
+
+
+
+
 
 /* ---------- standard header files ---------- */
 #include <algorithm>
@@ -24,23 +32,21 @@
 #include <sstream>
 #include <valarray>
 #include <vector>
+
 /* ---------- control flags ---------- */
 #ifdef USE_MESSAGES
 #include <fstream>
 extern std::ofstream messages;
 #endif /* USE_MESSAGES */
+
 /* ------- user header files -------- */
 #include "conversions.h"
-/* ---------------------------------- */
 
 
-/* ---------------------------------- */
 
 
-/* ------------------------------------------- */
+
 /* ---------- function declarations ---------- */
-/* ------------------------------------------- */
-
 
 void writestuff(const std::string&);
 void writestufff(const std::string&);
@@ -50,12 +56,12 @@ void message(const std::string&);
 void debug(const std::string&, const std::string&);
 void debug(const std::string&);
 void debugn(const std::string&);
-void debugn(const size_t&, const std::string&);
+void debugn(const std::size_t&, const std::string&);
 void debugnr(const std::string&);
-void debugnr(const size_t&, const std::string&);
+void debugnr(const std::size_t&, const std::string&);
 
-void counter(const std::string&, const size_t&);
-void counter(const std::string&, const size_t&, const size_t&);
+void counter(const std::string&, const std::size_t&);
+void counter(const std::string&, const std::size_t&, const std::size_t&);
 
 bool yesno(const std::string&, const bool& = false);
 
@@ -64,64 +70,76 @@ template<class T> T question(const std::string&, const std::vector<T>&, const T&
 template<class T> T question(const std::string&, const std::valarray<T>&, const T&);
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- writestuff ---------- */
-void
-writestuff(const std::string& stuff)
+/// write string to std::cout
+void writestuff(const std::string& stuff)
 {
 	std::cout << stuff;
 #ifdef USE_MESSAGES
 	messages << stuff;
 #endif /* USE_MESSAGES */
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- writestufff ---------- */
-void
-writestufff(const std::string& stuff)
+/// write string to std::cout and add an endline character
+void writestufff(const std::string& stuff)
 {
 	writestuff(stuff);
-	
 	std::cout << std::endl;
 #ifdef USE_MESSAGES
 	messages << std::endl;
 #endif /* USE_MESSAGES */
 }
-/* --------------------------------- */
+
+
+
+
 
 /* ---------- message ---------- */
-void
-message(const std::string& message)
+/// an alias for writestufff
+void message(const std::string& message)
 {
 	writestufff(message);
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- debug ---------- */
-void inline
-debug(const std::string& function, const std::string& message)
+/// write debugging information to std::clog
+void inline debug(const std::string& function, const std::string& message)
 {
 #if DEBUG > 0
-	
-	std::clog << "DEBUG::"+function+":\n\t"+message << std::endl;
+	std::clog << "DEBUG::" + function + ":\n\t" + message << std::endl;
 #ifdef USE_MESSAGES
-	messages << "DEBUG::"+function+":\n\t"+message << std::endl;
+	messages << "DEBUG::" + function + ":\n\t" + message << std::endl;
 #endif /* USE_MESSAGES */
-	
 #endif /* DEBUG */
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- debug ---------- */
-void inline
-debug(const std::string& message)
+/// write debugging information to std::clog
+void inline debug(const std::string& message)
 {
 #if DEBUG > 0
-	
 	if ( message != "" && message != "\n" )
 	{
 		std::clog << "\t";
@@ -133,60 +151,59 @@ debug(const std::string& message)
 #ifdef USE_MESSAGES
 	messages << message << std::endl;
 #endif /* USE_MESSAGES */
-	
 #endif /* DEBUG */
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- debugn ---------- */
-void inline
-debugn(const std::string& message)
+void inline debugn(const std::string& message)
 {
 #if DEBUG > 0
-	
 	std::string s = message;
 	std::string::size_type pb = 0;
 	while ( pb != s.size() )
 	{
 		if ( s[pb] == '\n' )
 		{
-			s.replace(pb,1,"\n\t");
+			s.replace(pb, 1, "\n\t");
 		}
 		pb++;
 	}
-	
 	std::clog << s;
 #ifdef USE_MESSAGES
 	messages << s;
 #endif /* USE_MESSAGES */
-	
 #endif /* DEBUG */
 }
-/* ---------------------------- */
+
+
+
+
 
 /* ---------- debugn ---------- */
-void inline
-debugn(const size_t& num, const std::string& message)
+void inline debugn(const std::size_t& num, const std::string& message)
 {
 #if DEBUG > 0
-	
 	std::string my_message = "";
-	for (size_t i=0; i<num; i++)
+	for (std::size_t i=0; i<num; i++)
 	{
 		my_message += message;
 	}
 	debugn(my_message);
-	
 #endif /* DEBUG */
 }
-/* ---------------------------- */
+
+
+
+
 
 /* ---------- debugnr ---------- */
-void inline
-debugnr(const std::string& message)
+void inline debugnr(const std::string& message)
 {
 #if DEBUG > 0
-	
 	std::string s = message;
 	std::string::size_type pb = 0;
 	while ( pb != s.size() )
@@ -199,53 +216,58 @@ debugnr(const std::string& message)
 	}
 	
 	std::clog << s;
-	
 #endif /* DEBUG */
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- debugnr ---------- */
-void inline
-debugnr(const size_t& num, const std::string& message)
+void inline debugnr(const std::size_t& num, const std::string& message)
 {
 #if DEBUG > 0
-	
 	std::string my_message = "";
-	for (size_t i=0; i<num; i++)
+	for (std::size_t i=0; i<num; i++)
 	{
 		my_message += message;
 	}
 	debugnr(my_message);
-	
 #endif /* DEBUG */
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- counter ---------- */
-void inline
-counter(const std::string& s, const size_t& val)
+/// write a counter to std::cerr
+void inline counter(const std::string& s, const std::size_t& val)
 {
 	std::cerr << s << "[";
 	std::cerr.width(7);
 	std::cerr << val;
 	std::cerr << "]" << "\b\b\b\b\b\b\b\b\b";
-	for (size_t i=0; i<s.size(); i++)
+	for (std::size_t i=0; i<s.size(); i++)
 	{
 		std::cerr << "\b";
 	}
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- counter ---------- */
-void inline
-counter(const std::string& s, const size_t& sz, const size_t& val)
+/// write progressive percentage to std::cerr
+void inline counter(const std::string& s, const std::size_t& sz, const std::size_t& val)
 {
-	static size_t counter_percentage = 0;
+	static std::size_t counter_percentage = 0;
 	if ( val == 0 || val == 1 )
 	{
 		counter_percentage = 99999;
 	}
-	size_t np = ( 100 * val ) / sz;
+    std::size_t np = ( 100 * val ) / sz;
 	if ( np != counter_percentage )
 	{
 		counter_percentage = np;
@@ -253,17 +275,20 @@ counter(const std::string& s, const size_t& sz, const size_t& val)
 		std::cerr.width(3);
 		std::cerr << counter_percentage;
 		std::cerr << "%" << "\b\b\b\b\b";
-		for (size_t i=0; i<s.size(); i++)
+		for (std::size_t i=0; i<s.size(); i++)
 		{
 			std::cerr << "\b";
 		}
 	}
 }
-/* ----------------------------- */
+
+
+
+
 
 /* ---------- yesno ---------- */
-bool
-yesno(const std::string& question, const bool& init_value)
+/// get a "yes" or "no" response from std::cin
+bool yesno(const std::string& question, const bool& init_value)
 {
 	writestuff(question+": [");
 	if ( init_value )
@@ -315,16 +340,19 @@ yesno(const std::string& question, const bool& init_value)
 #endif /* USE_MESSAGES */
 	return init_value;
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- question ---------- */
-template<class T> T
-question(const std::string& question, const T& init_value)
+/// get a response from a question via std::cin
+template<class T> T question(const std::string& question, const T& init_value)
 {
-	writestuff(question+": ["+ntos(init_value)+"] ");
+	writestuff(question + ": [" + std::to_string(init_value) + "] ");
 	
 	std::string response = "";
-	std::getline(std::cin,response);
+	std::getline(std::cin, response);
 	if ( response != std::string("") &&
 		response != std::string(" ") &&
 		response != std::string("\n") &&
@@ -335,22 +363,57 @@ question(const std::string& question, const T& init_value)
 		std::istringstream word(response);
 		word >> ret;
 #ifdef USE_MESSAGES
-		writestufff(ntos(ret));
+		writestufff(std::to_string(ret));
 #endif /* USE_MESSAGES */
 		return ret;
 	}
 #ifdef USE_MESSAGES
-	writestufff(ntos(init_value));
+	writestufff(std::to_string(init_value));
 #endif /* USE_MESSAGES */
 	return init_value;
 }
-/* ------------------------------ */
+
+
+
+
 
 /* ---------- question ---------- */
-template<class T> T
-question(const std::string& question, const std::vector<T>& list, const T& init_value)
+/// get a response from a question via std::cin
+std::string question(const std::string& question, const std::string& init_value)
 {
-	for (size_t i=0; i<list.size(); i++)
+    writestuff(question + ": [" + init_value + "] ");
+    
+    std::string response = "";
+    std::getline(std::cin, response);
+    if ( response != std::string("") &&
+        response != std::string(" ") &&
+        response != std::string("\n") &&
+        response != std::string("\0") &&
+        response != std::string("\t") )
+    {
+        std::string ret;
+        std::istringstream word(response);
+        word >> ret;
+#ifdef USE_MESSAGES
+        writestufff(ret);
+#endif /* USE_MESSAGES */
+        return ret;
+    }
+#ifdef USE_MESSAGES
+    writestufff(init_value);
+#endif /* USE_MESSAGES */
+    return init_value;
+}
+
+
+
+
+
+/* ---------- question ---------- */
+/// get a response from a question with specified options via std::cin
+template<class T> T question(const std::string& question, const std::vector<T>& list, const T& init_value)
+{
+	for (std::size_t i=0; i<list.size(); i++)
 	{
 		if ( i < 9 )
 		{
@@ -360,38 +423,82 @@ question(const std::string& question, const std::vector<T>& list, const T& init_
 		{
 			writestuff(" ");
 		}
-		writestufff(ntos(i+1)+". "+ntos(list[i]));
+		writestufff(std::to_string(i + 1) + ". " + std::to_string(list[i]));
 	}
-	writestuff(question+": ["+ntos(init_value)+"] ");
+	writestuff(question + ": [" + std::to_string(init_value) + "] ");
 	
 	std::string response = "";
 	std::getline(std::cin,response);
-	for (size_t i=0; i<list.size(); i++)
+	for (std::size_t i=0; i<list.size(); i++)
 	{
-		if ( response == ntos(i+1) || response == std::string(list[i]) )
+		if ( response == std::to_string(i + 1) || response == std::string(list[i]) )
 		{
 #ifdef USE_MESSAGES
-			writestufff(ntos(list[i]));
+			writestufff(std::to_string(list[i]));
 #endif /* USE_MESSAGES */
 			return list[i];
 		}
 	}
 #ifdef USE_MESSAGES
-	writestufff(ntos(init_value));
+	writestufff(std::to_string(init_value));
 #endif /* USE_MESSAGES */
 	return init_value;
 }
-/* ------------------------------ */
+
+
+
+
 
 /* ---------- question ---------- */
-template<class T> T
-question(const std::string& tquestion, const std::valarray<T>& list, const T& init_value)
+/// get a response from a question with specified options via std::cin
+std::string question(const std::string& question, const std::vector<std::string>& list, const std::string& init_value)
+{
+    for (std::size_t i=0; i<list.size(); i++)
+    {
+        if ( i < 9 )
+        {
+            writestuff("  ");
+        }
+        else if ( i < 99 )
+        {
+            writestuff(" ");
+        }
+        writestufff(std::to_string(i + 1) + ". " + list[i]);
+    }
+    writestuff(question + ": [" + init_value + "] ");
+    
+    std::string response = "";
+    std::getline(std::cin,response);
+    for (std::size_t i=0; i<list.size(); i++)
+    {
+        if ( response == std::to_string(i + 1) || response == std::string(list[i]) )
+        {
+#ifdef USE_MESSAGES
+            writestufff(list[i]);
+#endif /* USE_MESSAGES */
+            return list[i];
+        }
+    }
+#ifdef USE_MESSAGES
+    writestufff(init_value);
+#endif /* USE_MESSAGES */
+    return init_value;
+}
+
+
+
+
+
+/* ---------- question ---------- */
+template<class T> T question(const std::string& tquestion, const std::valarray<T>& list, const T& init_value)
 {
 	std::vector<T> vlist(list.size());
 	std::copy(&list[0], &list[list.size()], &vlist[0]);
 	return question(tquestion, vlist, init_value);
 }
-/* ------------------------------ */
+
+
+
 
 
 #endif /* _TEXT_FRONT_ */

@@ -1,5 +1,5 @@
 # Makefiles for Rado Faletic's tomographic routines
-# May 2001
+# May 2001, April 2022
 # 			Department of Physics
 # 			Faculty of Science
 # 			Australian National University
@@ -45,10 +45,10 @@ DEFINES = $(REAL) $(DEBUG) $(GUI)
 # --------------- Compiler options --------------- #
 # ------------------------------------------------ #
 #
-CXXFLAGS = -O $(DEFINES) #-Wall
+CXXFLAGS = -std=c++20 -O $(DEFINES) #-Wall
 CPPFLAGS = -I. -I$(incdir)
 LDFLAGS = -L.
-LDLIBS = -lfftw3 -lm -lpng
+LDLIBS = -lfftw3 -lpng
 
 # -------------------------------------------------------------- #
 # ----------------- DO NOT EDIT BELOW THIS LINE ---------------- #

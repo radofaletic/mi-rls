@@ -1,12 +1,12 @@
-
-/* check whether this machine is little or big endian */
+/**
+ check whether this machine is little or big endian
+ */
 
 #include <iostream>
 #include <string>
 
 int main(int argc, char* argv[])
 {
-	
 	int mynumber = 67305985;
 	std::cout << "mynumber = " << mynumber << std::endl;
 	

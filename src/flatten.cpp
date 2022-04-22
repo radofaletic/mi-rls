@@ -1,8 +1,9 @@
-/*
+/**
  creates a "flat" image, with no transparency in the data
  
  Rado Faletic
  3rd November 2004
+ 22nd April 2022
  */
 
 /*
@@ -13,17 +14,16 @@
 #include <sstream>
 #include <string>
 #include <valarray>
+
 #include "angles.h"
 #include "tomography.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
 	std::string ifilename = "input.png";
 	std::string ofilename = "";
-	real spread = real(75);
-	real error = real(10);
+	double spread = double(75);
+    double error = double(10);
 	bool fullmode = true;
 	
 	// read command-line switches
@@ -66,13 +66,13 @@ int main(int argc, char* argv[])
 		ofilename = ifilename.substr(0, ifilename.size()-4)+"_flat.png";
 	}
 	
-	size_t Nrows = 0;
-	size_t Ncols = 0;
-	std::valarray<real> data;
+    std::size_t Nrows = 0;
+    std::size_t Ncols = 0;
+	std::valarray<double> data;
 	std::valarray<bool> blanks;
 	Angle::axes raxis = Angle::X;
-	std::valarray<real> angles;
-	real scale = 1;
+	std::valarray<double> angles;
+    double scale = 1;
 	bool realdata = true;
 	bool tpcy = false;
 	std::cout << "reading " << ifilename << std::endl;

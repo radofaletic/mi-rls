@@ -1,8 +1,9 @@
-/*
+/**
  A programme to perform a linear tomographic inversion on any greyscale PNG file
  
  Rado Faletic
  8th July 2004
+ 22nd April 2022
  */
 
 /*
@@ -13,6 +14,7 @@
 #include <string>
 #include <valarray>
 #include <vector>
+
 #include "angles.h"
 #include "argv.h"
 #include "front-end.h"
@@ -23,17 +25,15 @@
 #include "sparse_matrix.h"
 #include "tomography.h"
 
-typedef double real;
-
 int main(int argc, char* argv[])
 {
 	std::string ip3dgfilename = "input.PBG";
 	std::string ip3dqfilename = "input.PBS";
 	short ip3dqi = 1;
 	std::string op3dfilename = "output";
-	size_t xresolution = 32;
-	size_t yresolution = 32;
-	size_t nangles = 12;
+	std::size_t xresolution = 32;
+    std::size_t yresolution = 32;
+    std::size_t nangles = 12;
 	Angle::axes rot_axis = Angle::X;
 	bool write_intermediates = false;
 	
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
@@ -53,11 +53,11 @@ int main(int argc, char* argv[])
 			message("below is a list of flags:\n");
 			message("--input_g=<inputfile>\n\tthe Plot3D grid file ("+ip3dgfilename+")");
 			message("--input_q=<inputfile>\n\tthe Plot3D Q file ("+ip3dqfilename+")");
-			message("--input_i=<n>\n\tthe Plot3D Q variable number between 1 and 5 ("+ntos(ip3dqi)+")");
+			message("--input_i=<n>\n\tthe Plot3D Q variable number between 1 and 5 ("+std::to_string(ip3dqi)+")");
 			message("--output=<outputfile>\n\tthe output Plot3D file ("+op3dfilename+")");
-			message("--xresolution=<res>\n\tx resolution of the projection plane ("+ntos(xresolution)+")");
-			message("--yresolution=<res>\n\ty resolution of the projection plane ("+ntos(yresolution)+")");
-			message("--angles=<nangles>\n\tthe number of angles, or projections ("+ntos(nangles)+")");
+			message("--xresolution=<res>\n\tx resolution of the projection plane ("+std::to_string(xresolution)+")");
+			message("--yresolution=<res>\n\ty resolution of the projection plane ("+std::to_string(yresolution)+")");
+			message("--angles=<nangles>\n\tthe number of angles, or projections ("+std::to_string(nangles)+")");
 			message("--axis=<axis>\n\taxis of rotation (X)");
 			message("--intermediates=on/off\n\twrite PNG files of intermediate steps (off)");
 			return 1;
@@ -77,7 +77,8 @@ int main(int argc, char* argv[])
 			if ( ip3dqi < 1 || 5 < ip3dqi )
 			{
 				message("\"input_i\" must be between 1 and 5.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("output") || fswitch[i].var("o") )
@@ -101,7 +102,8 @@ int main(int argc, char* argv[])
 			if ( !nangles )
 			{
 				message("\"angles\" must be non-zero.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("axis") )
@@ -121,7 +123,8 @@ int main(int argc, char* argv[])
 			else
 			{
 				message("\"axis\" must be one of X or Y.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("intermediates") )
@@ -139,7 +142,8 @@ int main(int argc, char* argv[])
 		else
 		{
 			message("Unrecognised option '"+fswitch[i].var()+"'.\nUse the --help option to learn more.");
-			throw; return 1;
+			throw;
+            return 1;
 		}
 	}
 	// read grid
@@ -154,22 +158,22 @@ int main(int argc, char* argv[])
 	mygrid.gridfile() = ip3dgfilename;
 	mygrid.datafile() = ip3dqfilename;
 	mygrid.qdata() = ip3dqi;
-	grid<real> the_grid(mygrid);
+	grid<double> the_grid(mygrid);
 	the_grid.read_data(mygrid);
 	
 	std::string gdn = op3dfilename;
 	the_grid.give_dataname(op3dfilename);
 	
-	std::valarray<real> angles;
+	std::valarray<double> angles;
 	
 	// generate projection lines
 	message("setting up rays");
-	real dlength = 1;
-	real dlength_s = 1;
-	std::valarray<real> min2(2);
-	std::valarray<real> max2(2);
-	std::valarray<real> min3 = the_grid.min();
-	std::valarray<real> max3 = the_grid.max();
+    double dlength = 1;
+    double dlength_s = 1;
+	std::valarray<double> min2(2);
+	std::valarray<double> max2(2);
+	std::valarray<double> min3 = the_grid.min();
+	std::valarray<double> max3 = the_grid.max();
 	switch(rot_axis)
 	{
 		case Angle::X: case Angle::YZ:
@@ -188,16 +192,18 @@ int main(int argc, char* argv[])
 			dlength = norm(&min2, &max2);
 			dlength_s = std::abs(max3[1]-min3[1]);
 			break;
+        default:
+            break;
 	}
-	real scale = dlength / (xresolution + 1);
-	real scale_s = dlength_s / (yresolution + 1);
+    double scale = dlength / (xresolution + 1);
+    double scale_s = dlength_s / (yresolution + 1);
 	dlength /= 2;
 	dlength_s /= 2;
-	std::vector< std::valarray<real> > ipoints(xresolution*yresolution, std::valarray<real>(3));
-	size_t counter = 0;
-	for (size_t j=1; j<xresolution+1; j++)
+	std::vector< std::valarray<double> > ipoints(xresolution*yresolution, std::valarray<double>(3));
+    std::size_t counter = 0;
+	for (std::size_t j=1; j<xresolution+1; j++)
 	{
-		for (size_t i=1; i<yresolution+1; i++)
+		for (std::size_t i=1; i<yresolution+1; i++)
 		{
 			ipoints[counter][0] = i * scale_s - dlength_s;
 			ipoints[counter][1] = j * scale - dlength;
@@ -208,33 +214,33 @@ int main(int argc, char* argv[])
 	}
 	
 	angles.resize(nangles);
-	for (size_t i=0; i<angles.size(); i++)
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
-		angles[i] = ((real)(180*i))/((real)(nangles));
+		angles[i] = ((double)(180*i))/((double)(nangles));
 	}
 	
-	Rotation<real> rot(3);
+	Rotation<double> rot(3);
 	rot.set_origin(the_grid.center());
-	std::valarray<real> islope(3);
+	std::valarray<double> islope(3);
 	islope[0] = 0;
 	islope[1] = 0;
 	islope[2] = 1;
-	std::vector< line<real> > rays(0);
-	for (size_t i=0; i<angles.size(); i++)
+	std::vector< line<double> > rays(0);
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
 		rot.reset(angles[i], rot_axis);
-		std::valarray<real> slope = rot.O(islope);
-		for (size_t j=0; j<ipoints.size(); j++)
+		std::valarray<double> slope = rot.O(islope);
+		for (std::size_t j=0; j<ipoints.size(); j++)
 		{
-			line<real> tline(slope, rot(ipoints[j]));
+			line<double> tline(slope, rot(ipoints[j]));
 			rays.push_back(tline);
 		}
 	}
 	
 	// project rays
 	message("projecting rays");
-	SparseMatrix<real> A(0,the_grid.ncells());
-	std::valarray<real> b;
+	SparseMatrix<double> A(0,the_grid.ncells());
+	std::valarray<double> b;
 	std::valarray<bool> blanks(true, rays.size());
 	Tomography::projection(the_grid, rays, blanks, b, A, walkfast, true, true, true);
 	
@@ -243,27 +249,27 @@ int main(int argc, char* argv[])
 		std::string o = op3dfilename;
 		o += "_1-projections.png";
 		message("saving '"+o+"'");
-		std::valarray<real> otb(real(0), blanks.size());
+		std::valarray<double> otb(double(0), blanks.size());
 		otb[blanks] = b;
 		Tomography::pngwrite(o, yresolution, xresolution, otb, rot_axis, angles, scale, false, true);
 	}
 	
 	// add smoothing
 	//message("adding smoothing equations");
-	//AddSmoothing(A, b, the_grid, real(0.1));
+	//AddSmoothing(A, b, the_grid, double(0.1));
 	the_grid.clear_aux();
 	
 	// doing matrix inversion
-	std::valarray<real> x(real(0), A.cols());
+	std::valarray<double> x(double(0), A.cols());
 	message("compressing matrix");
 	A.Compress(x);
 	message("inverting matrix");
-	lsqr_input<real> linput(0,0,0,0,100);
+	lsqr_input<double> linput(0,0,0,0,100);
 	LSQR(A, x, b, linput);
 	message("uncompressing matrix");
 	A.Uncompress(x);
 	
-	for (size_t i=0; i<x.size(); i++)
+	for (std::size_t i=0; i<x.size(); i++)
 	{
 		the_grid[i] = x[i];
 	}

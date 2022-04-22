@@ -1,4 +1,4 @@
-/*
+/**
  triangle
  
  A collection of C++ routines for dealing with generic triangles.
@@ -11,11 +11,18 @@
  
  Rado.Faletic@anu.edu.au
  21st June 2004
+ 22nd April 2022
  */
+
+
+
 
 
 #ifndef _TRIANGLE_
 #define _TRIANGLE_
+
+
+
 
 
 /* ---------- standard header files ---------- */
@@ -23,23 +30,26 @@
 #include <cmath>
 #include <valarray>
 #include <vector>
+
+
+
+
+
 /* ------- user header files -------- */
 #include "extra_math.h"
 #include "line.h"
 #include "plane.h"
 #include "segment.h"
 #include "shape.h"
-/* ---------------------------------- */
 
 
-/* --------------------------------------- */
+
+
+
 /* ---------- class declaration ---------- */
-/* --------------------------------------- */
-
 
 // `triangle' class
-template<class T>
-class triangle : public compact_shape<T>
+template<class T> class triangle : public compact_shape<T>
 {
 private:
 	plane<T> container_;
@@ -61,18 +71,22 @@ public:
 };
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- init ---------- */
-template<class T> void
-triangle<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3)
+template<class T> void triangle<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3)
 {
 	if ( pt1->size() < 2 )
 	{
-		throw; return;
+		throw;
+        return;
 	}
 	
 	// allocate triangle nodes
@@ -87,19 +101,23 @@ triangle<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, cons
 	// area
 	//this->measure_ = this->make_measure();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- triangle ---------- */
-template<class T> inline
-triangle<T>::triangle(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3)
+template<class T> inline triangle<T>::triangle(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3)
 {
 	this->init(pt1, pt2, pt3);
 }
-/* ------------------------------ */
+
+
+
+
 
 /* ---------- make_measure ---------- */
-template<class T> inline T
-triangle<T>::make_measure() const
+template<class T> inline T triangle<T>::make_measure() const
 {
 	T a = norm(this->p(1), this->p(0));
 	T b = norm(this->p(2), this->p(1));
@@ -107,19 +125,23 @@ triangle<T>::make_measure() const
 	T s = ( a + b + c ) / T(2);
 	return std::sqrt(s * ( s - a ) * ( s - b ) * ( s - c ));
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- scale ---------- */
-template<class T> inline T
-triangle<T>::scale() const
+template<class T> inline T triangle<T>::scale() const
 {
 	return ( this->edge0_.scale() + this->edge1_.scale() + this->edge2_.scale() ) / T(3);
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- distance_p ---------- */
-template<class T> T
-triangle<T>::distance_p(const std::valarray<T>* pt) const
+template<class T> T triangle<T>::distance_p(const std::valarray<T>* pt) const
 {
 	if ( this->contains(this->container_.drop(*pt)) )
 	{
@@ -130,31 +152,38 @@ triangle<T>::distance_p(const std::valarray<T>* pt) const
 	dist = std::min(dist, this->edge2_.distance_p(pt));
 	return dist;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- normal_p ---------- */
-template<class T> inline const std::valarray<T>*
-triangle<T>::normal_p() const
+template<class T> inline const std::valarray<T>* triangle<T>::normal_p() const
 {
 	return this->container_.normal_p();
 }
-/* ------------------------------ */
+
+
+
+
 
 /* ---------- contains_p ---------- */
-template<class T> inline bool
-triangle<T>::contains_p(const std::valarray<T>* pt) const
+template<class T> inline bool triangle<T>::contains_p(const std::valarray<T>* pt) const
 {
 	return this->contains_p(pt, false);
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- contains_p ---------- */
-template<class T> bool
-triangle<T>::contains_p(const std::valarray<T>* pt, const bool& internal) const
+template<class T> bool triangle<T>::contains_p(const std::valarray<T>* pt, const bool& internal) const
 {
 	if ( this->dim() != pt->size() )
 	{
-		throw; return false;
+		throw;
+        return false;
 	}
 	// see if the point is contained within the plane of the triangle
 	else if ( !internal && !this->container_.contains_p(pt) )
@@ -231,19 +260,22 @@ triangle<T>::contains_p(const std::valarray<T>* pt, const bool& internal) const
 	}
 	return true;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- intersect ---------- */
-template<class T> T
-triangle<T>::intersect(const line<T>& l, std::valarray<T>& intercept, bool& parallel) const
-// in 2d parallel refers to whether or not l lies along any of the sides of the triangle
-// in 3d parallel refers to whether or not l lies in the plane of the triangle
+/// in 2d parallel refers to whether or not l lies along any of the sides of the triangle
+/// in 3d parallel refers to whether or not l lies in the plane of the triangle
+template<class T> T triangle<T>::intersect(const line<T>& l, std::valarray<T>& intercept, bool& parallel) const
 {
 	intercept.resize(0);
 	parallel = false;
 	if ( this->dim() != l.dim() )
 	{
-		throw; return T(0);
+		throw;
+        return T(0);
 	}
 	
 	// firstly, make sure the line actually intersects the plane containing the triangle
@@ -306,11 +338,13 @@ triangle<T>::intersect(const line<T>& l, std::valarray<T>& intercept, bool& para
 	}
 	return maximise_distance(itemp);
 }
-/* ------------------------------- */
+
+
+
+
 
 /* ---------- face ---------- */
-template<class T> inline const compact_shape<T>*
-triangle<T>::face(const unsigned short& en) const
+template<class T> inline const compact_shape<T>* triangle<T>::face(const unsigned short& en) const
 {
 	switch(en)
 	{
@@ -326,7 +360,9 @@ triangle<T>::face(const unsigned short& en) const
 	}
 	return 0;
 }
-/* -------------------------- */
+
+
+
 
 
 #endif /* _TRIANGLE_ */

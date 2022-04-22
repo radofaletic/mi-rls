@@ -1,4 +1,4 @@
-/*
+/**
  polygon
  
  A collection of C++ routines for dealing with generic polygons.
@@ -11,17 +11,29 @@
  
  Rado.Faletic@anu.edu.au
  21st June 2004
+ 22nd April 2022
  */
+
+
+
 
 
 #ifndef _POLYGON_
 #define _POLYGON_
 
 
+
+
+
 /* ---------- standard header files ---------- */
 #include <algorithm>
 #include <valarray>
 #include <vector>
+
+
+
+
+
 /* ------- user header files -------- */
 #include "extra_math.h"
 #include "line.h"
@@ -29,17 +41,15 @@
 #include "shape.h"
 #include "tetrahedron.h"
 #include "triangle.h"
-/* ---------------------------------- */
 
 
-/* --------------------------------------- */
+
+
+
 /* ---------- class declaration ---------- */
-/* --------------------------------------- */
-
 
 // `polygon' class
-template<class T>
-class polygon : public compact_shape<T>
+template<class T> class polygon : public compact_shape<T>
 {
 private:
 	std::valarray<T> centroid_;
@@ -61,19 +71,23 @@ public:
 };
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- init_ ---------- */
-template<class T> void
-polygon<T>::init_()
+template<class T> void polygon<T>::init_()
 {
 	// check for consistency
 	if ( this->dim() < 2 )
 	{
-		throw; return;
+		throw;
+        return;
 	}
 	
 	// panels
@@ -101,47 +115,57 @@ polygon<T>::init_()
 	// area
 	//this->measure_ = this->make_measure();
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- init ---------- */
-template<class T> void
-polygon<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3)
-// this version of 'init' is a triangle
+/// this version of 'init' is a triangle
+template<class T> void polygon<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3)
 {
 	this->assign_nodes(3, pt1, pt2, pt3);
 	this->init_();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- polygon ---------- */
-template<class T> inline
-polygon<T>::polygon(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3)
+template<class T> inline polygon<T>::polygon(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3)
 {
 	this->init(pt1, pt2, pt3);
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- init ---------- */
-template<class T> void
-polygon<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
-// this version of 'init' is a quadrilateral, with nodes in cyclic order
+/// this version of 'init' is a quadrilateral, with nodes in cyclic order
+template<class T> void polygon<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
 {
 	this->assign_nodes(4, pt1, pt2, pt3, pt4);
 	this->init_();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- polygon ---------- */
-template<class T> inline
-polygon<T>::polygon(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
+template<class T> inline polygon<T>::polygon(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
 {
 	this->init(pt1, pt2, pt3, pt4);
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- make_measure ---------- */
-template<class T> inline T
-polygon<T>::make_measure() const
+template<class T> inline T polygon<T>::make_measure() const
 {
 	T m = T(0);
 	for (unsigned short i=0; i<this->panel_.size(); i++)
@@ -150,11 +174,13 @@ polygon<T>::make_measure() const
 	}
 	return m;
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- scale ---------- */
-template<class T> inline T
-polygon<T>::scale() const
+template<class T> inline T polygon<T>::scale() const
 {
 	switch (this->size())
 	{
@@ -169,11 +195,13 @@ polygon<T>::scale() const
 	}
 	return s / T(this->panel_.size());
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- distance_p ---------- */
-template<class T> inline T
-polygon<T>::distance_p(const std::valarray<T>* pt) const
+template<class T> inline T polygon<T>::distance_p(const std::valarray<T>* pt) const
 {
 	T dist = this->panel_[0].distance_p(pt);
 	for (unsigned short i=1; i<this->panel_.size(); i++)
@@ -182,7 +210,10 @@ polygon<T>::distance_p(const std::valarray<T>* pt) const
 	}
 	return dist;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- contains_p ---------- */
 template<class T> inline bool
@@ -190,19 +221,22 @@ polygon<T>::contains_p(const std::valarray<T>* pt) const
 {
 	return is_zero(this->distance_p(pt));
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- intersect ---------- */
-template<class T> T
-polygon<T>::intersect(const line<T>& l, std::valarray<T>& intercept, bool& parallel) const
 // in 2d 'parallel' refers to whether l lies along any of the edges of the polygon
 // in 3d 'parallel' refers to whether l lies in all of the pieces of the polygon
+template<class T> T polygon<T>::intersect(const line<T>& l, std::valarray<T>& intercept, bool& parallel) const
 {
 	intercept.resize(0);
 	parallel = false;
 	if ( this->dim() != l.dim() )
 	{
-		throw; return T(0);
+		throw;
+        return T(0);
 	}
 	std::vector< std::valarray<T> > itemp(0);
 	
@@ -218,7 +252,7 @@ polygon<T>::intersect(const line<T>& l, std::valarray<T>& intercept, bool& paral
 					{
 						parallel = true;
 					}
-					for (size_t j=0; j<intercept.size()/this->dim(); j++)
+					for (std::size_t j=0; j<intercept.size()/this->dim(); j++)
 					{
 						itemp.push_back(intercept[std::slice(j * this->dim(), this->dim(), 1)]);
 					}
@@ -265,11 +299,13 @@ polygon<T>::intersect(const line<T>& l, std::valarray<T>& intercept, bool& paral
 	}
 	return maximise_distance(itemp);
 }
-/* ------------------------------- */
+
+
+
+
 
 /* ---------- face ---------- */
-template<class T> inline const compact_shape<T>*
-polygon<T>::face(const unsigned short& en) const
+template<class T> inline const compact_shape<T>* polygon<T>::face(const unsigned short& en) const
 {
 	switch(this->size())
 	{
@@ -279,7 +315,10 @@ polygon<T>::face(const unsigned short& en) const
 	}
 	return (this->panel_[en]).face(0);
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- centroid_p ---------- */
 template<class T> inline const std::valarray<T>*
@@ -293,7 +332,9 @@ polygon<T>::centroid_p() const
 	}
 	return &(this->centroid_);
 }
-/* -------------------------------- */
+
+
+
 
 
 #endif /* _POLYGON_ */

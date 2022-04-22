@@ -1,4 +1,4 @@
-/*
+/**
  polyhedron
  
  A collection of C++ routines for dealing with generic polyhedra.
@@ -11,34 +11,44 @@
  
  Rado.Faletic@anu.edu.au
  21st June 2004
+ 22nd April 2022
  */
+
+
+
 
 
 #ifndef _POLYHEDRON_
 #define _POLYHEDRON_
 
 
+
+
+
 /* ---------- standard header files ---------- */
 #include <algorithm>
 #include <valarray>
 #include <vector>
+
+
+
+
+
 /* ------- user header files -------- */
 #include "extra_math.h"
 #include "line.h"
 #include "polygon.h"
 #include "shape.h"
 #include "tetrahedron.h"
-/* ---------------------------------- */
 
 
-/* --------------------------------------- */
+
+
+
 /* ---------- class declaration ---------- */
-/* --------------------------------------- */
-
 
 // `polyhedron' class
-template<class T>
-class polyhedron : public compact_shape<T>
+template<class T> class polyhedron : public compact_shape<T>
 {
 private:
 	std::vector< polygon<T> >  face_;
@@ -58,30 +68,36 @@ public:
 };
 
 
-/* ------------------------------------------ */
+
+
+
 /* ---------- function definitions ---------- */
-/* ------------------------------------------ */
+
+
+
 
 
 /* ---------- init_ ---------- */
-template<class T> void
-polyhedron<T>::init_()
+template<class T> void polyhedron<T>::init_()
 {
 	// check for consistency
 	if ( (this->p(0))->size() < 3 )
 	{
-		throw; return;
+		throw;
+        return;
 	}
 	
 	// volume
 	//this->measure_ = this->make_measure();
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- init ---------- */
-template<class T> void
-polyhedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
-// this version of 'init' is a tetrahedron
+/// this version of 'init' is a tetrahedron
+template<class T> void polyhedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
 {
 	// allocate polyhedron nodes
 	this->assign_nodes(4, pt1, pt2, pt3, pt4);
@@ -95,20 +111,24 @@ polyhedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, co
 	
 	this->init_();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- polyhedron ---------- */
-template<class T> inline
-polyhedron<T>::polyhedron(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
+template<class T> inline polyhedron<T>::polyhedron(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4)
 {
 	this->init(pt1, pt2, pt3, pt4);
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- init ---------- */
-template<class T> void
-polyhedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4, const std::valarray<T>* pt5, const std::valarray<T>* pt6, const std::valarray<T>* pt7, const std::valarray<T>* pt8)
-// this version of 'init' assumes that the nodes are given in order as for a Plot3D grid cell
+/// this version of 'init' assumes that the nodes are given in order as for a Plot3D grid cell
+template<class T> void polyhedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4, const std::valarray<T>* pt5, const std::valarray<T>* pt6, const std::valarray<T>* pt7, const std::valarray<T>* pt8)
 {
 	// allocate polyhedron nodes
 	this->assign_nodes(8, pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8);
@@ -124,19 +144,23 @@ polyhedron<T>::init(const std::valarray<T>* pt1, const std::valarray<T>* pt2, co
 	
 	this->init_();
 }
-/* -------------------------- */
+
+
+
+
 
 /* ---------- polyhedron ---------- */
-template<class T> inline
-polyhedron<T>::polyhedron(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4, const std::valarray<T>* pt5, const std::valarray<T>* pt6, const std::valarray<T>* pt7, const std::valarray<T>* pt8)
+template<class T> inline polyhedron<T>::polyhedron(const std::valarray<T>* pt1, const std::valarray<T>* pt2, const std::valarray<T>* pt3, const std::valarray<T>* pt4, const std::valarray<T>* pt5, const std::valarray<T>* pt6, const std::valarray<T>* pt7, const std::valarray<T>* pt8)
 {
 	this->init(pt1, pt2, pt3, pt4, pt5, pt6, pt7, pt8);
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- make_measure ---------- */
-template<class T> inline T
-polyhedron<T>::make_measure() const
+template<class T> inline T polyhedron<T>::make_measure() const
 {
 	T m = T(0);
 	tetrahedron<T> piece;
@@ -177,11 +201,13 @@ polyhedron<T>::make_measure() const
 	}
 	return m;
 }
-/* ---------------------------------- */
+
+
+
+
 
 /* ---------- scale ---------- */
-template<class T> inline T
-polyhedron<T>::scale() const
+template<class T> inline T polyhedron<T>::scale() const
 {
 	T s = T(0);
 	for (unsigned short i=0; i<this->face_.size(); i++)
@@ -190,11 +216,13 @@ polyhedron<T>::scale() const
 	}
 	return s / T(this->face_.size());
 }
-/* --------------------------- */
+
+
+
+
 
 /* ---------- distance_p ---------- */
-template<class T> inline T
-polyhedron<T>::distance_p(const std::valarray<T>* pt) const
+template<class T> inline T polyhedron<T>::distance_p(const std::valarray<T>* pt) const
 {
 	tetrahedron<T> piece;
 	T dist;
@@ -236,26 +264,31 @@ polyhedron<T>::distance_p(const std::valarray<T>* pt) const
 	}
 	return dist;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- contains_p ---------- */
-template<class T> bool
-polyhedron<T>::contains_p(const std::valarray<T>* pt) const
+template<class T> bool polyhedron<T>::contains_p(const std::valarray<T>* pt) const
 {
 	return ( is_zero(this->distance_p(pt)) ) ? true : false;
 }
-/* -------------------------------- */
+
+
+
+
 
 /* ---------- intersect ---------- */
-template<class T> T
-polyhedron<T>::intersect(const line<T>& l, std::valarray<T>& intercepts, bool& on_edge) const
-// on_edge refers to whether l lies along any of the faces of the polyhedron
+/// on_edge refers to whether l lies along any of the faces of the polyhedron
+template<class T> T polyhedron<T>::intersect(const line<T>& l, std::valarray<T>& intercepts, bool& on_edge) const
 {
 	intercepts.resize(0);
 	on_edge = false;
 	if ( this->dim() != l.dim() )
 	{
-		throw; return T(0);
+		throw;
+        return T(0);
 	}
 	
 	std::vector< std::valarray<T> > itemp;
@@ -269,7 +302,7 @@ polyhedron<T>::intersect(const line<T>& l, std::valarray<T>& intercepts, bool& o
 			{
 				on_edge = true;
 			}
-			for (size_t j=0; j<intercepts.size()/this->dim(); j++)
+			for (std::size_t j=0; j<intercepts.size()/this->dim(); j++)
 			{
 				itemp.push_back(intercepts[std::slice(j * this->dim(), this->dim(), 1)]);
 			}
@@ -284,15 +317,19 @@ polyhedron<T>::intersect(const line<T>& l, std::valarray<T>& intercepts, bool& o
 	}
 	return maximise_distance(itemp);
 }
-/* ------------------------------- */
+
+
+
+
 
 /* ---------- face ---------- */
-template<class T> inline const compact_shape<T>*
-polyhedron<T>::face(const unsigned short& fn) const
+template<class T> inline const compact_shape<T>* polyhedron<T>::face(const unsigned short& fn) const
 {
 	return &(this->face_[fn]);
 }
-/* -------------------------------- */
+
+
+
 
 
 #endif /* _POLYHEDRON_ */

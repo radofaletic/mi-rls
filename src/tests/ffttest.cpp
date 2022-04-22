@@ -1,4 +1,4 @@
-/*
+/**
  for testing ray tracing AND fourier techniques
  */
 
@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 	gridinputs.qdata() = 1;
 	int rotations = 32;
 	std::string the_dataname = "dorn";
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("type") )
 		{
@@ -117,7 +117,7 @@ int main(int argc, char* argv[])
 		}
 		else if ( fswitch[i].var("qdata") )
 		{
-			gridinputs.qdata() = stoi(fswitch[i].val());
+			gridinputs.qdata() = std::stol(fswitch[i].val());
 		}
 		else if ( fswitch[i].var("pngfile") )
 		{
@@ -130,11 +130,11 @@ int main(int argc, char* argv[])
 		}
 		else if ( fswitch[i].var("rotations") )
 		{
-			rotations = stoi(fswitch[i].val());
+			rotations = std::stol(fswitch[i].val());
 		}
 	}
-	size_t Nrows;
-	size_t Ncols;
+    std::size_t Nrows;
+    std::size_t Ncols;
 	std::valarray<double> b;
 	if ( the_pfilename.size() == 0 )
 	{
@@ -158,8 +158,8 @@ int main(int argc, char* argv[])
 		//
 		
 		message("creating generic projection plane");
-		size_t meshsize = 24;
-		//size_t meshsize = 128;
+        std::size_t meshsize = 24;
+		//std::size_t meshsize = 128;
 		std::valarray<double>* ratt = new std::valarray<double>(test_grid.scale()/10.0f,test_grid.dim());
 		std::valarray<double>* ratu = new std::valarray<double>(test_grid.min() + *ratt);
 		std::valarray<double>* ratv = new std::valarray<double>(test_grid.max() - *ratt);
@@ -198,10 +198,10 @@ int main(int argc, char* argv[])
 	message("reading PNG file "+the_pfilename);
 	pngread(the_pfilename, the_dataname, Nrows, Ncols, scale_x, scale_y, b, axis, angles);
 	std::vector< std::valarray<double> > data(b.size()/(Nrows*Ncols));
-	for (size_t i=0; i<data.size(); i++)
+	for (std::size_t i=0; i<data.size(); i++)
 	{
 		data[i].resize(Nrows*Ncols);
-		for (size_t j=0; j<data[i].size(); j++)
+		for (std::size_t j=0; j<data[i].size(); j++)
 		{
 			data[i] = b[std::slice(i*Nrows*Ncols,Nrows*Ncols,1)];
 		}
@@ -224,16 +224,16 @@ int main(int argc, char* argv[])
 	
 	// set up Fourier inversion tools
 	message("setting up Fourier tools");
-	const size_t number_of_slices = ( axis == Angle::X ) ? Ncols : Nrows;
-	const size_t output_dimension = ( axis == Angle::X ) ? Nrows : Ncols;
-	const size_t strip_start_factor = ( axis == Angle::X ) ? 1 : Ncols;
-	const size_t strip_stride = ( axis == Angle::X ) ? Ncols : 1;
+	const std::size_t number_of_slices = ( axis == Angle::X ) ? Ncols : Nrows;
+	const std::size_t output_dimension = ( axis == Angle::X ) ? Nrows : Ncols;
+	const std::size_t strip_start_factor = ( axis == Angle::X ) ? 1 : Ncols;
+	const std::size_t strip_stride = ( axis == Angle::X ) ? Ncols : 1;
 	std::vector< std::valarray<double> > tpointso;
 	std::vector< std::valarray<double> > output_re(number_of_slices);
 	std::vector< std::valarray<double> > output_im(number_of_slices);
 	std::vector< std::valarray<double> > output_fft_re(number_of_slices);
 	std::vector< std::valarray<double> > output_fft_im(number_of_slices);
-	for (size_t i=0; i<number_of_slices; i++)
+	for (std::size_t i=0; i<number_of_slices; i++)
 	{
 		output_re[i].resize(output_dimension*output_dimension);
 		output_im[i].resize(output_dimension*output_dimension);
@@ -247,7 +247,7 @@ int main(int argc, char* argv[])
 	fftw_complex* two_d_out = (fftw_complex*)fftw_malloc(output_dimension*output_dimension * sizeof(fftw_complex));
 	fftw_plan p2 = fftw_plan_dft_2d(output_dimension, output_dimension, two_d_in, two_d_out, FFTW_BACKWARD, FFTW_MEASURE);
 	std::vector< fftw_complex* > strips(data.size());
-	for (size_t i=0; i<strips.size(); i++)
+	for (std::size_t i=0; i<strips.size(); i++)
 	{
 		strips[i] = (fftw_complex*)fftw_malloc(output_dimension * sizeof(fftw_complex));
 	}
@@ -257,14 +257,14 @@ int main(int argc, char* argv[])
 	message("\t...done");
 	
 	// loop over each slice
-	for (size_t slice=0; slice<number_of_slices; slice++)
+	for (std::size_t slice=0; slice<number_of_slices; slice++)
 	{
-		message("computing Fourier inversion for slice "+ntos(slice+1)+" of "+ntos(number_of_slices));
+		message("computing Fourier inversion for slice "+std::to_string(slice+1)+" of "+std::to_string(number_of_slices));
 		// get each strip for this slice, and put it into the "strips" array
 		debug("setting up strips for slice");
-		for (size_t i=0; i<strips.size(); i++)
+		for (std::size_t i=0; i<strips.size(); i++)
 		{
-			for (size_t j=0; j<output_dimension; j++)
+			for (std::size_t j=0; j<output_dimension; j++)
 			{
 				strips[i][j][0] = data[i][strip_start_factor*slice + strip_stride*j];
 				strips[i][j][1] = 0;
@@ -272,18 +272,18 @@ int main(int argc, char* argv[])
 		}
 		// do a 1D FFT for each strip in "strips"
 		debug("computing 1D Fourier transform for each strip");
-		size_t topz = ( output_dimension%2 == 0 ) ? output_dimension/2 : (output_dimension-1)/2;
-		size_t DC = ( output_dimension%2 == 0 ) ? topz - 1 : topz;
+        std::size_t topz = ( output_dimension%2 == 0 ) ? output_dimension/2 : (output_dimension-1)/2;
+        std::size_t DC = ( output_dimension%2 == 0 ) ? topz - 1 : topz;
 		double sod = std::sqrt(double(output_dimension));
-		for (size_t i=0; i<strips.size(); i++)
+		for (std::size_t i=0; i<strips.size(); i++)
 		{
-			for (size_t j=0; j<output_dimension; j++)
+			for (std::size_t j=0; j<output_dimension; j++)
 			{
 				one_d_in[j][0] = strips[i][j][0];
 				one_d_in[j][1] = strips[i][j][1];
 			}
 			fftw_execute(p1);
-			for (size_t j=0; j<output_dimension; j++)
+			for (std::size_t j=0; j<output_dimension; j++)
 			{ // also for negative DFT frequencies
 				strips[i][j][0] = one_d_out[(j+topz+1)%output_dimension][0]/sod;
 				strips[i][j][1] = one_d_out[(j+topz+1)%output_dimension][1]/sod;
@@ -301,24 +301,24 @@ int main(int argc, char* argv[])
 			else if ( angles.size() == 0 )
 			{
 				angles.resize(strips.size());
-				for (size_t i=0; i<angles.size(); i++)
+				for (std::size_t i=0; i<angles.size(); i++)
 				{
 					angles[i] = i * 180 / angles.size();
 				}
 			}
 			std::vector< std::valarray<double> > opoints(output_dimension);
-			for (size_t i=0; i<opoints.size(); i++)
+			for (std::size_t i=0; i<opoints.size(); i++)
 			{
 				opoints[i].resize(2);
 				opoints[i][0] = double(i) - double(DC);
 				opoints[i][1] = 0;
 			}
 			tpoints.resize(opoints.size()*strips.size());
-			for (size_t i=0; i<strips.size(); i++)
+			for (std::size_t i=0; i<strips.size(); i++)
 			{
 				Rotation<double> prot(2);
 				prot.set(angles[i]);
-				for (size_t j=0; j<opoints.size(); j++)
+				for (std::size_t j=0; j<opoints.size(); j++)
 				{
 					tpoints[i*opoints.size()+j].resize(2);
 					tpoints[i*opoints.size()+j] = prot.O(opoints[j]);
@@ -327,9 +327,9 @@ int main(int argc, char* argv[])
 		}
 		std::valarray<double> slice_plane_re(output_dimension*strips.size());
 		std::valarray<double> slice_plane_im(output_dimension*strips.size());
-		for (size_t i=0; i<strips.size(); i++)
+		for (std::size_t i=0; i<strips.size(); i++)
 		{
-			for (size_t j=0; j<output_dimension; j++)
+			for (std::size_t j=0; j<output_dimension; j++)
 			{
 				slice_plane_re[i*output_dimension+j] = strips[i][j][0];
 				slice_plane_im[i*output_dimension+j] = strips[i][j][1];
@@ -340,7 +340,7 @@ int main(int argc, char* argv[])
 		if ( tpointso.size() == 0 )
 		{
 			tpointso.resize(tpoints.size());
-			for (size_t i=0; i<tpointso.size(); i++)
+			for (std::size_t i=0; i<tpointso.size(); i++)
 			{
 				tpointso[i].resize(tpoints[i].size());
 				tpointso[i] = tpoints[i];
@@ -352,11 +352,11 @@ int main(int argc, char* argv[])
 			nngridrc(tpoints, slice_plane_re, output_dimension, output_dimension);
 		}
 		nngridrc(tpoints, slice_plane_im, output_dimension, output_dimension);
-		for (size_t j=0; j<output_dimension; j++)
+		for (std::size_t j=0; j<output_dimension; j++)
 		{
-			for (size_t i=0; i<output_dimension; i++)
+			for (std::size_t i=0; i<output_dimension; i++)
 			{
-				size_t p = j*output_dimension+i;
+                std::size_t p = j*output_dimension+i;
 				output_fft_re[slice][p] = two_d_in[p][0] = slice_plane_re[p];
 				output_fft_im[slice][p] = two_d_in[p][1] = slice_plane_im[p];
 				if ( output_fft_re[slice][p] > re_max )
@@ -372,14 +372,14 @@ int main(int argc, char* argv[])
 		fftw_execute(p2);
 		// save the data to the final data array
 		debug("put the data into the output array");
-		for (size_t i=0; i<output_dimension*output_dimension; i++)
+		for (std::size_t i=0; i<output_dimension*output_dimension; i++)
 		{
 			output_re[slice][i] = two_d_out[i][0]/sod;
 			output_im[slice][i] = two_d_out[i][1]/sod;
 		}
 		message("\t...done");
 	}
-	for (size_t i=0; i<strips.size(); i++)
+	for (std::size_t i=0; i<strips.size(); i++)
 	{
 		fftw_free(strips[i]);
 	}
@@ -393,13 +393,13 @@ int main(int argc, char* argv[])
 	
 	// putting the 2D data back into order
 	message("putting 2D data back into order");
-	for (size_t slice=0; slice<number_of_slices; slice++)
+	for (std::size_t slice=0; slice<number_of_slices; slice++)
 	{
 		fftw_complex itemp[output_dimension];
 		fftw_complex otemp[output_dimension];
-		for (size_t j=0; j<output_dimension; j++)
+		for (std::size_t j=0; j<output_dimension; j++)
 		{
-			for (size_t i=0; i<output_dimension; i++)
+			for (std::size_t i=0; i<output_dimension; i++)
 			{
 				itemp[i][0] = output_re[slice][j*output_dimension+i];
 				itemp[i][1] = output_im[slice][j*output_dimension+i];
@@ -409,15 +409,15 @@ int main(int argc, char* argv[])
 				otemp[i][0] = itemp[(i-re_i)%output_dimension][0];
 				otemp[i][1] = itemp[(i-re_i)%output_dimension][1];
 			}
-			for (size_t i=0; i<output_dimension; i++)
+			for (std::size_t i=0; i<output_dimension; i++)
 			{
 				output_re[slice][j*output_dimension+i] = otemp[i][0];
 				output_im[slice][j*output_dimension+i] = otemp[i][1];
 			}
 		}
-		for (size_t i=0; i<output_dimension; i++)
+		for (std::size_t i=0; i<output_dimension; i++)
 		{
-			for (size_t j=0; j<output_dimension; j++)
+			for (std::size_t j=0; j<output_dimension; j++)
 			{
 				itemp[j][0] = output_re[slice][j*output_dimension+i];
 				itemp[j][1] = output_im[slice][j*output_dimension+i];
@@ -427,7 +427,7 @@ int main(int argc, char* argv[])
 				otemp[j][0] = itemp[(j-re_j)%output_dimension][0];
 				otemp[j][1] = itemp[(j-re_j)%output_dimension][1];
 			}
-			for (size_t j=0; j<output_dimension; j++)
+			for (std::size_t j=0; j<output_dimension; j++)
 			{
 				output_re[slice][j*output_dimension+i] = otemp[j][0];
 				output_im[slice][j*output_dimension+i] = otemp[j][1];
@@ -439,49 +439,49 @@ int main(int argc, char* argv[])
 	message("writing output PNG files");
 	b.resize(output_re.size()*output_dimension*output_dimension);
 	// 2D FFT
-	for (size_t i=0; i<output_fft_re.size(); i++)
+	for (std::size_t i=0; i<output_fft_re.size(); i++)
 	{
-		for (size_t j=0; j<output_fft_re[i].size(); j++)
+		for (std::size_t j=0; j<output_fft_re[i].size(); j++)
 		{
 			b[std::slice(i*output_dimension*output_dimension,output_dimension*output_dimension,1)] = output_fft_re[i];
 		}
 	}
 	pngwrite(the_dataname+"-fft2_re.png", output_dimension, output_dimension, b, tpointso);
-	for (size_t i=0; i<output_fft_im.size(); i++)
+	for (std::size_t i=0; i<output_fft_im.size(); i++)
 	{
-		for (size_t j=0; j<output_fft_im[i].size(); j++)
+		for (std::size_t j=0; j<output_fft_im[i].size(); j++)
 		{
 			b[std::slice(i*output_dimension*output_dimension,output_dimension*output_dimension,1)] = output_fft_im[i];
 		}
 	}
 	pngwrite(the_dataname+"-fft2_im.png", output_dimension, output_dimension, b, tpointso);
 	// 2D data
-	for (size_t i=0; i<output_re.size(); i++)
+	for (std::size_t i=0; i<output_re.size(); i++)
 	{
-		for (size_t j=0; j<output_re[i].size(); j++)
+		for (std::size_t j=0; j<output_re[i].size(); j++)
 		{
 			b[std::slice(i*output_dimension*output_dimension,output_dimension*output_dimension,1)] = output_re[i];
 		}
 	}
 	pngwrite(the_dataname+"-inverted_re.png", output_dimension, output_dimension, b, tpointso);
-	for (size_t i=0; i<output_im.size(); i++)
+	for (std::size_t i=0; i<output_im.size(); i++)
 	{
-		for (size_t j=0; j<output_im[i].size(); j++)
+		for (std::size_t j=0; j<output_im[i].size(); j++)
 		{
 			b[std::slice(i*output_dimension*output_dimension,output_dimension*output_dimension,1)] = output_im[i];
 		}
 	}
 	pngwrite(the_dataname+"-inverted_im.png", output_dimension, output_dimension, b, tpointso);
-	for (size_t i=0; i<output_re.size(); i++)
+	for (std::size_t i=0; i<output_re.size(); i++)
 	{
-		for (size_t j=0; j<output_re[i].size(); j++)
+		for (std::size_t j=0; j<output_re[i].size(); j++)
 		{
 			output_re[i][j] = std::sqrt(output_re[i][j]*output_re[i][j] + output_im[i][j]*output_im[i][j]);
 		}
 	}
-	for (size_t i=0; i<output_re.size(); i++)
+	for (std::size_t i=0; i<output_re.size(); i++)
 	{
-		for (size_t j=0; j<output_re[i].size(); j++)
+		for (std::size_t j=0; j<output_re[i].size(); j++)
 		{
 			b[std::slice(i*output_dimension*output_dimension,output_dimension*output_dimension,1)] = output_re[i];
 		}
@@ -490,7 +490,7 @@ int main(int argc, char* argv[])
 	message("\t...done");
 	
 	// finish
-	message("FINISHED running "+ctos(argv[0]));
+	message("FINISHED running " + std::string(argv[0]));
 	message("please wait until the programme exits");
 	return 0;
 }

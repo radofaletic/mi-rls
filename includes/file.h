@@ -1,4 +1,4 @@
-/*
+/**
  generic defines for file attributes, especially Fortran file formats
  
  Rado Faletic
@@ -9,18 +9,29 @@
  
  Rado.Faletic@anu.edu.au
  6th August 2003
+ 16th April 2022
  */
+
+
+
 
 
 #ifndef _FILE_
 #define _FILE_
 
 
+
+
+
+/* ---------- standard header files ---------- */
 #include <algorithm>
 #include <fstream>
 #include <string>
 #include <valarray>
 #include <vector>
+
+
+
 
 
 enum dataformat
@@ -36,8 +47,20 @@ enum dataprecision
 	Double
 };
 
+
+
+
+
+/* ---------- function declarations ---------- */
+
+/// write vector of vallarays to a CSV file
 template<class T> void write_CSV(const std::string&, const std::vector< std::valarray<T> >&, const std::vector<std::string>&);
 
+
+
+
+
+/* ---------- function definitions ---------- */
 
 template<class T> void
 write_CSV(const std::string& filename,
@@ -52,7 +75,7 @@ write_CSV(const std::string& filename,
 	std::vector< std::valarray<T> > csv = csvs;
 	std::vector<std::string> labels = labls;
 	
-	size_t maxlength = 0;
+    std::size_t maxlength = 0;
 	for (unsigned short i=0; i<csv.size(); i++)
 	{
 		maxlength = std::max(maxlength, csv[i].size());
@@ -64,7 +87,7 @@ write_CSV(const std::string& filename,
 		{
 			std::valarray<T> tmp = csv[i];
 			csv[i].resize(maxlength, T(0));
-			csv[i][std::slice(0,tmp.size(),1)] = tmp;
+			csv[i][std::slice(0, tmp.size(), 1)] = tmp;
 		}
 	}
 	
@@ -85,7 +108,7 @@ write_CSV(const std::string& filename,
 		}
 		csvfile << std::endl;
 	}
-	for (size_t j=0; j<maxlength; j++)
+	for (std::size_t j=0; j<maxlength; j++)
 	{
 		for (unsigned short i=0; i<csv.size(); i++)
 		{
@@ -99,5 +122,9 @@ write_CSV(const std::string& filename,
 	}
 	csvfile.close();
 }
+
+
+
+
 
 #endif /* _FILE_ */

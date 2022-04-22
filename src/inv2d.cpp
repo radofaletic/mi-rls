@@ -1,8 +1,9 @@
-/*
+/**
  A programme to perform a linear tomographic inversion on any greyscale PNG file
  
  Rado Faletic
  8th July 2004
+ 22nd April 2022
  */
 
 /*
@@ -13,6 +14,7 @@
 #include <string>
 #include <valarray>
 #include <vector>
+
 #include "angles.h"
 #include "argv.h"
 #include "front-end.h"
@@ -23,14 +25,12 @@
 #include "sparse_matrix.h"
 #include "tomography.h"
 
-typedef double real;
-
 int main(int argc, char* argv[])
 {
 	std::string ipngfilename = "input.png";
 	std::string opngfilename = "output.png";
-	size_t resolution = 256;
-	size_t nangles = 180;
+    std::size_t resolution = 256;
+    std::size_t nangles = 180;
 	bool write_intermediates = false;
 	
 	std::vector<args> fswitch = get_args(argc, argv);
@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
 		fswitch[0].var() = "help";
 		fswitch[0].val() = "";
 	}
-	for (size_t i=0; i<fswitch.size(); i++)
+	for (std::size_t i=0; i<fswitch.size(); i++)
 	{
 		if ( fswitch[i].var("help") )
 		{
@@ -48,8 +48,8 @@ int main(int argc, char* argv[])
 			message("below is a list of flags:\n");
 			message("--input=<inputfile>\n\tthe input PNG file ("+ipngfilename+")");
 			message("--output=<outputfile>\n\tthe output PNG file ("+opngfilename+")");
-			message("--resolution=<res>\n\tthe number of data points in each projection ("+ntos(resolution)+")");
-			message("--angles=<nangles>\n\tthe number of angles, or projections ("+ntos(nangles)+")");
+			message("--resolution=<res>\n\tthe number of data points in each projection ("+std::to_string(resolution)+")");
+			message("--angles=<nangles>\n\tthe number of angles, or projections ("+std::to_string(nangles)+")");
 			message("--intermediades=on/off\n\twrite PNG files of intermediate steps (off)");
 			return 1;
 		}
@@ -73,7 +73,8 @@ int main(int argc, char* argv[])
 			if ( !nangles )
 			{
 				message("\"angles\" must be non-zero.\nUse the --help option to learn more.");
-				throw; return 1;
+				throw;
+                return 1;
 			}
 		}
 		else if ( fswitch[i].var("intermediates") )
@@ -91,7 +92,8 @@ int main(int argc, char* argv[])
 		else
 		{
 			message("Unrecognised option '"+fswitch[i].var()+"'.\nUse the --help option to learn more.");
-			throw; return 1;
+			throw;
+            return 1;
 		}
 	}
 	if ( ipngfilename.substr(ipngfilename.size()-4,4) != ".png" && ipngfilename.substr(ipngfilename.size()-4,4) != ".PNG" )
@@ -105,18 +107,19 @@ int main(int argc, char* argv[])
 	
 	// read PNG image file
 	message("reading '"+ipngfilename+"'");
-	size_t Nrows, Ncols;
-	std::valarray<real> input_data;
+    std::size_t Nrows, Ncols;
+	std::valarray<double> input_data;
 	Angle::axes sino_axis;
-	std::valarray<real> angles;
-	real scale;
+	std::valarray<double> angles;
+    double scale;
 	bool realdata;
 	std::valarray<bool> blanks;
 	Tomography::pngread(ipngfilename, Nrows, Ncols, input_data, blanks, sino_axis, angles, scale, realdata);
 	if ( Nrows*Ncols != input_data.size() )
 	{
 		message("'"+ipngfilename+"' seems to be a multi-image tomographic file, this software will only read a single-image file.");
-		throw; return 1;
+		throw;
+        return 1;
 	}
 	
 	// set up grid
@@ -128,7 +131,7 @@ int main(int argc, char* argv[])
 	mygrid.g_nY() = Nrows;
 	mygrid.g_nZ() = 0;
 	mygrid.g_scale() = scale;
-	grid<real> the_grid(mygrid);
+	grid<double> the_grid(mygrid);
 	
 	the_grid.put_adata(input_data);
 	std::string gdn = opngfilename.substr(0,opngfilename.size()-4);
@@ -138,13 +141,13 @@ int main(int argc, char* argv[])
 	message("setting up projection rays");
 	if ( !resolution )
 	{
-		resolution = size_t(std::ceil(std::sqrt((real)(Ncols*Ncols+Nrows*Nrows))));
+		resolution = std::size_t(std::ceil(std::sqrt((double)(Ncols*Ncols+Nrows*Nrows))));
 	}
-	real dlength = scale * std::sqrt((real)(Ncols*Ncols+Nrows*Nrows));
+    double dlength = scale * std::sqrt((double)(Ncols*Ncols+Nrows*Nrows));
 	scale = dlength / ( resolution + 1 );
 	dlength /= 2;
-	std::vector< std::valarray<real> > ipoints(resolution+2);
-	for (size_t i=0; i<ipoints.size(); i++)
+	std::vector< std::valarray<double> > ipoints(resolution+2);
+	for (std::size_t i=0; i<ipoints.size(); i++)
 	{
 		ipoints[i].resize(2);
 		ipoints[i][0] = i * scale - dlength;
@@ -154,32 +157,32 @@ int main(int argc, char* argv[])
 	ipoints.erase(ipoints.end()-1);
 	ipoints.erase(ipoints.begin());
 	angles.resize(nangles);
-	for (size_t i=0; i<angles.size(); i++)
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
-		angles[i] = ((real)(180*i))/((real)(nangles));
+		angles[i] = ((double)(180*i))/((double)(nangles));
 	}
 	
-	Rotation<real> rot(2);
+	Rotation<double> rot(2);
 	rot.set_origin(the_grid.center());
-	std::valarray<real> islope(2);
+	std::valarray<double> islope(2);
 	islope[0] = 0;
 	islope[1] = 1;
-	std::vector< line<real> > rays(0);
-	for (size_t i=0; i<angles.size(); i++)
+	std::vector< line<double> > rays(0);
+	for (std::size_t i=0; i<angles.size(); i++)
 	{
 		rot.reset(angles[i], Angle::XY);
-		std::valarray<real> slope = rot.O(islope);
-		for (size_t j=0; j<ipoints.size(); j++)
+		std::valarray<double> slope = rot.O(islope);
+		for (std::size_t j=0; j<ipoints.size(); j++)
 		{
-			line<real> tline(slope, rot(ipoints[j]));
+			line<double> tline(slope, rot(ipoints[j]));
 			rays.push_back(tline);
 		}
 	}
 	
 	// create tomograms
 	message("creating tomograms");
-	SparseMatrix<real> A(0,the_grid.ncells());
-	std::valarray<real> b;
+	SparseMatrix<double> A(0, the_grid.ncells());
+	std::valarray<double> b;
 	Tomography::projection(the_grid, rays, blanks, b, A, walkfast, true, true, true);
 	
 	if ( write_intermediates ) // save sinogram
@@ -187,22 +190,22 @@ int main(int argc, char* argv[])
 		std::string o = opngfilename.substr(0,opngfilename.size()-4);
 		o += "_1-tomograms.png";
 		message("saving '"+o+"'");
-		std::valarray<real> otb(real(0), blanks.size());
+		std::valarray<double> otb(double(0), blanks.size());
 		otb[blanks] = b;
 		Tomography::pngwrite(o, nangles, resolution, otb, sino_axis, angles, scale, false, true);
 	}
 	
 	// add smoothing
 	//message("adding smoothing equations");
-	//AddSmoothing(A, b, the_grid, real(0.1));
+	//AddSmoothing(A, b, the_grid, double(0.1));
 	the_grid.clear_aux();
 	
 	// doing matrix inversion
-	std::valarray<real> x(real(0), A.cols());
+	std::valarray<double> x(double(0), A.cols());
 	message("compressing matrix");
 	A.Compress(x);
 	message("inverting matrix");
-	lsqr_input<real> linput(0,0,0,0,1000);
+	lsqr_input<double> linput(0, 0, 0, 0, 1000);
 	LSQR(A, x, b, linput);
 	message("uncompressing matrix");
 	A.Uncompress(x);

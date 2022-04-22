@@ -1,6 +1,5 @@
-/*
- Rado's own little routine for testing
- Plot3d I/O through the grid interface
+/**
+ Rado's own little routine for testing  Plot3d I/O through the grid interface
  */
 
 #include <iostream>
@@ -44,6 +43,6 @@ int main(int argc, char* argv[])
 	test_grid.write(outputname,SaveData,format);
 	test_grid.write(outputname,SaveNeighbours,format);
 	
-	message("FINISHED running "+ntos(argv[0]));
+	message("FINISHED running " + std::string(argv[0]));
 	
 }

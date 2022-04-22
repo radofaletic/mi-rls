@@ -1,4 +1,4 @@
-/*
+/**
  Rado's own little routine for testing Plot3D I/O
  */
 
@@ -28,9 +28,9 @@ int main(int argc, char* argv[])
 #endif /* USE_MESSAGES */
 	
 	std::vector< std::valarray<float> > nodes;
-	std::valarray<size_t> Nx;
-	std::valarray<size_t> Ny;
-	std::valarray<size_t> Nz;
+	std::valarray<std::size_t> Nx;
+	std::valarray<std::size_t> Ny;
+	std::valarray<std::size_t> Nz;
 	std::valarray<float> data;
 	std::string gfilename;
 	std::string dataname;
@@ -46,5 +46,5 @@ int main(int argc, char* argv[])
 	Plot3D::write_interface(nodes, Nx, Ny, Nz, oname);
 	Plot3D::write_data_interface(data, dataname, Nx, Ny, Nz, oname);
 	
-	message("FINISHED running "+ntos(argv[0]));
+	message("FINISHED running " + std::string(argv[0]));
 }

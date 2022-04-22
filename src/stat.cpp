@@ -1,8 +1,9 @@
-/*
+/**
  Generate statistics about a PNG file
  
  Rado Faletic
  7th December 2004
+ 22nd April 2022
  */
 
 /*
@@ -13,10 +14,9 @@
 #include <sstream>
 #include <string>
 #include <valarray>
+
 #include "angles.h"
 #include "tomography.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
@@ -58,18 +58,18 @@ int main(int argc, char* argv[])
 	}
 	
 	// search for PNG files
-	size_t Nrows = 0;
-	size_t Ncols = 0;
-	std::valarray<real> data;
+    std::size_t Nrows = 0;
+    std::size_t Ncols = 0;
+	std::valarray<double> data;
 	std::valarray<bool> blanks;
 	Angle::axes raxis = Angle::X;
-	std::valarray<real> angles;
-	real scale = 1;
+	std::valarray<double> angles;
+    double scale = 1;
 	bool realdata = true;
 	std::cout << "reading " << ifilename << std::endl;
 	Tomography::pngread(ifilename, Nrows, Ncols, data, blanks, raxis, angles, scale, realdata);
 	
-	std::valarray<real> datab = data[blanks];
+	std::valarray<double> datab = data[blanks];
 	std::cout << " SIZE: " << data.size() << std::endl
 	<< "   NI: " << data.size()/(Nrows*Ncols) << std::endl
 	<< "SCALE: " << scale << std::endl
@@ -78,15 +78,15 @@ int main(int argc, char* argv[])
 	<< " MINB: " << datab.min() << std::endl
 	<< "  AVE: " << data.sum()/data.size() << std::endl;
 	
-	size_t counter = 0;
-	for (size_t i=0; i<data.size(); i++)
+    std::size_t counter = 0;
+	for (std::size_t i=0; i<data.size(); i++)
 	{
-		if ( data[i] < real(0) )
+		if ( data[i] < double(0) )
 		{
 			counter++;
 		}
 	}
-	std::cout << "  NEG: " << real(100)*real(counter)/data.size() << "%" << std::endl;
+	std::cout << "  NEG: " << double(100)*double(counter)/data.size() << "%" << std::endl;
 	
 	return 0;
 }

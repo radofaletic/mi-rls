@@ -1,8 +1,9 @@
-/*
+/**
  A programme to convert from IEEE real format image file to PNG image file
  
  Rado Faletic
  14th July 2004
+ 22nd April 2022
  */
 
 /*
@@ -14,21 +15,20 @@
 #include <sstream>
 #include <string>
 #include <valarray>
+
 #include "angles.h"
 #include "file.h"
 #include "fortran_io.h"
 #include "tomography.h"
-
-typedef double real;
 
 int main(int argc, char* argv[])
 {
 	std::string ifilename = "input.bin";
 	std::string ofilename = "output.png";
 	dataprecision precision = Single;
-	size_t xresolution = 640;
-	size_t yresolution = 480;
-	size_t xchop = 0;
+	std::size_t xresolution = 640;
+    std::size_t yresolution = 480;
+    std::size_t xchop = 0;
 	bool xdir = true;
 	bool byte_swapping = false;
 	bool trans = true;
@@ -145,7 +145,7 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	std::valarray<real> data(xresolution*yresolution);
+	std::valarray<double> data(xresolution*yresolution);
 	
 	std::ifstream file;
 	file.open(ifilename.c_str(),std::ios_base::binary);
@@ -153,11 +153,11 @@ int main(int argc, char* argv[])
 	
 	if ( xchop )
 	{
-		size_t oxresolution = xresolution;
+        std::size_t oxresolution = xresolution;
 		xresolution = xchop;
-		std::valarray<real> odata = data;
+		std::valarray<double> odata = data;
 		data.resize(xresolution*yresolution);
-		for (size_t j=0; j<yresolution; j++)
+		for (std::size_t j=0; j<yresolution; j++)
 		{
 			if ( xdir )
 			{
@@ -171,16 +171,16 @@ int main(int argc, char* argv[])
 		}
 	}
 	
-	real dmin = 0.0;
-	real dmax = data.max();
-	for (size_t i=0; i<data.size(); i++)
+    double dmin = 0.0;
+    double dmax = data.max();
+	for (std::size_t i=0; i<data.size(); i++)
 	{
 		if ( -500.0 < data[i] && data[i] < dmin )
 		{
 			dmin = data[i];
 		}
 	}
-	for (size_t i=0; i<data.size(); i++)
+	for (std::size_t i=0; i<data.size(); i++)
 	{
 		if ( data[i] < dmin )
 		{
@@ -188,7 +188,7 @@ int main(int argc, char* argv[])
 		}
 	}
 	bool ec = true; // edge cut
-	for (size_t i=0; i<xresolution; i++)
+	for (std::size_t i=0; i<xresolution; i++)
 	{
 		if ( data[i] != dmin )
 		{
@@ -197,13 +197,13 @@ int main(int argc, char* argv[])
 	}
 	if ( ec )
 	{
-		std::valarray<real> odata = data;
+		std::valarray<double> odata = data;
 		yresolution--;
 		data.resize(xresolution*yresolution);
 		data[std::slice(0,data.size(),1)] = odata[std::slice(xresolution, data.size(),1)];
 	}
 	ec = true;
-	for (size_t i=data.size()-xresolution; i<data.size(); i++)
+	for (std::size_t i=data.size()-xresolution; i<data.size(); i++)
 	{
 		if ( data[i] != dmin )
 		{
@@ -212,13 +212,13 @@ int main(int argc, char* argv[])
 	}
 	if ( ec )
 	{
-		std::valarray<real> odata = data;
+		std::valarray<double> odata = data;
 		yresolution--;
 		data.resize(xresolution*yresolution);
 		data[std::slice(0,data.size(),1)] = odata[std::slice(0, data.size(),1)];
 	}
 	ec = true;
-	for (size_t i=0; i<data.size(); i+=xresolution)
+	for (std::size_t i=0; i<data.size(); i+=xresolution)
 	{
 		if ( data[i] != dmin )
 		{
@@ -227,17 +227,17 @@ int main(int argc, char* argv[])
 	}
 	if ( ec )
 	{
-		std::valarray<real> odata = data;
-		size_t oxresolution = xresolution;
+		std::valarray<double> odata = data;
+        std::size_t oxresolution = xresolution;
 		xresolution--;
 		data.resize(xresolution*yresolution);
-		for (size_t j=0; j<yresolution; j++)
+		for (std::size_t j=0; j<yresolution; j++)
 		{
 			data[std::slice(j*xresolution, xresolution, 1)] = odata[std::slice(j*oxresolution+1,xresolution,1)];
 		}
 	}
 	ec = true;
-	for (size_t i=xresolution-1; i<data.size(); i+=xresolution)
+	for (std::size_t i=xresolution-1; i<data.size(); i+=xresolution)
 	{
 		if ( data[i] != dmin )
 		{
@@ -246,28 +246,28 @@ int main(int argc, char* argv[])
 	}
 	if ( ec )
 	{
-		std::valarray<real> odata = data;
-		size_t oxresolution = xresolution;
+		std::valarray<double> odata = data;
+        std::size_t oxresolution = xresolution;
 		xresolution--;
 		data.resize(xresolution*yresolution);
-		for (size_t j=0; j<yresolution; j++)
+		for (std::size_t j=0; j<yresolution; j++)
 		{
 			data[std::slice(j*xresolution, xresolution, 1)] = odata[std::slice(j*oxresolution,xresolution,1)];
 		}
 	}
 	if ( addflip )
 	{
-		std::valarray<real> odata = data;
+		std::valarray<double> odata = data;
 		data.resize(2*data.size());
 		data[std::slice(odata.size(), odata.size(), 1)] = odata;
-		for (size_t j=0; j<yresolution; j++)
+		for (std::size_t j=0; j<yresolution; j++)
 		{
 			data[std::slice(odata.size()-(j+1)*xresolution, xresolution, 1)] = odata[std::slice(j*xresolution, xresolution, 1)];
 		}
 		yresolution *= 2;
 	}
 	
-	Tomography::pngwrite(ofilename, yresolution, xresolution, data, Angle::X, std::valarray<real>(0), real(1), true, trans);
+	Tomography::pngwrite(ofilename, yresolution, xresolution, data, Angle::X, std::valarray<double>(0), double(1), true, trans);
 	
 	return 0;
 }
