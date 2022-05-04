@@ -54,8 +54,12 @@ testarg
 
 # work files #
 ##############
-*.png
+#*.png
 *.matrix
+*.messages
+data/phantoms/*.PBG
+data/phantoms/*.PBS
+data/phantoms/*.VAR
 
 # OS generated files #
 ######################

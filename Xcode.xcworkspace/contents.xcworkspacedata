@@ -9,6 +9,185 @@
       location = "group:README.md">
    </FileRef>
    <Group
+      location = "group:data"
+      name = "data">
+      <Group
+         location = "group:phase"
+         name = "phase">
+         <FileRef
+            location = "group:sphere.png">
+         </FileRef>
+         <FileRef
+            location = "group:phase_CFD_proj.png">
+         </FileRef>
+         <FileRef
+            location = "group:phase_T3_proj_shock.png">
+         </FileRef>
+         <FileRef
+            location = "group:sphere_shock.png">
+         </FileRef>
+         <FileRef
+            location = "group:phase_T3_proj.png">
+         </FileRef>
+         <Group
+            location = "group:orig"
+            name = "orig">
+            <FileRef
+               location = "group:phase_CFD_090.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_045.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_135.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_120.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_030.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_150.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_150.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_030.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_120.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_135.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_045.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_090.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_165.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_075.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_060.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_105.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_000.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_015.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_015.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_000.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_105.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_060.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_CFD_075.png">
+            </FileRef>
+            <FileRef
+               location = "group:phase_T3_165.png">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:phase_CFD_proj_shock.png">
+         </FileRef>
+      </Group>
+      <Group
+         location = "group:phantoms"
+         name = "phantoms">
+         <FileRef
+            location = "group:make_all.sh">
+         </FileRef>
+         <FileRef
+            location = "group:Makefile">
+         </FileRef>
+         <Group
+            location = "group:originals"
+            name = "originals">
+            <FileRef
+               location = "group:testpat.1k.tiff">
+            </FileRef>
+            <FileRef
+               location = "group:Lenna.tiff">
+            </FileRef>
+         </Group>
+         <FileRef
+            location = "group:phantoms.cpp">
+         </FileRef>
+         <Group
+            location = "group:Plot3D50"
+            name = "Plot3D50">
+            <FileRef
+               location = "group:stark.VAR">
+            </FileRef>
+            <FileRef
+               location = "group:stark.PBG">
+            </FileRef>
+            <FileRef
+               location = "group:stark.PBS">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:PNG256"
+            name = "PNG256">
+            <FileRef
+               location = "group:testpat.1k.png">
+            </FileRef>
+            <FileRef
+               location = "group:Lenna.png">
+            </FileRef>
+         </Group>
+         <Group
+            location = "group:Plot3D36"
+            name = "Plot3D36">
+            <FileRef
+               location = "group:stark.VAR">
+            </FileRef>
+            <FileRef
+               location = "group:shepp-logan.PBS">
+            </FileRef>
+            <FileRef
+               location = "group:dorn.PBG">
+            </FileRef>
+            <FileRef
+               location = "group:dorn.PBS">
+            </FileRef>
+            <FileRef
+               location = "group:shepp-logan.PBG">
+            </FileRef>
+            <FileRef
+               location = "group:stark.PBG">
+            </FileRef>
+            <FileRef
+               location = "group:stark.PBS">
+            </FileRef>
+            <FileRef
+               location = "group:dorn.VAR">
+            </FileRef>
+            <FileRef
+               location = "group:shepp-logan.VAR">
+            </FileRef>
+         </Group>
+      </Group>
+   </Group>
+   <Group
       location = "group:doc"
       name = "doc">
       <Group

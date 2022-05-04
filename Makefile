@@ -33,7 +33,7 @@ mandir = $(prefix)
 #       3 - (2) + I/O messages
 #       4 - (3) + calculation messages
 #	5 - all debugging information
-DEBUG = #-DDEBUG=5 #-DUSE_MESSAGES
+DEBUG = -DDEBUG=5 #-DUSE_MESSAGES
 # GUI is either defined or not. If it is defined
 #     then a GUI will be compiled into the program
 GUI = #-DGUI
@@ -45,7 +45,7 @@ DEFINES = $(REAL) $(DEBUG) $(GUI)
 # --------------- Compiler options --------------- #
 # ------------------------------------------------ #
 #
-CXXFLAGS = -std=c++20 -O $(DEFINES) #-Wall
+CXXFLAGS = -std=c++20 -O0 $(DEFINES) #-Wall
 CPPFLAGS = -I. -I$(incdir)
 LDFLAGS = -L.
 LDLIBS = -lfftw3 -lpng
