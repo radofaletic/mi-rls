@@ -11,7 +11,7 @@
  
  Rado.Faletic@anu.edu.au
  21st June 2004
- 22nd April 2022
+ 4th May 2022 
  */
 
 
@@ -43,7 +43,7 @@ template<class T> class shape
 {
 public:
 	shape() { };
-	~shape() { };
+    virtual ~shape() { };
 	virtual unsigned short dim() const = 0;
 	virtual std::string print() const = 0;
 	virtual T distance_p(const std::valarray<T>*) const = 0;

@@ -939,7 +939,8 @@ template<class T> void grid<T>::init(const grid_input& thisgrid, const bool& aux
 	debug("grid<T>::init", "initialising grid");
 	if ( thisgrid.load_grid() && thisgrid.gridfile() == std::string("") )
 	{
-		throw; return;
+		throw;
+        return;
 	}
 	
 	// clear any existing grid
@@ -964,7 +965,8 @@ template<class T> void grid<T>::init(const grid_input& thisgrid, const bool& aux
 	if ( !this->check() )
 	{
 		this->clear();
-		throw; return;
+		throw;
+        return;
 	}
 	
 	// create the grid

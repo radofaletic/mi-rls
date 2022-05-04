@@ -11,7 +11,7 @@
  
  Rado.Faletic@anu.edu.au
  21st June 2004
- 22nd April 2022
+ 4th May 2022
  */
 
 
@@ -59,6 +59,7 @@ public:
 	void init(const std::valarray<T>*, const std::valarray<T>*, const std::valarray<T>*, const std::valarray<T>*);
 	tetrahedron(const std::valarray<T>*, const std::valarray<T>*, const std::valarray<T>*, const std::valarray<T>*);
 	tetrahedron() { };
+    ~tetrahedron() { };
 	T make_measure() const;
 	T scale() const;
 	T distance_p(const std::valarray<T>*) const;

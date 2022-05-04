@@ -2,7 +2,7 @@
  Rado's own little routine for testing  Plot3d I/O through the grid interface
  */
 
-#include <iostream>
+#include <string>
 
 #if DEBUG >= 5
 #ifndef USE_MESSAGES
@@ -21,28 +21,28 @@ std::ofstream messages;
 int main(int argc, char* argv[])
 {
 #ifdef USE_MESSAGES
-	messages.open((std::string(argv[0])+std::string(".messages")).c_str());
+	messages.open((std::string(argv[0]) + std::string(".messages")).c_str());
 #endif /* USE_MESSAGES */
-	
-	grid_input gridinputs;
-	gridinputs.type() = structured;
-	gridinputs.format() = Unformatted;
-	gridinputs.precision() = Single;
-	gridinputs.multidomain() = true;
-	gridinputs.blanking() = true;
-	gridinputs.gridfile() = "data/BF1/BF1.PUG";
-	gridinputs.datafile() = "data/BF1/BF1.PUS";
-	gridinputs.qdata() = 1;
-	
-	grid<float> test_grid(gridinputs);
-	test_grid.read_data(gridinputs);
-	
+    
+    grid_input gridinputs;
+    gridinputs.type() = structured;
+    gridinputs.format() = Binary;
+    gridinputs.precision() = Single;
+    gridinputs.multidomain() = false;
+    gridinputs.blanking() = false;
+    gridinputs.load_grid() = true;
+    gridinputs.gridfile() = "data/phantoms/dorn_3d.PBG";
+    gridinputs.datafile() = "data/phantoms/dorn_3d.PBS";
+    gridinputs.qdata() = 1;
+    
+    grid<float> test_grid(gridinputs);
+    test_grid.read_data(gridinputs);
+    
 	std::string outputname = "gio_output";
 	dataformat format = Formatted;
-	test_grid.write(outputname,SaveGrid,format);
-	test_grid.write(outputname,SaveData,format);
-	test_grid.write(outputname,SaveNeighbours,format);
+	test_grid.write(outputname, SaveGrid, format);
+	test_grid.write(outputname, SaveData, format);
+	test_grid.write(outputname, SaveNeighbours, format);
 	
 	message("FINISHED running " + std::string(argv[0]));
-	
 }

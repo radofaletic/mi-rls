@@ -31,7 +31,7 @@ std::ofstream messages;
 int main(int argc, char* argv[])
 {
 #ifdef USE_MESSAGES
-	messages.open((std::string(argv[0])+std::string(".messages")).c_str());
+	messages.open((std::string(argv[0]) + std::string(".messages")).c_str());
 #endif /* USE_MESSAGES */
 	
 	/*
@@ -39,13 +39,13 @@ int main(int argc, char* argv[])
 	 */
 	grid_input gridinputs;
 	gridinputs.type() = structured;
-	gridinputs.load_grid() = true;
 	gridinputs.format() = Binary;
 	gridinputs.precision() = Single;
 	gridinputs.multidomain() = false;
 	gridinputs.blanking() = false;
-	gridinputs.gridfile() = "data/tests/stark_3d.PBG";
-	gridinputs.datafile() = "data/tests/stark_3d.PBS";
+    gridinputs.load_grid() = true;
+	gridinputs.gridfile() = "data/phantoms/stark_3d.PBG";
+	gridinputs.datafile() = "data/phantoms/stark_3d.PBS";
 	gridinputs.qdata() = 1;
 	
 	grid<float> test_grid(gridinputs);
@@ -53,7 +53,7 @@ int main(int argc, char* argv[])
 	test_grid.give_dataname("stark_3d");
 	std::string the_dataname = test_grid.get_dataname();
 	std::string the_filename = test_grid.get_filename();
-	SparseMatrix<float> A(0,test_grid.ncells());
+	SparseMatrix<float> A(0, test_grid.ncells());
 	std::valarray<float> b;
 	std::valarray<float> cellw;
 	
@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
 	const int rotations = 12;
 	//const int rotations = 3;
 	
-	if ( !yesno("read existing matrix",false) )
+	if ( !yesno("read existing matrix", false) )
 	{
 		
 		//

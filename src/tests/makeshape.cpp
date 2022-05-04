@@ -7,7 +7,7 @@
 
 int main(int argc, char* argv[])
 {
-    std::size_t sos = 100;
+    const std::size_t sos = 100;
 	std::valarray<double> shape(0.0, sos*sos);
 	for (std::size_t j=0; j<sos; j++)
 	{

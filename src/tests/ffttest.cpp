@@ -41,12 +41,13 @@ int main(int argc, char* argv[])
 	std::string the_pfilename;
 	grid_input gridinputs;
 	gridinputs.type() = structured;
-	gridinputs.format() = Formatted;
+	gridinputs.format() = Binary;
 	gridinputs.precision() = Single;
 	gridinputs.multidomain() = false;
 	gridinputs.blanking() = false;
-	gridinputs.gridfile() = "data/phantoms/dorn_3d.PFG";
-	gridinputs.datafile() = "data/phantoms/dorn_3d.PFS";
+    gridinputs.load_grid() = true;
+	gridinputs.gridfile() = "data/phantoms/dorn_3d.PBG";
+	gridinputs.datafile() = "data/phantoms/dorn_3d.PBS";
 	gridinputs.qdata() = 1;
 	int rotations = 32;
 	std::string the_dataname = "dorn";
@@ -136,16 +137,9 @@ int main(int argc, char* argv[])
     std::size_t Nrows;
     std::size_t Ncols;
 	std::valarray<double> b;
-	if ( the_pfilename.size() == 0 )
+	if ( the_pfilename.size() == 0 ) // do test projections
 	{
-		/*
-		 do test projections
-		 */
-		
-		//
 		// read in grid and a-priori data
-		//
-		
 		grid<double> test_grid(gridinputs);
 		test_grid.read_data(gridinputs);
 		test_grid.give_dataname(the_dataname);
@@ -153,10 +147,7 @@ int main(int argc, char* argv[])
 		
 		test_grid.set_basis(unity);
 		
-		//
 		// a blank projection pane
-		//
-		
 		message("creating generic projection plane");
         std::size_t meshsize = 24;
 		//std::size_t meshsize = 128;
@@ -168,9 +159,7 @@ int main(int argc, char* argv[])
 		delete ratu;
 		delete ratv;
 		
-		//
 		// get stuck into the ray tracing
-		//
 		message("ray tracing");
 		b.resize(rays.size());
 		std::valarray<bool> blanks;
@@ -208,7 +197,7 @@ int main(int argc, char* argv[])
 	}
 	message("\t...done");
 	
-	/*
+	/**
 	 Now we do the Fourier inversion:
 	 - make the output data array
 	 - loop over each slice

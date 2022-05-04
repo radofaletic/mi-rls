@@ -11,7 +11,7 @@
  
  Rado.Faletic@anu.edu.au
  17th May 2004
- 20th April 2022
+ 4th May 2022 
  */
 
 
@@ -56,6 +56,7 @@ public:
 	line(const std::valarray<T>&, const std::valarray<T>&);
 	line(const std::valarray<T>*, const std::valarray<T>*);
 	line() { };
+    ~line() { };
 	unsigned short dim() const;
 	std::string print() const;
 	const std::valarray<T>* gradient_p() const;
