@@ -2,7 +2,7 @@
 
 Rado Faletič, May 2005
 
-Contains the code for the C++ routines used for my PhD thesis “Tomographic Reconstruction of Shock Layer Flows”, which can be read at http://hdl.handle.net/1885/46916
+Contains the code for the C++ routines used for my PhD thesis “Tomographic Reconstruction of Shock Layer Flows”, which can be read at [doi:10.25911/5d7a2a41cea7c](https://doi.org/10.25911/5d7a2a41cea7c).
 
 The results are generally stored in plain PNG files, which should be viewable in any modern web browser or imaging programme. Note, however, that PNG images are integer. Also stored in these files, in textual IEEE number format are the decimal values of the results. These values can be retrieved with the Tomography::pngread function found in the include/tomography.h header file.
 
